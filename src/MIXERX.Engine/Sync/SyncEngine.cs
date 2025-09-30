@@ -1,4 +1,4 @@
-using MIXERX.Engine.Analysis;
+using MIXERX.Core;
 
 namespace MIXERX.Engine.Sync;
 
@@ -6,105 +6,123 @@ public class SyncEngine
 {
     private readonly Dictionary<int, DeckSyncInfo> _deckInfo = new();
     private int? _masterDeckId;
+    private float _masterBpm = 120.0f;
 
-    public void RegisterDeck(int deckId, float bpm, string key)
+    public void RegisterDeck(int deckId, float bpm, long samplePosition, int sampleRate)
     {
         _deckInfo[deckId] = new DeckSyncInfo
         {
             DeckId = deckId,
             Bpm = bpm,
-            Key = key,
-            Phase = 0,
+            SamplePosition = samplePosition,
+            SampleRate = sampleRate,
             IsSynced = false
         };
+
+        // First deck becomes master
+        if (_masterDeckId == null && bpm > 0)
+        {
+            SetMasterDeck(deckId);
+        }
     }
 
     public void SetMasterDeck(int deckId)
     {
-        _masterDeckId = deckId;
-        
         if (_deckInfo.TryGetValue(deckId, out var info))
         {
-            info.IsMaster = true;
+            _masterDeckId = deckId;
+            _masterBpm = info.Bpm;
+            
+            // Update all other decks to sync to this master
+            foreach (var deck in _deckInfo.Values)
+            {
+                if (deck.DeckId != deckId)
+                {
+                    deck.IsSynced = true;
+                }
+            }
         }
     }
 
-    public SyncResult CalculateSync(int slaveDeckId)
-    {
-        if (!_masterDeckId.HasValue || !_deckInfo.ContainsKey(_masterDeckId.Value))
-            return new SyncResult { CanSync = false };
-
-        var master = _deckInfo[_masterDeckId.Value];
-        var slave = _deckInfo.GetValueOrDefault(slaveDeckId);
-        
-        if (slave == null)
-            return new SyncResult { CanSync = false };
-
-        // Calculate tempo adjustment needed
-        var tempoRatio = master.Bpm / slave.Bpm;
-        
-        // Calculate phase alignment
-        var phaseOffset = CalculatePhaseOffset(master, slave);
-        
-        // Check key compatibility
-        var keyCompatible = AreKeysCompatible(master.Key, slave.Key);
-
-        return new SyncResult
-        {
-            CanSync = true,
-            TempoAdjustment = tempoRatio,
-            PhaseOffset = phaseOffset,
-            KeyCompatible = keyCompatible,
-            RecommendedKey = keyCompatible ? slave.Key : GetCompatibleKey(master.Key)
-        };
-    }
-
-    public void UpdateDeckPhase(int deckId, float phase)
+    public void SyncDeck(int deckId, bool enable)
     {
         if (_deckInfo.TryGetValue(deckId, out var info))
         {
-            info.Phase = phase % 1.0f; // Keep phase between 0-1
+            info.IsSynced = enable;
         }
     }
 
-    private float CalculatePhaseOffset(DeckSyncInfo master, DeckSyncInfo slave)
+    public float GetSyncedTempo(int deckId)
     {
-        // Calculate how much to offset slave to align with master beat
-        var phaseDiff = master.Phase - slave.Phase;
-        
-        // Normalize to [-0.5, 0.5] range
-        while (phaseDiff > 0.5f) phaseDiff -= 1.0f;
-        while (phaseDiff < -0.5f) phaseDiff += 1.0f;
-        
-        return phaseDiff;
-    }
-
-    private bool AreKeysCompatible(string key1, string key2)
-    {
-        // Simplified key compatibility (same key or relative major/minor)
-        var compatibleKeys = GetCompatibleKeys(key1);
-        return compatibleKeys.Contains(key2);
-    }
-
-    private string[] GetCompatibleKeys(string key)
-    {
-        // Simplified compatibility - same key, perfect fifth, relative minor/major
-        return key switch
+        if (!_deckInfo.TryGetValue(deckId, out var info) || !info.IsSynced || _masterDeckId == null)
         {
-            "C" => new[] { "C", "G", "Am", "Em" },
-            "G" => new[] { "G", "D", "Em", "Bm" },
-            "D" => new[] { "D", "A", "Bm", "F#m" },
-            "A" => new[] { "A", "E", "F#m", "C#m" },
-            "E" => new[] { "E", "B", "C#m", "G#m" },
-            "F" => new[] { "F", "C", "Dm", "Am" },
-            _ => new[] { key } // Default to same key only
-        };
+            return 1.0f; // No sync, normal tempo
+        }
+
+        if (info.Bpm <= 0 || _masterBpm <= 0)
+        {
+            return 1.0f;
+        }
+
+        // Calculate tempo adjustment to match master BPM
+        return _masterBpm / info.Bpm;
     }
 
-    private string GetCompatibleKey(string masterKey)
+    public long GetQuantizedPosition(int deckId, long currentPosition)
     {
-        var compatible = GetCompatibleKeys(masterKey);
-        return compatible.Length > 1 ? compatible[1] : masterKey;
+        if (!_deckInfo.TryGetValue(deckId, out var info) || !info.IsSynced || _masterDeckId == null)
+        {
+            return currentPosition; // No quantization
+        }
+
+        if (!_deckInfo.TryGetValue(_masterDeckId.Value, out var masterInfo))
+        {
+            return currentPosition;
+        }
+
+        // Calculate beat length in samples
+        var beatLengthSamples = (long)(info.SampleRate * 60.0 / info.Bpm);
+        
+        // Quantize to nearest beat
+        var beatNumber = currentPosition / beatLengthSamples;
+        return beatNumber * beatLengthSamples;
+    }
+
+    public bool IsDeckSynced(int deckId)
+    {
+        return _deckInfo.TryGetValue(deckId, out var info) && info.IsSynced;
+    }
+
+    public int? GetMasterDeckId()
+    {
+        return _masterDeckId;
+    }
+
+    public float GetMasterBpm()
+    {
+        return _masterBpm;
+    }
+
+    public void UpdateDeckBpm(int deckId, float bpm)
+    {
+        if (_deckInfo.TryGetValue(deckId, out var info))
+        {
+            info.Bpm = bpm;
+            
+            // If this is the master deck, update master BPM
+            if (_masterDeckId == deckId)
+            {
+                _masterBpm = bpm;
+            }
+        }
+    }
+
+    public void UpdateDeckPosition(int deckId, long samplePosition)
+    {
+        if (_deckInfo.TryGetValue(deckId, out var info))
+        {
+            info.SamplePosition = samplePosition;
+        }
     }
 }
 
@@ -112,53 +130,7 @@ public class DeckSyncInfo
 {
     public int DeckId { get; set; }
     public float Bpm { get; set; }
-    public string Key { get; set; } = "";
-    public float Phase { get; set; } // Beat phase (0-1)
+    public long SamplePosition { get; set; }
+    public int SampleRate { get; set; }
     public bool IsSynced { get; set; }
-    public bool IsMaster { get; set; }
-}
-
-public class SyncResult
-{
-    public bool CanSync { get; set; }
-    public float TempoAdjustment { get; set; } = 1.0f;
-    public float PhaseOffset { get; set; }
-    public bool KeyCompatible { get; set; }
-    public string RecommendedKey { get; set; } = "";
-}
-
-// Beat Grid for precise sync
-public class BeatGrid
-{
-    private readonly float _bpm;
-    private readonly float _sampleRate;
-    private readonly float _beatsPerSecond;
-
-    public BeatGrid(float bpm, float sampleRate)
-    {
-        _bpm = bpm;
-        _sampleRate = sampleRate;
-        _beatsPerSecond = bpm / 60.0f;
-    }
-
-    public float GetBeatPhase(long samplePosition)
-    {
-        var timeInSeconds = samplePosition / _sampleRate;
-        var beatPosition = timeInSeconds * _beatsPerSecond;
-        return beatPosition % 1.0f; // Return fractional part (0-1)
-    }
-
-    public long GetNextBeatSample(long currentSample)
-    {
-        var currentPhase = GetBeatPhase(currentSample);
-        var samplesPerBeat = _sampleRate / _beatsPerSecond;
-        var samplesToNextBeat = (1.0f - currentPhase) * samplesPerBeat;
-        return currentSample + (long)samplesToNextBeat;
-    }
-
-    public bool IsOnBeat(long samplePosition, float tolerance = 0.05f)
-    {
-        var phase = GetBeatPhase(samplePosition);
-        return phase < tolerance || phase > (1.0f - tolerance);
-    }
 }

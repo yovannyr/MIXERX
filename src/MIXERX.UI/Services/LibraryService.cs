@@ -42,17 +42,39 @@ public class LibraryService : ILibraryService
             Title = Path.GetFileNameWithoutExtension(filePath),
             Artist = "Unknown Artist",
             Album = "Unknown Album",
-            Duration = TimeSpan.Zero, // Will be extracted from audio file metadata
+            Duration = TimeSpan.Zero,
+            Bpm = EstimateBpm(filePath), // Basic BPM estimation
+            Key = "Unknown",
             LastModified = fileInfo.LastWriteTime
         };
-
-        // Audio metadata extraction will be implemented with TagLib# or similar
-        // BPM and Key analysis will be added in future iterations
 
         _context.Tracks.Add(track);
         await _context.SaveChangesAsync();
         
         return track;
+    }
+
+    private float EstimateBpm(string filePath)
+    {
+        // Simple BPM estimation based on filename patterns or default ranges
+        var fileName = Path.GetFileNameWithoutExtension(filePath).ToLower();
+        
+        // Look for BPM in filename (e.g., "Song - 128 BPM.mp3")
+        var bpmMatch = System.Text.RegularExpressions.Regex.Match(fileName, @"(\d{2,3})\s*bpm");
+        if (bpmMatch.Success && float.TryParse(bpmMatch.Groups[1].Value, out var bpm))
+        {
+            return bpm;
+        }
+        
+        // Genre-based BPM estimation
+        if (fileName.Contains("house")) return 128f;
+        if (fileName.Contains("techno")) return 130f;
+        if (fileName.Contains("trance")) return 138f;
+        if (fileName.Contains("drum") || fileName.Contains("bass")) return 174f;
+        if (fileName.Contains("hip") || fileName.Contains("hop")) return 90f;
+        
+        // Default BPM for unknown tracks
+        return 120f;
     }
 
     public async Task ImportDirectoryAsync(string path)
@@ -73,6 +95,18 @@ public class LibraryService : ILibraryService
 
     public async Task<IEnumerable<Track>> GetAllTracksAsync()
     {
-        return await _context.Tracks.ToListAsync();
+        return await _context.Tracks
+            .OrderBy(t => t.Bpm)
+            .ThenBy(t => t.Artist)
+            .ThenBy(t => t.Title)
+            .ToListAsync();
+    }
+
+    public async Task<IEnumerable<Track>> GetTracksByBpmRangeAsync(float minBpm, float maxBpm)
+    {
+        return await _context.Tracks
+            .Where(t => t.Bpm >= minBpm && t.Bpm <= maxBpm)
+            .OrderBy(t => t.Bpm)
+            .ToListAsync();
     }
 }

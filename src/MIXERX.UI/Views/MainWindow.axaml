@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:MIXERX.UI.ViewModels"
         xmlns:views="using:MIXERX.UI.Views"
+        xmlns:controls="using:MIXERX.UI.Controls"
         xmlns:conv="using:MIXERX.UI.Converters"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,31 +17,116 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <Grid RowDefinitions="*,*,Auto">
-        
-        <!-- Top Row - Decks 1 & 2 -->
-        <Grid Grid.Row="0" ColumnDefinitions="*,*">
-          <views:DeckView Grid.Column="0" DataContext="{Binding Deck1}" Margin="10"/>
-          <views:DeckView Grid.Column="1" DataContext="{Binding Deck2}" Margin="10"/>
+    <DockPanel>
+        <!-- Menu Bar -->
+        <Menu DockPanel.Dock="Top" Background="#1a1a1a" Foreground="White">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New Project" Command="{Binding NewProjectCommand}" InputGesture="Ctrl+N"/>
+                <MenuItem Header="_Open Project..." Command="{Binding OpenProjectCommand}" InputGesture="Ctrl+O"/>
+                <Separator/>
+                <MenuItem Header="_Save Project" Command="{Binding SaveProjectCommand}" InputGesture="Ctrl+S"/>
+                <MenuItem Header="Save Project _As..."/>
+                <Separator/>
+                <MenuItem Header="Import _Audio Files..."/>
+                <MenuItem Header="_Export Mix..."/>
+                <Separator/>
+                <MenuItem Header="E_xit" Command="{Binding ExitCommand}" InputGesture="Alt+F4"/>
+            </MenuItem>
+            
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Undo" InputGesture="Ctrl+Z"/>
+                <MenuItem Header="_Redo" InputGesture="Ctrl+Y"/>
+                <Separator/>
+                <MenuItem Header="_Preferences..." Command="{Binding PreferencesCommand}" InputGesture="Ctrl+,"/>
+            </MenuItem>
+            
+            <MenuItem Header="_View">
+                <MenuItem Header="Show _Library"/>
+                <MenuItem Header="Show _Controller Mapping"/>
+                <MenuItem Header="Show _Effects Panel"/>
+                <Separator/>
+                <MenuItem Header="_Full Screen" InputGesture="F11"/>
+            </MenuItem>
+            
+            <MenuItem Header="_Tools">
+                <MenuItem Header="_Audio Settings..."/>
+                <MenuItem Header="_MIDI Settings..."/>
+                <MenuItem Header="_Controller Mapping..."/>
+                <Separator/>
+                <MenuItem Header="_Analyze Tracks"/>
+                <MenuItem Header="_Sync Library"/>
+            </MenuItem>
+            
+            <MenuItem Header="_Help">
+                <MenuItem Header="_Keyboard Shortcuts" Command="{Binding ShowKeyboardShortcutsCommand}"/>
+                <MenuItem Header="_User Manual"/>
+                <Separator/>
+                <MenuItem Header="_About MIXERX" Command="{Binding AboutCommand}"/>
+            </MenuItem>
+        </Menu>
+
+        <!-- Main Content -->
+        <Grid RowDefinitions="*,*,Auto" ColumnDefinitions="2*,*">
+            
+            <!-- Left Side - Decks -->
+            <Grid Grid.Column="0" RowDefinitions="*,*">
+                <!-- Top Row - Decks 1 & 2 -->
+                <Grid Grid.Row="0" ColumnDefinitions="*,*">
+                  <views:DeckView Grid.Column="0" DataContext="{Binding Deck1}" Margin="10"/>
+                  <views:DeckView Grid.Column="1" DataContext="{Binding Deck2}" Margin="10"/>
+                </Grid>
+
+                <!-- Bottom Row - Decks 3 & 4 -->
+                <Grid Grid.Row="1" ColumnDefinitions="*,*">
+                  <views:DeckView Grid.Column="0" DataContext="{Binding Deck3}" Margin="10"/>
+                  <views:DeckView Grid.Column="1" DataContext="{Binding Deck4}" Margin="10"/>
+                </Grid>
+            </Grid>
+            
+            <!-- Right Side - Library -->
+            <Border Grid.Column="1" Grid.RowSpan="2" Background="#2a2a2a" Margin="5">
+                <views:LibraryView DataContext="{Binding Library}"/>
+            </Border>
+
+            <!-- Mixer Section with Crossfader -->
+            <Grid Grid.Row="2" Grid.ColumnSpan="2" Background="#1a1a1a" Height="120">
+                <Grid ColumnDefinitions="*,Auto,*" Margin="20">
+                    
+                    <!-- Left Side - Deck A Controls -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="DECK A" Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <Button Content="CUE" Width="40" Height="30" Background="#333" Foreground="White"/>
+                        <Slider Width="60" Height="20" Minimum="0" Maximum="1" Value="0.8" Margin="5,0"/>
+                    </StackPanel>
+                    
+                    <!-- Center - Crossfader -->
+                    <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center">
+                        <TextBlock Text="CROSSFADER" Foreground="White" HorizontalAlignment="Center" FontSize="10" Margin="0,0,0,5"/>
+                        <controls:CrossfaderControl Width="40" Height="80"/>
+                    </StackPanel>
+                    
+                    <!-- Right Side - Deck B Controls -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Slider Width="60" Height="20" Minimum="0" Maximum="1" Value="0.8" Margin="5,0"/>
+                        <Button Content="CUE" Width="40" Height="30" Background="#333" Foreground="White"/>
+                        <TextBlock Text="DECK B" Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    </StackPanel>
+                    
+                </Grid>
+            </Grid>
+
+            <!-- Status Bar -->
+            <Border Grid.Row="2" Background="#333" Height="30">
+              <Grid ColumnDefinitions="Auto,*,Auto">
+                <TextBlock Grid.Column="0" Text="MIXERX Professional DJ Software" 
+                           Foreground="White" VerticalAlignment="Center" Margin="10,0"/>
+                <TextBlock Grid.Column="1" Text="{Binding IsEngineRunning, Converter={x:Static conv:BoolConverters.EngineStatus}}" 
+                           Foreground="#00ff64" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock Grid.Column="2" Text="Ready" 
+                           Foreground="#cccccc" VerticalAlignment="Center" Margin="10,0"/>
+              </Grid>
+            </Border>
+
         </Grid>
-
-        <!-- Bottom Row - Decks 3 & 4 -->
-        <Grid Grid.Row="1" ColumnDefinitions="*,*">
-          <views:DeckView Grid.Column="0" DataContext="{Binding Deck3}" Margin="10"/>
-          <views:DeckView Grid.Column="1" DataContext="{Binding Deck4}" Margin="10"/>
-        </Grid>
-
-        <!-- Status Bar -->
-        <Border Grid.Row="2" Background="#333" Height="30">
-          <Grid ColumnDefinitions="Auto,*,Auto">
-            <TextBlock Grid.Column="0" Text="MIXERX Professional DJ Software" 
-                       Foreground="White" VerticalAlignment="Center" Margin="10,0"/>
-            <TextBlock Grid.Column="1" Text="Engine Running" 
-                       Foreground="#00ff64" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-            <TextBlock Grid.Column="2" Text="Ready" 
-                       Foreground="#cccccc" VerticalAlignment="Center" Margin="10,0"/>
-          </Grid>
-        </Border>
-
-    </Grid>
+    </DockPanel>
 </Window>

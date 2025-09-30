@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "/Users/yovannyr/Projects/MIXERX/src/MIXERX.Engine/MIXERX.Engine.csproj": {}
+    "C:\\repo\\MIXERX\\src\\MIXERX.Engine\\MIXERX.Engine.csproj": {}
   },
   "projects": {
-    "/Users/yovannyr/Projects/MIXERX/src/MIXERX.Core/MIXERX.Core.csproj": {
+    "C:\\repo\\MIXERX\\src\\MIXERX.Core\\MIXERX.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/yovannyr/Projects/MIXERX/src/MIXERX.Core/MIXERX.Core.csproj",
+        "projectUniqueName": "C:\\repo\\MIXERX\\src\\MIXERX.Core\\MIXERX.Core.csproj",
         "projectName": "MIXERX.Core",
-        "projectPath": "/Users/yovannyr/Projects/MIXERX/src/MIXERX.Core/MIXERX.Core.csproj",
-        "packagesPath": "/Users/yovannyr/.nuget/packages/",
-        "outputPath": "/Users/yovannyr/Projects/MIXERX/src/MIXERX.Core/obj/",
+        "projectPath": "C:\\repo\\MIXERX\\src\\MIXERX.Core\\MIXERX.Core.csproj",
+        "packagesPath": "C:\\Users\\yrodriguez\\.nuget\\packages\\",
+        "outputPath": "C:\\repo\\MIXERX\\src\\MIXERX.Core\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/Users/yovannyr/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\yrodriguez\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -46,11 +52,15 @@
           "dependencies": {
             "Google.Protobuf": {
               "target": "Package",
-              "version": "[3.25.1, )"
+              "version": "[3.32.1, )"
             },
             "System.Memory": {
               "target": "Package",
-              "version": "[4.5.5, )"
+              "version": "[4.6.3, )"
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[9.0.9, )"
             }
           },
           "imports": [
@@ -69,34 +79,40 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/Users/yovannyr/Projects/MIXERX/src/MIXERX.Engine/MIXERX.Engine.csproj": {
+    "C:\\repo\\MIXERX\\src\\MIXERX.Engine\\MIXERX.Engine.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/yovannyr/Projects/MIXERX/src/MIXERX.Engine/MIXERX.Engine.csproj",
+        "projectUniqueName": "C:\\repo\\MIXERX\\src\\MIXERX.Engine\\MIXERX.Engine.csproj",
         "projectName": "MIXERX.Engine",
-        "projectPath": "/Users/yovannyr/Projects/MIXERX/src/MIXERX.Engine/MIXERX.Engine.csproj",
-        "packagesPath": "/Users/yovannyr/.nuget/packages/",
-        "outputPath": "/Users/yovannyr/Projects/MIXERX/src/MIXERX.Engine/obj/",
+        "projectPath": "C:\\repo\\MIXERX\\src\\MIXERX.Engine\\MIXERX.Engine.csproj",
+        "packagesPath": "C:\\Users\\yrodriguez\\.nuget\\packages\\",
+        "outputPath": "C:\\repo\\MIXERX\\src\\MIXERX.Engine\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/Users/yovannyr/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\yrodriguez\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/Users/yovannyr/Projects/MIXERX/src/MIXERX.Core/MIXERX.Core.csproj": {
-                "projectPath": "/Users/yovannyr/Projects/MIXERX/src/MIXERX.Core/MIXERX.Core.csproj"
+              "C:\\repo\\MIXERX\\src\\MIXERX.Core\\MIXERX.Core.csproj": {
+                "projectPath": "C:\\repo\\MIXERX\\src\\MIXERX.Core\\MIXERX.Core.csproj"
               }
             }
           }
@@ -117,16 +133,20 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "FFMpegCore": {
+              "target": "Package",
+              "version": "[5.2.0, )"
+            },
             "Microsoft.DotNet.ILCompiler": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[9.0.9, )",
+              "version": "[9.0.8, )",
               "autoReferenced": true
             },
             "Microsoft.NET.ILLink.Tasks": {
               "suppressParent": "All",
               "target": "Package",
-              "version": "[9.0.9, )",
+              "version": "[9.0.8, )",
               "autoReferenced": true
             },
             "NAudio": {
@@ -135,7 +155,7 @@
             },
             "System.Threading.Channels": {
               "target": "Package",
-              "version": "[8.0.0, )"
+              "version": "[9.0.9, )"
             }
           },
           "imports": [
@@ -151,8 +171,8 @@
           "warn": true,
           "downloadDependencies": [
             {
-              "name": "runtime.osx-x64.Microsoft.DotNet.ILCompiler",
-              "version": "[9.0.9, 9.0.9]"
+              "name": "runtime.win-x64.Microsoft.DotNet.ILCompiler",
+              "version": "[9.0.8, 9.0.8]"
             }
           ],
           "frameworkReferences": {
@@ -160,7 +180,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

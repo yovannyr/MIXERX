@@ -11,6 +11,8 @@ public class IpcServer : IDisposable
     private Thread? _serverThread;
     private volatile bool _isRunning;
 
+    public Func<object, bool> OnCommand { get; set; }
+
     public IpcServer(AudioEngine audioEngine)
     {
         _audioEngine = audioEngine;
@@ -107,6 +109,16 @@ public class IpcServer : IDisposable
 
                 case IpcMessageType.SetPosition:
                     _audioEngine.SetPosition(message.DeckId, TimeSpan.FromSeconds(message.FloatParam));
+                    break;
+
+                case IpcMessageType.SetEffectParameter:
+                    if (message.Data != null && 
+                        message.Data.TryGetValue("effectName", out var effectName) &&
+                        message.Data.TryGetValue("paramName", out var paramName) &&
+                        message.Data.TryGetValue("value", out var value))
+                    {
+                        _audioEngine.SetEffectParameter(message.DeckId, effectName.ToString()!, paramName.ToString()!, Convert.ToSingle(value));
+                    }
                     break;
 
                 case IpcMessageType.GetStatus:

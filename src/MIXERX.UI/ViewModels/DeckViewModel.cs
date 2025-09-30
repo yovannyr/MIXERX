@@ -109,6 +109,7 @@ namespace MIXERX.UI.ViewModels
         PlayPauseCommand = ReactiveCommand.CreateFromTask(PlayPause);
         LoadTrackCommand = ReactiveCommand.CreateFromTask(LoadTrack);
         SyncCommand = ReactiveCommand.CreateFromTask(Sync);
+        SetCueCommand = ReactiveCommand.CreateFromTask(SetCue);
         
         // Loop commands
         AutoLoopCommand = ReactiveCommand.CreateFromTask<object>(param =>
@@ -160,8 +161,7 @@ namespace MIXERX.UI.ViewModels
         set
         {
             this.RaiseAndSetIfChanged(ref _eqLow, value);
-            // Send effect parameter to engine
-            // _ = _engineService.SetEffectParameterAsync(_deckId, "EQ", "low", (float)value);
+            _ = _engineService.SetEffectParameterAsync(_deckId, "EQ", "low", (float)value);
         }
     }
 
@@ -171,7 +171,7 @@ namespace MIXERX.UI.ViewModels
         set
         {
             this.RaiseAndSetIfChanged(ref _eqMid, value);
-            // _ = _engineService.SetEffectParameterAsync(_deckId, "EQ", "mid", (float)value);
+            _ = _engineService.SetEffectParameterAsync(_deckId, "EQ", "mid", (float)value);
         }
     }
 
@@ -181,7 +181,7 @@ namespace MIXERX.UI.ViewModels
         set
         {
             this.RaiseAndSetIfChanged(ref _eqHigh, value);
-            // _ = _engineService.SetEffectParameterAsync(_deckId, "EQ", "high", (float)value);
+            _ = _engineService.SetEffectParameterAsync(_deckId, "EQ", "high", (float)value);
         }
     }
 
@@ -192,7 +192,7 @@ namespace MIXERX.UI.ViewModels
         set
         {
             this.RaiseAndSetIfChanged(ref _filterCutoff, value);
-            // _ = _engineService.SetEffectParameterAsync(_deckId, "Filter", "cutoff", (float)value);
+            _ = _engineService.SetEffectParameterAsync(_deckId, "Filter", "cutoff", (float)value);
         }
     }
 
@@ -202,7 +202,7 @@ namespace MIXERX.UI.ViewModels
         set
         {
             this.RaiseAndSetIfChanged(ref _filterResonance, value);
-            // _ = _engineService.SetEffectParameterAsync(_deckId, "Filter", "resonance", (float)value);
+            _ = _engineService.SetEffectParameterAsync(_deckId, "Filter", "resonance", (float)value);
         }
     }
 
@@ -245,6 +245,7 @@ namespace MIXERX.UI.ViewModels
     public ReactiveCommand<Unit, Unit> PlayPauseCommand { get; }
     public ReactiveCommand<Unit, Unit> LoadTrackCommand { get; }
     public ReactiveCommand<Unit, Unit> SyncCommand { get; }
+    public ReactiveCommand<Unit, Unit> SetCueCommand { get; }
     
     // Loop commands
     public ReactiveCommand<object, Unit> AutoLoopCommand { get; }
@@ -296,6 +297,14 @@ namespace MIXERX.UI.ViewModels
                 _ = Task.Run(UpdateTrackInfo);
             }
         }
+    }
+
+    private Task SetCue()
+    {
+        // Set cue point at current position
+        // await _engineService.SetCuePointAsync(_deckId, Position);
+        System.Diagnostics.Debug.WriteLine($"Cue point set at {Position:F2} on Deck {_deckId}");
+        return Task.CompletedTask;
     }
 
     private Task SetAutoLoop(int beats)

@@ -12,12 +12,17 @@ namespace MIXERX.UI.ViewModels;
 public class LibraryViewModel : ViewModelBase
 {
     private readonly ILibraryService _libraryService;
+    private readonly IEngineService _engineService;
+    private readonly IAutoplayService _autoplayService;
     private string _searchText = string.Empty;
     private Track? _selectedTrack;
+    private bool _isAutoplayEnabled;
 
-    public LibraryViewModel()
+    public LibraryViewModel(IEngineService? engineService = null)
     {
         _libraryService = new LibraryService();
+        _engineService = engineService ?? new EngineService();
+        _autoplayService = new AutoplayService();
         Tracks = new ObservableCollection<Track>();
         
         SearchCommand = ReactiveCommand.CreateFromTask(Search);
@@ -44,6 +49,16 @@ public class LibraryViewModel : ViewModelBase
     {
         get => _selectedTrack;
         set => this.RaiseAndSetIfChanged(ref _selectedTrack, value);
+    }
+
+    public bool IsAutoplayEnabled
+    {
+        get => _isAutoplayEnabled;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _isAutoplayEnabled, value);
+            _autoplayService.IsEnabled = value;
+        }
     }
 
     public ReactiveCommand<Unit, Unit> SearchCommand { get; }
@@ -98,7 +113,7 @@ public class LibraryViewModel : ViewModelBase
 
     private void LoadTrack(Track track)
     {
-        // TODO: Send to deck via IPC
         SelectedTrack = track;
+        _ = _engineService.LoadTrackAsync(1, track.FilePath);
     }
 }

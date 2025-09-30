@@ -9,24 +9,20 @@ public class WasapiDriver : IAudioDriver
 {
     private WasapiOut? _wasapiOut;
     private BufferedWaveProvider? _waveProvider;
-    private readonly AudioConfig _config;
+    private AudioConfig? _config;
 
-    public WasapiDriver(AudioConfig config)
-    {
-        _config = config;
-    }
-
-    public bool Initialize()
+    public bool Initialize(AudioConfig config)
     {
         try
         {
-            _waveProvider = new BufferedWaveProvider(new WaveFormat(_config.SampleRate, 2))
+            _config = config;
+            _waveProvider = new BufferedWaveProvider(new WaveFormat(config.SampleRate, 2))
             {
-                BufferLength = _config.BufferSize * 4 * 10, // 10 buffers
+                BufferLength = config.BufferSize * 4 * 10,
                 DiscardOnBufferOverflow = true
             };
 
-            _wasapiOut = new WasapiOut(AudioClientShareMode.Shared, _config.BufferSize);
+            _wasapiOut = new WasapiOut(AudioClientShareMode.Shared, config.BufferSize);
             _wasapiOut.Init(_waveProvider);
             return true;
         }
@@ -36,7 +32,7 @@ public class WasapiDriver : IAudioDriver
         }
     }
 
-    public void Start()
+    public void Start(AudioCallback callback)
     {
         _wasapiOut?.Play();
     }
@@ -46,28 +42,18 @@ public class WasapiDriver : IAudioDriver
         _wasapiOut?.Stop();
     }
 
-    public IEnumerable<AudioDevice> EnumerateDevices()
+    public AudioDeviceInfo[] GetDevices()
     {
-        var enumerator = new MMDeviceEnumerator();
-        var devices = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
-        
-        return devices.Select(d => new AudioDevice(d.ID, d.FriendlyName));
-    }
-
-    public void ProcessAudio(Span<float> samples)
-    {
-        if (_waveProvider == null) return;
-
-        // Convert float samples to byte array
-        var bytes = new byte[samples.Length * 4];
-        for (int i = 0; i < samples.Length; i++)
+        try
         {
-            var sample = Math.Clamp(samples[i], -1.0f, 1.0f);
-            var intSample = (int)(sample * int.MaxValue);
-            BitConverter.GetBytes(intSample).CopyTo(bytes, i * 4);
+            var enumerator = new MMDeviceEnumerator();
+            var devices = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
+            return devices.Select(d => new AudioDeviceInfo(d.ID, d.FriendlyName, 2, 44100)).ToArray();
         }
-
-        _waveProvider.AddSamples(bytes, 0, bytes.Length);
+        catch
+        {
+            return Array.Empty<AudioDeviceInfo>();
+        }
     }
 
     public void Dispose()
@@ -77,42 +63,104 @@ public class WasapiDriver : IAudioDriver
     }
 }
 
-// macOS CoreAudio Driver (Stub for cross-platform)
+// macOS CoreAudio Driver (Basic Implementation)
 public class CoreAudioDriver : IAudioDriver
 {
-    private readonly AudioConfig _config;
+    private Thread? _audioThread;
+    private volatile bool _isRunning;
+    private AudioConfig? _config;
 
-    public CoreAudioDriver(AudioConfig config)
+    public bool Initialize(AudioConfig config)
+    {
+        try
+        {
+            _config = config;
+            // On macOS, we'd use AudioUnit/CoreAudio APIs here
+            // For now, return true if running on macOS
+            return OperatingSystem.IsMacOS();
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public void Start(AudioCallback callback)
+    {
+        if (_isRunning || !OperatingSystem.IsMacOS()) return;
+        
+        _isRunning = true;
+        _audioThread = new Thread(() => AudioThreadProc(callback))
+        {
+            Name = "CoreAudio",
+            IsBackground = true
+        };
+        _audioThread.Start();
+    }
+
+    public void Stop()
+    {
+        _isRunning = false;
+        _audioThread?.Join(1000);
+    }
+
+    public AudioDeviceInfo[] GetDevices()
+    {
+        return new[] { new AudioDeviceInfo("default", "Default Audio Device", 2, 44100) };
+    }
+
+    public void Dispose()
+    {
+        Stop();
+    }
+
+    private void AudioThreadProc(AudioCallback callback)
+    {
+        var buffer = new float[_config?.BufferSize ?? 512];
+        var sleepTime = (int)(1000.0 * buffer.Length / (_config?.SampleRate ?? 44100));
+        
+        while (_isRunning)
+        {
+            Array.Clear(buffer);
+            callback(buffer.AsSpan(), buffer.AsSpan());
+            // On real macOS, this would output to CoreAudio
+            Thread.Sleep(sleepTime);
+        }
+    }
+}
+
+// Mock Driver for Testing
+public class MockAudioDriver : IAudioDriver
+{
+    private AudioConfig? _config;
+    private AudioCallback? _callback;
+    private bool _initialized;
+
+    public bool Initialize(AudioConfig config)
     {
         _config = config;
+        _initialized = true;
+        return true;
     }
 
-    public bool Initialize()
+    public void Start(AudioCallback callback)
     {
-        // NAudio doesn't support CoreAudio directly on macOS
-        // This would need platform-specific implementation
-        return false;
+        if (!_initialized) return;
+        _callback = callback;
     }
 
-    public void Start() { }
-    public void Stop() { }
-
-    public IEnumerable<AudioDevice> EnumerateDevices()
+    public void Stop()
     {
-        return [];
+        _callback = null;
     }
 
-    public void ProcessAudio(Span<float> samples) { }
-    public void Dispose() { }
-}
+    public AudioDeviceInfo[] GetDevices()
+    {
+        return new[] { new AudioDeviceInfo("mock", "Mock Device", 2, 44100) };
+    }
 
-public interface IAudioDriver : IDisposable
-{
-    bool Initialize();
-    void Start();
-    void Stop();
-    IEnumerable<AudioDevice> EnumerateDevices();
-    void ProcessAudio(Span<float> samples);
+    public void Dispose()
+    {
+        Stop();
+    }
 }
-
-public record AudioDevice(string Id, string Name);

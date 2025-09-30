@@ -10,6 +10,9 @@ public enum IpcMessageType
     Pause,
     SetTempo,
     SetPosition,
+    SetEffectParameter,
+    SetCue,
+    SetLoop,
     GetStatus,
     StatusResponse
 }
@@ -54,6 +57,20 @@ public record SetPositionMessage : IpcMessage
     public SetPositionMessage(int deckId, float position) : base(IpcMessageType.SetPosition, deckId)
     {
         FloatParam = position;
+    }
+}
+
+public record SetEffectParameterMessage : IpcMessage
+{
+    public SetEffectParameterMessage(int deckId, string effectName, string paramName, float value) 
+        : base(IpcMessageType.SetEffectParameter, deckId)
+    {
+        Data = new Dictionary<string, object>
+        {
+            ["effectName"] = effectName,
+            ["paramName"] = paramName,
+            ["value"] = value
+        };
     }
 }
 

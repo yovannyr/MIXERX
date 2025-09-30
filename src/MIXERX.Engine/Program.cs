@@ -4,7 +4,6 @@ using MIXERX.Engine;
 Console.WriteLine("MIXERX Audio Engine Starting...");
 
 var engine = new AudioEngine();
-var ipcServer = new IpcServer(engine);
 
 var config = new AudioConfig
 {
@@ -20,11 +19,7 @@ try
     if (await engine.StartAsync(config))
     {
         Console.WriteLine("Audio engine started successfully!");
-        Console.WriteLine("Starting IPC server for UI communication...");
-        
-        // Start IPC server for UI communication
-        ipcServer.Start();
-        
+        Console.WriteLine("IPC server started for UI communication.");
         Console.WriteLine("MIXERX Engine is running. Press 'q' to quit.");
         
         // Keep engine running
@@ -34,7 +29,6 @@ try
         }
         
         Console.WriteLine("\nShutting down...");
-        ipcServer.Stop();
         await engine.StopAsync();
         Console.WriteLine("Engine stopped.");
     }

@@ -26,14 +26,29 @@
                                 Height="80" Margin="0,10"
                                 WaveformData="{Binding WaveformData}"
                                 Position="{Binding Position}"
-                                IsPlaying="{Binding IsPlaying}"/>
+                                IsPlaying="{Binding IsPlaying}">
+        <controls:WaveformControl.ContextMenu>
+          <ContextMenu>
+            <MenuItem Header="Set Cue Point" Command="{Binding SetCueCommand}"/>
+            <MenuItem Header="Set Loop In" Command="{Binding LoopInCommand}"/>
+            <MenuItem Header="Set Loop Out" Command="{Binding LoopOutCommand}"/>
+            <Separator/>
+            <MenuItem Header="Zoom In"/>
+            <MenuItem Header="Zoom Out"/>
+            <MenuItem Header="Zoom to Fit"/>
+            <Separator/>
+            <MenuItem Header="Analyze Track"/>
+            <MenuItem Header="Set BPM..."/>
+          </ContextMenu>
+        </controls:WaveformControl.ContextMenu>
+      </controls:WaveformControl>
 
       <!-- Vinyl Animation & Controls -->
-      <Grid Grid.Row="2" ColumnDefinitions="100,*" Margin="0,10">
+      <Grid Grid.Row="2" ColumnDefinitions="150,*" Margin="0,10">
         
         <!-- Spinning Vinyl -->
         <controls:VinylControl Grid.Column="0" 
-                               Width="80" Height="80"
+                               Width="150" Height="150"
                                IsPlaying="{Binding IsPlaying}"
                                Rpm="{Binding VinylRpm}"
                                AlbumCover="{Binding AlbumCover}"/>
@@ -47,11 +62,18 @@
             <Button Content="{Binding PlayButtonText}" 
                     Command="{Binding PlayPauseCommand}"
                     Width="40" Height="30"
-                    Background="{Binding PlayButtonColor}"/>
+                    Background="{Binding PlayButtonColor}"
+                    ToolTip.Tip="Space / Shift+Space"/>
+            
+            <Button Content="⟲" Command="{Binding SyncCommand}" 
+                    Width="30" Height="30" Background="#666"
+                    ToolTip.Tip="Sync to Master"/>
+            
             <Button Content="SYNC" 
                     Command="{Binding SyncCommand}"
                     Width="40" Height="30"
                     Background="#333"/>
+            
             <Button Content="LOAD" 
                     Command="{Binding LoadTrackCommand}"
                     Width="40" Height="30"
@@ -112,6 +134,11 @@
       </Grid>
 
       <!-- EQ Controls -->
+      <Grid Grid.Row="3" Margin="0,10">
+        <controls:EQControl HorizontalAlignment="Center"/>
+      </Grid>
+
+      <!-- Effects Section -->
       <Grid Grid.Row="3" ColumnDefinitions="*,*,*" Margin="0,10">
         
         <!-- High EQ -->
@@ -160,22 +187,26 @@
                                    x:Name="HotCueButton1"
                                    IsSet="{Binding HotCue1.IsSet}"
                                    CueColor="{Binding HotCue1.Color}"
-                                   CueLabel="{Binding HotCue1.Label}"/>
+                                   CueLabel="{Binding HotCue1.Label}"
+                                   ToolTip.Tip="Hot Cue 1 (Q/A)"/>
             <controls:HotCueButton Grid.Column="1" CueNumber="2"
                                    x:Name="HotCueButton2"
                                    IsSet="{Binding HotCue2.IsSet}"
                                    CueColor="{Binding HotCue2.Color}"
-                                   CueLabel="{Binding HotCue2.Label}"/>
+                                   CueLabel="{Binding HotCue2.Label}"
+                                   ToolTip.Tip="Hot Cue 2 (W/S)"/>
             <controls:HotCueButton Grid.Column="2" CueNumber="3"
                                    x:Name="HotCueButton3"
                                    IsSet="{Binding HotCue3.IsSet}"
                                    CueColor="{Binding HotCue3.Color}"
-                                   CueLabel="{Binding HotCue3.Label}"/>
+                                   CueLabel="{Binding HotCue3.Label}"
+                                   ToolTip.Tip="Hot Cue 3 (E/D)"/>
             <controls:HotCueButton Grid.Column="3" CueNumber="4"
                                    x:Name="HotCueButton4"
                                    IsSet="{Binding HotCue4.IsSet}"
                                    CueColor="{Binding HotCue4.Color}"
-                                   CueLabel="{Binding HotCue4.Label}"/>
+                                   CueLabel="{Binding HotCue4.Label}"
+                                   ToolTip.Tip="Hot Cue 4 (R/F)"/>
           </Grid>
 
           <!-- Second Row of Hot Cues -->

@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "/jCL/FmB0KQ=",
+  "dgSpecHash": "tLa5yi22lmI=",
   "success": true,
-  "projectFilePath": "/Users/yovannyr/Projects/MIXERX/src/MIXERX.Core/MIXERX.Core.csproj",
+  "projectFilePath": "C:\\repo\\MIXERX\\src\\MIXERX.Core\\MIXERX.Core.csproj",
   "expectedPackageFiles": [
-    "/Users/yovannyr/.nuget/packages/google.protobuf/3.25.1/google.protobuf.3.25.1.nupkg.sha512",
-    "/Users/yovannyr/.nuget/packages/system.memory/4.5.5/system.memory.4.5.5.nupkg.sha512"
+    "C:\\Users\\yrodriguez\\.nuget\\packages\\google.protobuf\\3.32.1\\google.protobuf.3.32.1.nupkg.sha512",
+    "C:\\Users\\yrodriguez\\.nuget\\packages\\system.memory\\4.6.3\\system.memory.4.6.3.nupkg.sha512",
+    "C:\\Users\\yrodriguez\\.nuget\\packages\\system.text.json\\9.0.9\\system.text.json.9.0.9.nupkg.sha512"
   ],
   "logs": []
 }

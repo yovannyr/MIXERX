@@ -5,6 +5,7 @@ using MIXERX.Engine.Sync;
 using MIXERX.Engine.Loops;
 using MIXERX.Engine.Cues;
 using MIXERX.Engine.AI;
+using MIXERX.Engine.Codecs;
 using System.Collections.Concurrent;
 
 namespace MIXERX.Engine;
@@ -14,9 +15,11 @@ public class Deck : IAudioNode
     private readonly int _deckId;
     private readonly ConcurrentQueue<DeckCommand> _commandQueue = new();
     private IAudioDecoder? _decoder;
+    private AudioData? _currentTrack;
     private bool _isPlaying;
     private float _tempo = 1.0f;
     private float _volume = 1.0f;
+    private int _position;
     private readonly float[] _readBuffer = new float[8192];
     
     // Advanced features
@@ -47,6 +50,9 @@ public class Deck : IAudioNode
         // Initialize default effects
         _effectChain.AddEffect(new EQEffect());
         _effectChain.AddEffect(new FilterEffect());
+        // TODO: Fix interface mismatch - ReverbEffect/DelayEffect don't implement IEffect.Process(Span<float>)
+        // _effectChain.AddEffect(new ReverbEffect());
+        // _effectChain.AddEffect(new DelayEffect());
     }
 
     public bool IsPlaying => _isPlaying;
@@ -288,6 +294,32 @@ public class Deck : IAudioNode
         }
     }
 
+    public void GetAudioSamples(float[] buffer, int frames)
+    {
+        if (!_isPlaying || _currentTrack == null)
+        {
+            Array.Fill(buffer, 0.0f);
+            return;
+        }
+
+        // Read from current track samples
+        var available = Math.Min(frames, _currentTrack.Samples.Length - _position);
+        Array.Copy(_currentTrack.Samples, _position, buffer, 0, available);
+        _position += available;
+        
+        // Apply volume
+        for (int i = 0; i < available; i++)
+        {
+            buffer[i] *= _volume;
+        }
+
+        // Fill remaining with silence
+        for (int i = available; i < frames; i++)
+        {
+            buffer[i] = 0.0f;
+        }
+    }
+
     public void Process(Span<float> input, Span<float> output, int sampleCount)
     {
         Process(output, sampleCount);
@@ -350,34 +382,43 @@ public class Deck : IAudioNode
         try
         {
             _decoder?.Dispose();
-            _decoder = new AudioDecoder();
             
-            if (_decoder.LoadFile(filePath))
+            // Use FFmpegAudioDecoder for all formats (includes WAV fallback)
+            var ffmpegDecoder = new FFmpegAudioDecoder();
+            var audioData = ffmpegDecoder.LoadFile(filePath);
+            
+            if (audioData != null)
             {
-                CurrentTrack = Path.GetFileNameWithoutExtension(filePath);
-                _isPlaying = false;
-                _samplePosition = 0;
-                _bpmAnalyzer.Reset();
-                _detectedBpm = 0;
-                _detectedKey = "";
-                _aiConfidence = 0;
-                _keyDetectionResult = null;
-                _loopEngine?.ExitLoop();
-                
-                // Load hot cues for this track
-                _hotCueEngine.LoadHotCuesFromTrack(filePath);
+                _currentTrack = audioData;
+                _decoder = ffmpegDecoder as IAudioDecoder;
             }
             else
             {
-                _decoder.Dispose();
+                ffmpegDecoder.Dispose();
                 _decoder = null;
                 CurrentTrack = null;
+                return;
             }
+            
+            CurrentTrack = Path.GetFileNameWithoutExtension(filePath);
+            _isPlaying = false;
+            _samplePosition = 0;
+            _position = 0;
+            _bpmAnalyzer.Reset();
+            _detectedBpm = 0;
+            _detectedKey = "";
+            _aiConfidence = 0;
+            _keyDetectionResult = null;
+            _loopEngine?.ExitLoop();
+            
+            // Load hot cues for this track
+            _hotCueEngine.LoadHotCuesFromTrack(filePath);
         }
         catch
         {
             _decoder?.Dispose();
             _decoder = null;
+            _currentTrack = null;
             CurrentTrack = null;
         }
     }

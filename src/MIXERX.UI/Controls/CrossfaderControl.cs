@@ -1,104 +1,89 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Media;
+using System;
 
 namespace MIXERX.UI.Controls;
 
 public class CrossfaderControl : Control
 {
-    public static readonly StyledProperty<double> PositionProperty =
-        AvaloniaProperty.Register<CrossfaderControl, double>(nameof(Position), 0.0);
+    public static readonly StyledProperty<double> ValueProperty =
+        AvaloniaProperty.Register<CrossfaderControl, double>(nameof(Value), 0.5);
 
-    public static readonly StyledProperty<double> VolumeAProperty =
-        AvaloniaProperty.Register<CrossfaderControl, double>(nameof(VolumeA), 0.5);
-
-    public static readonly StyledProperty<double> VolumeBProperty =
-        AvaloniaProperty.Register<CrossfaderControl, double>(nameof(VolumeB), 0.5);
-
-    public double Position
+    public double Value
     {
-        get => GetValue(PositionProperty);
-        set => SetValue(PositionProperty, Math.Clamp(value, -1.0, 1.0));
+        get => GetValue(ValueProperty);
+        set => SetValue(ValueProperty, Math.Clamp(value, 0.0, 1.0));
     }
 
-    public double VolumeA
-    {
-        get => GetValue(VolumeAProperty);
-        set => SetValue(VolumeAProperty, value);
-    }
-
-    public double VolumeB
-    {
-        get => GetValue(VolumeBProperty);
-        set => SetValue(VolumeBProperty, value);
-    }
+    private bool _isDragging;
+    private double _startY;
 
     static CrossfaderControl()
     {
-        AffectsRender<CrossfaderControl>(PositionProperty, VolumeAProperty, VolumeBProperty);
+        AffectsRender<CrossfaderControl>(ValueProperty);
     }
 
     public CrossfaderControl()
     {
-        Height = 40;
-        MinWidth = 200;
+        Width = 40;
+        Height = 200;
+        
+        PointerPressed += OnPointerPressed;
+        PointerMoved += OnPointerMoved;
+        PointerReleased += OnPointerReleased;
+    }
+
+    private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        _isDragging = true;
+        _startY = e.GetPosition(this).Y;
+        e.Pointer.Capture(this);
+    }
+
+    private void OnPointerMoved(object? sender, PointerEventArgs e)
+    {
+        if (!_isDragging) return;
+        
+        var currentY = e.GetPosition(this).Y;
+        var deltaY = currentY - _startY;
+        var newValue = Value + (deltaY / Height);
+        
+        Value = Math.Clamp(newValue, 0.0, 1.0);
+        _startY = currentY;
+        
+        InvalidateVisual();
+    }
+
+    private void OnPointerReleased(object? sender, PointerReleasedEventArgs e)
+    {
+        _isDragging = false;
+        e.Pointer.Capture(null);
     }
 
     public override void Render(DrawingContext context)
     {
         base.Render(context);
-
-        var rect = new Rect(0, 0, Bounds.Width, Bounds.Height);
         
-        // Background track
-        var trackBrush = new SolidColorBrush(Color.FromRgb(40, 40, 40));
-        var trackRect = new Rect(10, Bounds.Height / 2 - 3, Bounds.Width - 20, 6);
-        context.FillRectangle(trackBrush, trackRect);
-
-        // Volume indicators (A and B sides)
-        DrawVolumeIndicator(context, VolumeA, true);  // Left side (A)
-        DrawVolumeIndicator(context, VolumeB, false); // Right side (B)
-
-        // Crossfader knob
-        var knobX = 10 + (Bounds.Width - 20) * ((Position + 1.0) / 2.0);
-        var knobRect = new Rect(knobX - 8, Bounds.Height / 2 - 8, 16, 16);
+        // Draw crossfader track
+        var trackRect = new Rect(15, 10, 10, Height - 20);
+        context.FillRectangle(Brushes.Gray, trackRect);
         
-        var knobBrush = new SolidColorBrush(Color.FromRgb(200, 200, 200));
-        context.FillRectangle(knobBrush, knobRect);
+        // Draw crossfader knob
+        var knobY = 10 + (Height - 40) * (1.0 - Value);
+        var knobRect = new Rect(5, knobY, 30, 20);
+        context.FillRectangle(Brushes.White, knobRect);
+        context.DrawRectangle(new Pen(Brushes.Black, 1), knobRect);
         
-        var knobBorder = new Pen(new SolidColorBrush(Color.FromRgb(100, 100, 100)), 1);
-        context.DrawRectangle(null, knobBorder, knobRect);
-
-        // Labels
-        DrawLabel(context, "A", 5, Bounds.Height - 15);
-        DrawLabel(context, "B", Bounds.Width - 15, Bounds.Height - 15);
-    }
-
-    private void DrawVolumeIndicator(DrawingContext context, double volume, bool isLeftSide)
-    {
-        var maxWidth = (Bounds.Width - 40) / 2; // Half width minus margins
-        var width = maxWidth * volume;
-        
-        var x = isLeftSide ? 10 : Bounds.Width - 10 - width;
-        var y = 5;
-        var height = 8;
-        
-        var color = isLeftSide 
-            ? Color.FromRgb(255, 100, 100) // Red for A
-            : Color.FromRgb(100, 100, 255); // Blue for B
-            
-        var brush = new SolidColorBrush(color);
-        var rect = new Rect(x, y, width, height);
-        
-        context.FillRectangle(brush, rect);
-    }
-
-    private void DrawLabel(DrawingContext context, string text, double x, double y)
-    {
-        var textBrush = new SolidColorBrush(Color.FromRgb(200, 200, 200));
-        var formattedText = new FormattedText(text, System.Globalization.CultureInfo.CurrentCulture,
+        // Draw position markers
+        var textBrush = Brushes.White;
+        var textA = new FormattedText("A", System.Globalization.CultureInfo.CurrentCulture,
             FlowDirection.LeftToRight, Typeface.Default, 10, textBrush);
-        
-        context.DrawText(formattedText, new Point(x, y));
+        var textB = new FormattedText("B", System.Globalization.CultureInfo.CurrentCulture,
+            FlowDirection.LeftToRight, Typeface.Default, 10, textBrush);
+            
+        context.DrawText(textA, new Point(18, 5));
+        context.DrawText(textB, new Point(18, Height - 15));
     }
 }

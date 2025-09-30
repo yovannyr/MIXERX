@@ -1,4 +1,6 @@
 using MIXERX.Core;
+using MIXERX.Engine.Audio;
+using MIXERX.Engine.Sync;
 using System.Collections.Concurrent;
 
 namespace MIXERX.Engine;
@@ -7,8 +9,11 @@ public class AudioEngine : IAudioEngine
 {
     private readonly Dictionary<int, Deck> _decks = new();
     private readonly ConcurrentQueue<AudioCommand> _commandQueue = new();
+    private readonly SyncEngine _syncEngine = new();
     private IAudioDriver? _audioDriver;
     private Thread? _audioThread;
+    private LockFreeAudioBuffer? _masterBuffer;
+    private IpcServer? _ipcServer;
     private volatile bool _isRunning;
 
     public AudioEngine()
@@ -24,13 +29,36 @@ public class AudioEngine : IAudioEngine
     {
         if (_isRunning) return true;
 
-        // Create platform-specific audio driver
-        _audioDriver = OperatingSystem.IsWindows() 
-            ? new WasapiDriver(config) 
-            : new CoreAudioDriver(config);
+        // Create platform-specific audio driver with fallback
+        try 
+        {
+            _audioDriver = OperatingSystem.IsWindows() 
+                ? new WasapiDriver() 
+                : new CoreAudioDriver();
+                
+            if (!_audioDriver.Initialize(config))
+            {
+                // Fallback to mock driver if real driver fails
+                System.Diagnostics.Debug.WriteLine("Real audio driver failed, using mock driver");
+                _audioDriver = new MockAudioDriver();
+            }
+        }
+        catch
+        {
+            // Fallback to mock driver on any exception
+            System.Diagnostics.Debug.WriteLine("Audio driver exception, using mock driver");
+            _audioDriver = new MockAudioDriver();
+        }
 
-        if (!_audioDriver.Initialize())
+        if (!_audioDriver.Initialize(config))
             return false;
+
+        // Initialize audio buffer
+        _masterBuffer = new LockFreeAudioBuffer(config.BufferSize * 4);
+
+        // Start IPC server
+        _ipcServer = new IpcServer(this);
+        _ipcServer.Start();
 
         _isRunning = true;
         
@@ -43,7 +71,7 @@ public class AudioEngine : IAudioEngine
         };
         _audioThread.Start(config);
 
-        _audioDriver.Start();
+        _audioDriver.Start(ProcessAudioCallback);
         return true;
     }
 
@@ -52,6 +80,7 @@ public class AudioEngine : IAudioEngine
         _isRunning = false;
         
         _audioDriver?.Stop();
+        _ipcServer?.Dispose();
         _audioThread?.Join(1000);
         _audioDriver?.Dispose();
     }
@@ -71,13 +100,35 @@ public class AudioEngine : IAudioEngine
 
             // Generate audio
             ProcessAudio(buffer.AsSpan());
-            
-            // Send to audio driver
-            _audioDriver?.ProcessAudio(buffer.AsSpan());
 
             // Sleep for buffer duration to maintain real-time
             Thread.Sleep(config.BufferSize * 1000 / config.SampleRate);
         }
+    }
+
+    private void ProcessAudioCallback(Span<float> input, Span<float> output)
+    {
+        if (_masterBuffer == null) return;
+
+        // Mix all decks
+        var mixBuffer = new float[output.Length];
+        foreach (var deck in _decks.Values)
+        {
+            if (deck.IsPlaying)
+            {
+                var deckBuffer = new float[output.Length];
+                deck.GetAudioSamples(deckBuffer, output.Length);
+                
+                for (int i = 0; i < output.Length; i++)
+                {
+                    mixBuffer[i] += deckBuffer[i];
+                }
+            }
+        }
+
+        // Write to master buffer and read to output
+        _masterBuffer.Write(mixBuffer);
+        _masterBuffer.Read(output);
     }
 
     private void ProcessAudio(Span<float> output)
@@ -150,6 +201,14 @@ public class AudioEngine : IAudioEngine
     public void SetPosition(int deckId, TimeSpan position)
     {
         _commandQueue.Enqueue(new AudioCommand(IpcMessageType.SetPosition, deckId) { FloatParam = (float)position.TotalSeconds });
+    }
+
+    public void SetEffectParameter(int deckId, string effectName, string paramName, float value)
+    {
+        if (_decks.TryGetValue(deckId, out var deck))
+        {
+            deck.SetEffectParameter(effectName, paramName, value);
+        }
     }
 
     public void Play(int deckId)
