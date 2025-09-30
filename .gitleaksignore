@@ -1,0 +1,4 @@
+*.svcinfo
+*.disco
+*.wsdl
+*.xsd
