@@ -1,0 +1,46 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MIXERX.UI.ViewModels"
+        xmlns:views="using:MIXERX.UI.Views"
+        xmlns:conv="using:MIXERX.UI.Converters"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1400" d:DesignHeight="800"
+        x:Class="MIXERX.UI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="MIXERX - Professional DJ Software"
+        Width="1400" Height="800"
+        Background="#0a0a0a">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="*,*,Auto">
+        
+        <!-- Top Row - Decks 1 & 2 -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,*">
+          <views:DeckView Grid.Column="0" DataContext="{Binding Deck1}" Margin="10"/>
+          <views:DeckView Grid.Column="1" DataContext="{Binding Deck2}" Margin="10"/>
+        </Grid>
+
+        <!-- Bottom Row - Decks 3 & 4 -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,*">
+          <views:DeckView Grid.Column="0" DataContext="{Binding Deck3}" Margin="10"/>
+          <views:DeckView Grid.Column="1" DataContext="{Binding Deck4}" Margin="10"/>
+        </Grid>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" Background="#333" Height="30">
+          <Grid ColumnDefinitions="Auto,*,Auto">
+            <TextBlock Grid.Column="0" Text="MIXERX Professional DJ Software" 
+                       Foreground="White" VerticalAlignment="Center" Margin="10,0"/>
+            <TextBlock Grid.Column="1" Text="Engine Running" 
+                       Foreground="#00ff64" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Column="2" Text="Ready" 
+                       Foreground="#cccccc" VerticalAlignment="Center" Margin="10,0"/>
+          </Grid>
+        </Border>
+
+    </Grid>
+</Window>

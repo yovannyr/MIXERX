@@ -1,0 +1,54 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MIXERX.UI.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
+             x:Class="MIXERX.UI.Views.LibraryView"
+             x:DataType="vm:LibraryViewModel">
+
+    <Design.DataContext>
+        <vm:LibraryViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        
+        <!-- Search -->
+        <TextBox Grid.Row="0" 
+                 Text="{Binding SearchText}" 
+                 Watermark="Search tracks..."
+                 Margin="5"/>
+
+        <!-- Controls -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5">
+            <Button Content="Import Directory" Command="{Binding ImportDirectoryCommand}" Margin="0,0,5,0"/>
+            <Button Content="Refresh" Command="{Binding SearchCommand}"/>
+        </StackPanel>
+
+        <!-- Track List -->
+        <ListBox Grid.Row="2" 
+                 ItemsSource="{Binding Tracks}"
+                 SelectedItem="{Binding SelectedTrack}"
+                 Margin="5">
+            
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid ColumnDefinitions="*,150,60,50,80">
+                        <TextBlock Grid.Column="0" Text="{Binding Title}" FontWeight="Bold"/>
+                        <TextBlock Grid.Column="1" Text="{Binding Artist}" Foreground="Gray"/>
+                        <TextBlock Grid.Column="2" Text="{Binding Bpm}" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="3" Text="{Binding Key}" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="4" Text="{Binding Duration}" HorizontalAlignment="Right"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Load to Deck 1" Command="{Binding LoadTrackCommand}" CommandParameter="{Binding SelectedTrack}"/>
+                    <MenuItem Header="Load to Deck 2" Command="{Binding LoadTrackCommand}" CommandParameter="{Binding SelectedTrack}"/>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+    </Grid>
+</UserControl>

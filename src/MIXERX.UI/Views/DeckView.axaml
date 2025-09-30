@@ -1,0 +1,239 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:MIXERX.UI.Controls"
+             xmlns:vm="using:MIXERX.UI.ViewModels"
+             x:Class="MIXERX.UI.Views.DeckView"
+             x:DataType="vm:DeckViewModel">
+
+  <Border Background="#1a1a1a" CornerRadius="8" Padding="10">
+    <Grid RowDefinitions="Auto,*,Auto,Auto,Auto">
+      
+      <!-- Deck Header -->
+      <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto">
+        <TextBlock Grid.Column="0" Text="{Binding DeckNumber}" 
+                   FontSize="18" FontWeight="Bold" Foreground="White"/>
+        <TextBlock Grid.Column="1" Text="{Binding TrackName}" 
+                   FontSize="12" Foreground="#cccccc" 
+                   HorizontalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+        <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="5">
+          <TextBlock Text="{Binding Bpm}" FontSize="10" Foreground="#00ff64"/>
+          <TextBlock Text="{Binding Key}" FontSize="10" Foreground="#ff6400"/>
+        </StackPanel>
+      </Grid>
+
+      <!-- Waveform Display -->
+      <controls:WaveformControl Grid.Row="1" 
+                                Height="80" Margin="0,10"
+                                WaveformData="{Binding WaveformData}"
+                                Position="{Binding Position}"
+                                IsPlaying="{Binding IsPlaying}"/>
+
+      <!-- Vinyl Animation & Controls -->
+      <Grid Grid.Row="2" ColumnDefinitions="100,*" Margin="0,10">
+        
+        <!-- Spinning Vinyl -->
+        <controls:VinylControl Grid.Column="0" 
+                               Width="80" Height="80"
+                               IsPlaying="{Binding IsPlaying}"
+                               Rpm="{Binding VinylRpm}"
+                               AlbumCover="{Binding AlbumCover}"/>
+        
+        <!-- Transport Controls -->
+        <StackPanel Grid.Column="1" Orientation="Vertical" 
+                    VerticalAlignment="Center" Margin="20,0">
+          
+          <!-- Play/Pause & Loop Controls -->
+          <StackPanel Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center">
+            <Button Content="{Binding PlayButtonText}" 
+                    Command="{Binding PlayPauseCommand}"
+                    Width="40" Height="30"
+                    Background="{Binding PlayButtonColor}"/>
+            <Button Content="SYNC" 
+                    Command="{Binding SyncCommand}"
+                    Width="40" Height="30"
+                    Background="#333"/>
+            <Button Content="LOAD" 
+                    Command="{Binding LoadTrackCommand}"
+                    Width="40" Height="30"
+                    Background="#333"/>
+          </StackPanel>
+
+          <!-- Loop Controls Row -->
+          <Grid Margin="0,5" ColumnDefinitions="*,*,*,*">
+            <Button Grid.Column="0" Content="1" 
+                    Command="{Binding AutoLoopCommand}" CommandParameter="1"
+                    Height="25" Background="#444"/>
+            <Button Grid.Column="1" Content="2" 
+                    Command="{Binding AutoLoopCommand}" CommandParameter="2"
+                    Height="25" Background="#444"/>
+            <Button Grid.Column="2" Content="4" 
+                    Command="{Binding AutoLoopCommand}" CommandParameter="4"
+                    Height="25" Background="#444"/>
+            <Button Grid.Column="3" Content="8" 
+                    Command="{Binding AutoLoopCommand}" CommandParameter="8"
+                    Height="25" Background="#444"/>
+          </Grid>
+
+          <!-- Loop Status & Controls -->
+          <Grid Margin="0,5" ColumnDefinitions="*,Auto,Auto,Auto">
+            <controls:LoopControl Grid.Column="0" 
+                                  Height="25"
+                                  IsLooping="{Binding IsLooping}"
+                                  LoopLengthBeats="{Binding LoopLengthBeats}"
+                                  LoopProgress="{Binding LoopProgress}"/>
+            <Button Grid.Column="1" Content="IN" 
+                    Command="{Binding LoopInCommand}"
+                    Width="25" Height="25" Background="#666"/>
+            <Button Grid.Column="2" Content="OUT" 
+                    Command="{Binding LoopOutCommand}"
+                    Width="25" Height="25" Background="#666"/>
+            <Button Grid.Column="3" Content="EXIT" 
+                    Command="{Binding ExitLoopCommand}"
+                    Width="30" Height="25" Background="#666"/>
+          </Grid>
+
+          <!-- Tempo Slider -->
+          <Grid Margin="0,10" ColumnDefinitions="Auto,*,Auto">
+            <TextBlock Grid.Column="0" Text="-50%" FontSize="8" Foreground="#666"/>
+            <Slider Grid.Column="1" 
+                    Value="{Binding Tempo}" 
+                    Minimum="0.5" Maximum="2.0" 
+                    TickFrequency="0.1"
+                    IsSnapToTickEnabled="True"
+                    Margin="5,0"/>
+            <TextBlock Grid.Column="2" Text="+100%" FontSize="8" Foreground="#666"/>
+          </Grid>
+          
+          <!-- Tempo Display -->
+          <TextBlock Text="{Binding TempoDisplay}" 
+                     HorizontalAlignment="Center"
+                     FontSize="12" Foreground="White"/>
+        </StackPanel>
+      </Grid>
+
+      <!-- EQ Controls -->
+      <Grid Grid.Row="3" ColumnDefinitions="*,*,*" Margin="0,10">
+        
+        <!-- High EQ -->
+        <StackPanel Grid.Column="0" Spacing="5">
+          <TextBlock Text="HIGH" HorizontalAlignment="Center" 
+                     FontSize="10" Foreground="#cccccc"/>
+          <Slider Value="{Binding EqHigh}" 
+                  Minimum="0" Maximum="2" 
+                  Orientation="Vertical" Height="60"
+                  HorizontalAlignment="Center"/>
+          <TextBlock Text="{Binding EqHigh, StringFormat=F1}" 
+                     HorizontalAlignment="Center"
+                     FontSize="8" Foreground="#666"/>
+        </StackPanel>
+
+        <!-- Mid EQ -->
+        <StackPanel Grid.Column="1" Spacing="5">
+          <TextBlock Text="MID" HorizontalAlignment="Center" 
+                     FontSize="10" Foreground="#cccccc"/>
+          <Slider Value="{Binding EqMid}" 
+                  Minimum="0" Maximum="2" 
+                  Orientation="Vertical" Height="60"
+                  HorizontalAlignment="Center"/>
+          <TextBlock Text="{Binding EqMid, StringFormat=F1}" 
+                     HorizontalAlignment="Center"
+                     FontSize="8" Foreground="#666"/>
+        </StackPanel>
+
+        <!-- Low EQ -->
+        <StackPanel Grid.Column="2" Spacing="5">
+          <TextBlock Text="LOW" HorizontalAlignment="Center" 
+                     FontSize="10" Foreground="#cccccc"/>
+          <Slider Value="{Binding EqLow}" 
+                  Minimum="0" Maximum="2" 
+                  Orientation="Vertical" Height="60"
+                  HorizontalAlignment="Center"/>
+          <TextBlock Text="{Binding EqLow, StringFormat=F1}" 
+                     HorizontalAlignment="Center"
+                     FontSize="8" Foreground="#666"/>
+        </StackPanel>
+      </Grid>
+
+          <!-- Hot Cues Row -->
+          <Grid Margin="0,5" ColumnDefinitions="*,*,*,*">
+            <controls:HotCueButton Grid.Column="0" CueNumber="1" 
+                                   x:Name="HotCueButton1"
+                                   IsSet="{Binding HotCue1.IsSet}"
+                                   CueColor="{Binding HotCue1.Color}"
+                                   CueLabel="{Binding HotCue1.Label}"/>
+            <controls:HotCueButton Grid.Column="1" CueNumber="2"
+                                   x:Name="HotCueButton2"
+                                   IsSet="{Binding HotCue2.IsSet}"
+                                   CueColor="{Binding HotCue2.Color}"
+                                   CueLabel="{Binding HotCue2.Label}"/>
+            <controls:HotCueButton Grid.Column="2" CueNumber="3"
+                                   x:Name="HotCueButton3"
+                                   IsSet="{Binding HotCue3.IsSet}"
+                                   CueColor="{Binding HotCue3.Color}"
+                                   CueLabel="{Binding HotCue3.Label}"/>
+            <controls:HotCueButton Grid.Column="3" CueNumber="4"
+                                   x:Name="HotCueButton4"
+                                   IsSet="{Binding HotCue4.IsSet}"
+                                   CueColor="{Binding HotCue4.Color}"
+                                   CueLabel="{Binding HotCue4.Label}"/>
+          </Grid>
+
+          <!-- Second Row of Hot Cues -->
+          <Grid Margin="0,2" ColumnDefinitions="*,*,*,*">
+            <controls:HotCueButton Grid.Column="0" CueNumber="5"
+                                   IsSet="{Binding HotCue5.IsSet}"
+                                   CueColor="{Binding HotCue5.Color}"
+                                   CueLabel="{Binding HotCue5.Label}"
+                                   HotCueTriggered="OnHotCueTriggered"
+                                   HotCueSet="OnHotCueSet"
+                                   HotCueDeleted="OnHotCueDeleted"/>
+            <controls:HotCueButton Grid.Column="1" CueNumber="6"
+                                   IsSet="{Binding HotCue6.IsSet}"
+                                   CueColor="{Binding HotCue6.Color}"
+                                   CueLabel="{Binding HotCue6.Label}"
+                                   HotCueTriggered="OnHotCueTriggered"
+                                   HotCueSet="OnHotCueSet"
+                                   HotCueDeleted="OnHotCueDeleted"/>
+            <controls:HotCueButton Grid.Column="2" CueNumber="7"
+                                   IsSet="{Binding HotCue7.IsSet}"
+                                   CueColor="{Binding HotCue7.Color}"
+                                   CueLabel="{Binding HotCue7.Label}"
+                                   HotCueTriggered="OnHotCueTriggered"
+                                   HotCueSet="OnHotCueSet"
+                                   HotCueDeleted="OnHotCueDeleted"/>
+            <controls:HotCueButton Grid.Column="3" CueNumber="8"
+                                   IsSet="{Binding HotCue8.IsSet}"
+                                   CueColor="{Binding HotCue8.Color}"
+                                   CueLabel="{Binding HotCue8.Label}"
+                                   HotCueTriggered="OnHotCueTriggered"
+                                   HotCueSet="OnHotCueSet"
+                                   HotCueDeleted="OnHotCueDeleted"/>
+          </Grid>
+        
+        <!-- Filter -->
+        <StackPanel Grid.Column="0" Spacing="5">
+          <TextBlock Text="FILTER" HorizontalAlignment="Center" 
+                     FontSize="10" Foreground="#cccccc"/>
+          <Slider Value="{Binding FilterCutoff}" 
+                  Minimum="0" Maximum="1"
+                  HorizontalAlignment="Stretch"/>
+          <TextBlock Text="{Binding FilterCutoff, StringFormat=P0}" 
+                     HorizontalAlignment="Center"
+                     FontSize="8" Foreground="#666"/>
+        </StackPanel>
+
+        <!-- Volume -->
+        <StackPanel Grid.Column="1" Spacing="5">
+          <TextBlock Text="VOLUME" HorizontalAlignment="Center" 
+                     FontSize="10" Foreground="#cccccc"/>
+          <Slider Value="{Binding Volume}" 
+                  Minimum="0" Maximum="1"
+                  HorizontalAlignment="Stretch"/>
+          <TextBlock Text="{Binding Volume, StringFormat=P0}" 
+                     HorizontalAlignment="Center"
+                     FontSize="8" Foreground="#666"/>
+        </StackPanel>
+      </Grid>
+
+  </Border>
+</UserControl>

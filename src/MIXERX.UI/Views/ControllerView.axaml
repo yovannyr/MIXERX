@@ -1,0 +1,60 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:MIXERX.UI.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
+             x:Class="MIXERX.UI.Views.ControllerView"
+             x:DataType="vm:ControllerViewModel">
+
+    <Design.DataContext>
+        <vm:ControllerViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+        
+        <!-- Device Selection -->
+        <StackPanel Grid.Row="0" Margin="5">
+            <TextBlock Text="MIDI Device" FontWeight="Bold" Margin="0,0,0,5"/>
+            <ComboBox ItemsSource="{Binding Devices}"
+                      SelectedItem="{Binding SelectedDevice}"
+                      DisplayMemberBinding="{Binding Name}"
+                      Margin="0,0,0,5"/>
+            
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Refresh" Command="{Binding RefreshDevicesCommand}" Margin="0,0,5,0"/>
+                <Button Content="Connect" Command="{Binding ConnectCommand}" 
+                        IsEnabled="{Binding !IsConnected}" Margin="0,0,5,0"/>
+                <Button Content="Disconnect" Command="{Binding DisconnectCommand}" 
+                        IsEnabled="{Binding IsConnected}"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Status -->
+        <Border Grid.Row="1" Background="LightGray" Padding="5" Margin="5">
+            <TextBlock Text="{Binding IsConnected, StringFormat='Status: {0}'}" />
+        </Border>
+
+        <!-- Mapping Controls -->
+        <StackPanel Grid.Row="2" Margin="5">
+            <TextBlock Text="Controller Mapping" FontWeight="Bold" Margin="0,0,0,5"/>
+            <Button Content="Load Mapping File" Command="{Binding LoadMappingCommand}" Margin="0,0,0,5"/>
+        </StackPanel>
+
+        <!-- Mapping Script Editor -->
+        <Grid Grid.Row="3" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Grid.Row="0" Text="JavaScript Mapping" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TextBox Grid.Row="1" 
+                     Text="{Binding MappingScript}"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     FontFamily="Consolas,Monaco,monospace"
+                     FontSize="12"/>
+        </Grid>
+    </Grid>
+</UserControl>
