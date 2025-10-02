@@ -60,6 +60,8 @@ namespace MIXERX.UI.ViewModels
     private double _eqHigh = 1.0;
     private double _filterCutoff = 1.0;
     private double _filterResonance = 0.1;
+    private double _reverbWet = 0.0;
+    private double _delayMix = 0.0;
     
     // Visual properties
     private float[]? _waveformData;
@@ -215,6 +217,28 @@ namespace MIXERX.UI.ViewModels
         {
             this.RaiseAndSetIfChanged(ref _filterResonance, value);
             _ = _engineService.SetEffectParameterAsync(_deckId, "Filter", "resonance", (float)value);
+        }
+    }
+
+    // Reverb Control
+    public double ReverbWet
+    {
+        get => _reverbWet;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _reverbWet, value);
+            _ = _engineService.SetEffectParameterAsync(_deckId, "Reverb", "wet", (float)value);
+        }
+    }
+
+    // Delay Control
+    public double DelayMix
+    {
+        get => _delayMix;
+        set
+        {
+            this.RaiseAndSetIfChanged(ref _delayMix, value);
+            _ = _engineService.SetEffectParameterAsync(_deckId, "Delay", "mix", (float)value);
         }
     }
 

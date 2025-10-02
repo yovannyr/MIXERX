@@ -181,6 +181,49 @@
         </StackPanel>
       </Grid>
 
+      <!-- Effects Controls -->
+      <Grid Grid.Row="4" ColumnDefinitions="*,*,*" Margin="0,10">
+        
+        <!-- Reverb -->
+        <StackPanel Grid.Column="0" Spacing="5">
+          <TextBlock Text="REVERB" HorizontalAlignment="Center" 
+                     FontSize="10" Foreground="#cccccc"/>
+          <Slider Value="{Binding ReverbWet}" 
+                  Minimum="0" Maximum="1" 
+                  Orientation="Vertical" Height="60"
+                  HorizontalAlignment="Center"/>
+          <TextBlock Text="{Binding ReverbWet, StringFormat=P0}" 
+                     HorizontalAlignment="Center"
+                     FontSize="8" Foreground="#666"/>
+        </StackPanel>
+
+        <!-- Delay -->
+        <StackPanel Grid.Column="1" Spacing="5">
+          <TextBlock Text="DELAY" HorizontalAlignment="Center" 
+                     FontSize="10" Foreground="#cccccc"/>
+          <Slider Value="{Binding DelayMix}" 
+                  Minimum="0" Maximum="1" 
+                  Orientation="Vertical" Height="60"
+                  HorizontalAlignment="Center"/>
+          <TextBlock Text="{Binding DelayMix, StringFormat=P0}" 
+                     HorizontalAlignment="Center"
+                     FontSize="8" Foreground="#666"/>
+        </StackPanel>
+
+        <!-- Filter -->
+        <StackPanel Grid.Column="2" Spacing="5">
+          <TextBlock Text="FILTER" HorizontalAlignment="Center" 
+                     FontSize="10" Foreground="#cccccc"/>
+          <Slider Value="{Binding FilterCutoff}" 
+                  Minimum="0" Maximum="1" 
+                  Orientation="Vertical" Height="60"
+                  HorizontalAlignment="Center"/>
+          <TextBlock Text="{Binding FilterCutoff, StringFormat=P0}" 
+                     HorizontalAlignment="Center"
+                     FontSize="8" Foreground="#666"/>
+        </StackPanel>
+      </Grid>
+
           <!-- Hot Cues Row -->
           <Grid Margin="0,5" ColumnDefinitions="*,*,*,*">
             <controls:HotCueButton Grid.Column="0" CueNumber="1" 
