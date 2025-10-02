@@ -1,76 +1,163 @@
-# Development Plan: MIXERX (main branch)
+# Entwicklungsplan: MIXERX (main branch)
 
-*Generated on 2025-10-02 by Vibe Feature MCP*
+*Erstellt am 2025-10-02 durch Vibe Feature MCP*
 *Workflow: [epcc](https://mrsimpson.github.io/responsible-vibe-mcp/workflows/epcc)*
 
-## Goal
-Create basic functional DJ interface with deck controls, making MIXERX visually usable.
+## Ziel
+MP3 Export - Ermöglicht Export von Aufnahmen im MP3-Format (zusätzlich zu WAV).
+
+## Feature-Prioritätenliste (Reihenfolge)
+1. ✅ Waveform Visualization - ABGESCHLOSSEN
+2. ✅ Effects Processing - ABGESCHLOSSEN
+3. ✅ Beat Detection & Auto-Sync - ABGESCHLOSSEN (MINIMAL: nur BPM-Anzeige)
+4. ⏳ **MP3 Export** ← AKTUELL
+5. ⏳ Advanced Loop Features
+6. ⏳ Track Waveform Analysis
 
 ## Explore
 
-### Phase Entrance Criteria
-- [x] Development workflow started
+### Phasen-Eintrittskriterien
+- [x] Entwicklungs-Workflow gestartet
 
-### Tasks
+### Aufgaben
 
-### Completed
-- [x] Created development plan file
-- [x] Verified Avalonia UI framework
-- [x] Checked existing MainWindow structure
+### Abgeschlossen
+- [x] Bestehende Recording-Infrastruktur analysiert
+- [x] MP3-Encoding-Optionen geprüft (NAudio, FFMpegCore)
+- [x] UI-Integration geplant
+
+### Erkenntnisse
+**Bestehende Infrastruktur:**
+- ✅ RecordingEngine vorhanden (WAV-only, 16-bit PCM)
+- ✅ UI Recording Controls vorhanden (REC/STOP Buttons)
+- ✅ MainWindowViewModel: StartRecording/StopRecording Commands
+- ✅ FFMpegCore bereits installiert (Version 5.2.0)
+- ✅ File Picker Dialog für Speicherort
+
+**Aktueller Flow:**
+1. User klickt REC → File Picker öffnet sich
+2. User wählt Speicherort (nur .wav)
+3. EngineService.StartRecordingAsync(filePath)
+4. RecordingEngine schreibt WAV
+5. User klickt STOP → StopRecording
+
+**Was fehlt:**
+- MP3 als Export-Option im File Picker
+- Post-Processing: WAV → MP3 Konvertierung nach Recording
+- Bitrate-Auswahl (128/192/320 kbps)
+
+**MINIMAL SCOPE:**
+- ✅ MP3 Export nach Recording (nicht während)
+- ✅ FFMpegCore für Konvertierung nutzen
+- ✅ Standard-Bitrate: 192 kbps (gute Qualität/Größe Balance)
+- ❌ KEINE Echtzeit-MP3-Encoding (zu komplex)
+- ❌ KEINE Bitrate-Auswahl UI (später)
 
 ## Plan
 
-### Phase Entrance Criteria
-- [x] Requirements clear
+### Phasen-Eintrittskriterien
+- [x] Anforderungen klar definiert (MINIMAL SCOPE)
+- [x] Technischer Ansatz festgelegt
 
-### Implementation Strategy
+### Implementierungsstrategie
 
-**Approach:** Create minimal but functional deck control UI.
+**Ansatz:** Post-Recording WAV → MP3 Konvertierung mit FFMpegCore.
 
-**Components to implement:**
-1. Deck control panel (Play/Pause/Cue buttons)
-2. Tempo slider
-3. Volume fader
-4. Track info display
-5. Simple transport controls
+**Komponenten:**
+1. **MainWindowViewModel** - File Picker mit MP3-Option erweitern
+2. **RecordingEngine** - Bleibt unverändert (WAV-only)
+3. **Mp3Converter** - Neue Klasse für FFMpegCore-Integration
 
-**Keep it minimal:** Focus on core DJ controls only.
+**Technische Details:**
+- FFMpegCore.FFMpeg.Convert() für WAV → MP3
+- Bitrate: 192 kbps (Standard)
+- Nach Konvertierung: WAV optional löschen
+- Progress-Feedback optional (später)
 
-### Tasks
+**Zero-Break:**
+- Keine Engine-Änderungen
+- RecordingEngine bleibt WAV-only
+- Nur UI/ViewModel Update
+- MP3 als zusätzliche Option
 
-### Completed
-- [x] Define UI components
+### Detaillierter Implementierungsplan
+
+#### 1. Mp3Converter Klasse
+**Datei:** `src/MIXERX.Engine/Audio/Mp3Converter.cs` (NEU)
+- ConvertWavToMp3Async(string wavPath, string mp3Path, int bitrate = 192)
+- FFMpegCore Integration
+
+#### 2. MainWindowViewModel Update
+**Datei:** `src/MIXERX.UI/ViewModels/MainWindowViewModel.cs`
+- File Picker: MP3 als Option hinzufügen
+- Nach StopRecording: Wenn MP3 gewählt → Konvertierung
+- Optional: WAV nach Konvertierung löschen
+
+### Aufgaben
+
+### Abgeschlossen
+- [x] Implementierungsstrategie definiert
+- [x] MINIMAL SCOPE festgelegt
 
 ## Code
 
-### Phase Entrance Criteria
-- [x] Plan complete
+### Phasen-Eintrittskriterien
+- [x] Plan vollständig
+- [x] Technischer Ansatz bestätigt
 
-### Tasks
-- [ ] Update DeckView.axaml with basic controls
-- [ ] Update DeckViewModel with commands
-- [ ] Wire up to EngineService
-- [ ] Test UI functionality
+### Aufgaben
 
-### Completed
-*None yet*
+### Abgeschlossen
+- [x] 1. Mp3Converter Klasse erstellt
+- [x] 2. MainWindowViewModel: File Picker mit MP3-Option erweitert
+- [x] 3. MainWindowViewModel: Post-Recording MP3-Konvertierung
+- [x] 4. Build getestet (0 Errors)
 
 ## Commit
 
-### Phase Entrance Criteria
-- [ ] UI implemented
-- [ ] Build successful
+### Phasen-Eintrittskriterien
+- [x] MP3 Export implementiert
+- [x] Build erfolgreich
+- [x] Keine Regression
 
-### Tasks
+### Aufgaben
+- [ ] Git commit erstellen
+- [ ] Änderungen pushen
 
-### Completed
-*None yet*
+### Implementierte Änderungen
+**Neue Dateien:**
+- `src/MIXERX.Engine/Audio/Mp3Converter.cs` - FFMpegCore Integration für WAV→MP3
 
-## Key Decisions
-*Important decisions will be documented here as they are made*
+**Geänderte Dateien:**
+- `src/MIXERX.UI/ViewModels/MainWindowViewModel.cs`:
+  - File Picker: MP3 als primäre Option (Standard)
+  - Recording-Flow: WAV → MP3 Konvertierung nach Stop
+  - Temporäre WAV-Datei wird nach Konvertierung gelöscht
 
-## Notes
-*Additional context and observations*
+**Technische Details:**
+- FFMpegCore mit libmp3lame Codec
+- Bitrate: 192 kbps (Standard)
+- Zero-Break: RecordingEngine unverändert
+
+### Abgeschlossen
+
+## Wichtige Entscheidungen
+
+### MINIMAL SCOPE
+- **KEINE Beat-Detection** - zu komplex für jetzt
+- **KEIN Auto-Sync** - später
+- **NUR BPM-Anzeige** aus Metadaten
+- **Erweiterbar** - BpmAnalyzer bleibt für später
+
+### Zero-Break Strategie
+- Keine Engine-Änderungen
+- UI bereits vorhanden
+- Nur DeckViewModel Update
+
+## Notizen
+- BpmAnalyzer existiert für zukünftige Beat-Detection
+- SyncEngine existiert für zukünftiges Auto-Sync
+- Jetzt: Nur Metadaten-BPM anzeigen
 
 ---
-*This plan is maintained by the LLM. Tool responses provide guidance on which section to focus on and what tasks to work on.*
+*Dieser Plan wird vom LLM gepflegt. Tool-Antworten geben Anleitung für die aktuelle Phase.*

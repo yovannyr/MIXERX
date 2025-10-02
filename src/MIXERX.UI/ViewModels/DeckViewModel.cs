@@ -70,8 +70,8 @@ namespace MIXERX.UI.ViewModels
     private Bitmap? _albumCover;
     
     // Track info
-    private string _bpm = "0.0";
-    private string _key = "";
+    private string _bpm = "-- BPM";
+    private string _key = "--";
     
     // UI Display properties
     public string DeckNumber => $"DECK {_deckId}";
@@ -399,31 +399,31 @@ namespace MIXERX.UI.ViewModels
             await Task.Run(() =>
             {
                 using var file = TagLib.File.Create(filePath);
-                var pictures = file.Tag.Pictures;
                 
+                // Extract metadata (always, regardless of album cover)
+                Bpm = file.Tag.BeatsPerMinute > 0 ? $"{file.Tag.BeatsPerMinute:F1} BPM" : "-- BPM";
+                Key = !string.IsNullOrEmpty(file.Tag.InitialKey) ? file.Tag.InitialKey : "--";
+                
+                // Extract album cover
+                var pictures = file.Tag.Pictures;
                 if (pictures.Length > 0)
                 {
                     var picture = pictures[0];
                     using var stream = new MemoryStream(picture.Data.Data);
-                    
-                    // Create bitmap from album cover data
                     AlbumCover = new Bitmap(stream);
-                    
-                    // Also extract metadata
-                    Bpm = file.Tag.BeatsPerMinute > 0 ? file.Tag.BeatsPerMinute.ToString() : "0.0";
-                    Key = !string.IsNullOrEmpty(file.Tag.InitialKey) ? file.Tag.InitialKey : "";
                 }
                 else
                 {
-                    // No album cover found
                     AlbumCover = null;
                 }
             });
         }
         catch
         {
-            // Fallback: no album cover
+            // Fallback
             AlbumCover = null;
+            Bpm = "-- BPM";
+            Key = "--";
         }
     }
 

@@ -11,6 +11,8 @@ public class MainWindowViewModel : ViewModelBase
 {
     private readonly IEngineService _engineService;
     private bool _isEngineRunning;
+    private string? _recordingPath;
+    private bool _recordingIsMp3;
 
     public MainWindowViewModel()
     {
@@ -267,14 +269,23 @@ Ctrl+L - Load Track to focused deck";
             var options = new FilePickerSaveOptions
             {
                 Title = "Record Mix",
-                SuggestedFileName = $"MIXERX_Recording_{timestamp}.wav",
-                FileTypeChoices = [new FilePickerFileType("WAV Audio") { Patterns = ["*.wav"] }]
+                SuggestedFileName = $"MIXERX_Recording_{timestamp}.mp3",
+                FileTypeChoices = 
+                [
+                    new FilePickerFileType("MP3 Audio") { Patterns = ["*.mp3"] },
+                    new FilePickerFileType("WAV Audio") { Patterns = ["*.wav"] }
+                ]
             };
 
             var result = await topLevel.StorageProvider.SaveFilePickerAsync(options);
             if (result != null)
             {
-                await _engineService.StartRecordingAsync(result.Path.LocalPath);
+                _recordingPath = result.Path.LocalPath;
+                _recordingIsMp3 = _recordingPath.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase);
+                
+                // Always record to WAV first
+                var wavPath = _recordingIsMp3 ? Path.ChangeExtension(_recordingPath, ".wav") : _recordingPath;
+                await _engineService.StartRecordingAsync(wavPath);
             }
         }
     }
@@ -282,5 +293,21 @@ Ctrl+L - Load Track to focused deck";
     private async Task StopRecording()
     {
         await _engineService.StopRecordingAsync();
+        
+        // Convert to MP3 if user selected MP3 format
+        if (_recordingIsMp3 && _recordingPath != null)
+        {
+            var wavPath = Path.ChangeExtension(_recordingPath, ".wav");
+            var success = await MIXERX.Engine.Audio.Mp3Converter.ConvertWavToMp3Async(wavPath, _recordingPath);
+            
+            // Delete temporary WAV file after successful conversion
+            if (success && File.Exists(wavPath))
+            {
+                File.Delete(wavPath);
+            }
+        }
+        
+        _recordingPath = null;
+        _recordingIsMp3 = false;
     }
 }
