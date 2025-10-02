@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MIXERX.MAUI.ViewModels"
+             x:Class="MIXERX.MAUI.Views.StreamingPage"
+             x:DataType="vm:StreamingViewModel"
+             Title="Streaming"
+             BackgroundColor="{StaticResource BackgroundDark}">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        
+        <Frame Grid.Row="0" BackgroundColor="{StaticResource BackgroundLight}" Padding="15" Margin="10">
+            <Grid ColumnDefinitions="*,Auto">
+                <Picker Grid.Column="0" ItemsSource="{Binding Services}" SelectedItem="{Binding SelectedService}"/>
+                <Button Grid.Column="1" Text="Login" Command="{Binding AuthenticateCommand}" Margin="10,0,0,0"/>
+            </Grid>
+        </Frame>
+
+        <Frame Grid.Row="1" BackgroundColor="{StaticResource BackgroundLight}" Padding="15" Margin="10,0">
+            <Grid ColumnDefinitions="*,Auto">
+                <SearchBar Grid.Column="0" Placeholder="Search..." Text="{Binding SearchQuery}"/>
+                <Button Grid.Column="1" Text="Search" Command="{Binding SearchCommand}" Margin="10,0,0,0"/>
+            </Grid>
+        </Frame>
+
+        <CollectionView Grid.Row="2" ItemsSource="{Binding Results}" Margin="10,0"/>
+        
+    </Grid>
+
+</ContentPage>
