@@ -348,16 +348,10 @@ namespace MIXERX.UI.ViewModels
         return Task.CompletedTask;
     }
 
-    private Task SetAutoLoop(int beats)
+    private async Task SetAutoLoop(int beats)
     {
-        // Send auto-loop command to engine
-        // await _engineService.SetAutoLoopAsync(_deckId, beats);
-        
-        // Update UI state
-        IsLooping = true;
-        LoopLengthBeats = beats;
+        await _engineService.SetAutoLoopAsync(_deckId, beats);
         System.Diagnostics.Debug.WriteLine($"Auto-Loop {beats} beats on Deck {_deckId}");
-        return Task.CompletedTask;
     }
 
     private Task SetLoopIn()
@@ -375,13 +369,10 @@ namespace MIXERX.UI.ViewModels
         return Task.CompletedTask;
     }
 
-    private Task ExitLoop()
+    private async Task ExitLoop()
     {
-        // await _engineService.ExitLoopAsync(_deckId);
-        IsLooping = false;
-        LoopProgress = 0;
+        await _engineService.ExitLoopAsync(_deckId);
         System.Diagnostics.Debug.WriteLine($"Exit Loop on Deck {_deckId}");
-        return Task.CompletedTask;
     }
 
     private Task Sync()

@@ -224,6 +224,22 @@ public class AudioEngine : IAudioEngine
         }
     }
 
+    public void SetAutoLoop(int deckId, int beats)
+    {
+        if (_decks.TryGetValue(deckId, out var deck))
+        {
+            deck.SetAutoLoop(beats);
+        }
+    }
+
+    public void ExitLoop(int deckId)
+    {
+        if (_decks.TryGetValue(deckId, out var deck))
+        {
+            deck.ExitLoop();
+        }
+    }
+
     public void SetCrossfader(float position)
     {
         _crossfader.Position = position;

@@ -128,6 +128,17 @@ public class IpcServer : IDisposable
                     }
                     break;
 
+                case IpcMessageType.SetLoop:
+                    if (message.Data != null && message.Data.TryGetValue("beats", out var beats))
+                    {
+                        _audioEngine.SetAutoLoop(message.DeckId, Convert.ToInt32(beats));
+                    }
+                    break;
+
+                case IpcMessageType.ExitLoop:
+                    _audioEngine.ExitLoop(message.DeckId);
+                    break;
+
                 case IpcMessageType.StartRecording:
                     if (!string.IsNullOrEmpty(message.StringParam))
                     {

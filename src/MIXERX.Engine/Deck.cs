@@ -134,6 +134,11 @@ public class Deck : IAudioNode
         _loopEngine?.Reloop();
     }
 
+    public LoopInfo? GetLoopInfo()
+    {
+        return _loopEngine?.GetLoopInfo();
+    }
+
     public void HalveLoop()
     {
         _loopEngine?.HalveLoop();

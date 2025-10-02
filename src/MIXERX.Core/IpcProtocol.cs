@@ -13,6 +13,8 @@ public enum IpcMessageType
     SetEffectParameter,
     SetCue,
     SetLoop,
+    ExitLoop,
+    LoopStatus,
     GetStatus,
     StatusResponse,
     StartRecording,
@@ -68,6 +70,33 @@ public record SetCuePointMessage : IpcMessage
     public SetCuePointMessage(int deckId, float position) : base(IpcMessageType.SetCue, deckId)
     {
         FloatParam = position;
+    }
+}
+
+public record SetLoopMessage : IpcMessage
+{
+    public SetLoopMessage(int deckId, int beats) : base(IpcMessageType.SetLoop, deckId)
+    {
+        Data = new Dictionary<string, object> { ["beats"] = beats };
+    }
+}
+
+public record ExitLoopMessage : IpcMessage
+{
+    public ExitLoopMessage(int deckId) : base(IpcMessageType.ExitLoop, deckId) { }
+}
+
+public record LoopStatusMessage : IpcMessage
+{
+    public LoopStatusMessage(int deckId, bool isLooping, int lengthBeats, float progress) 
+        : base(IpcMessageType.LoopStatus, deckId)
+    {
+        Data = new Dictionary<string, object>
+        {
+            ["isLooping"] = isLooping,
+            ["lengthBeats"] = lengthBeats,
+            ["progress"] = progress
+        };
     }
 }
 

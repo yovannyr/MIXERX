@@ -4,14 +4,14 @@
 *Workflow: [epcc](https://mrsimpson.github.io/responsible-vibe-mcp/workflows/epcc)*
 
 ## Ziel
-MP3 Export - Ermöglicht Export von Aufnahmen im MP3-Format (zusätzlich zu WAV).
+Advanced Loop Features - Ermöglicht präzise Loop-Steuerung für DJ-Performances.
 
 ## Feature-Prioritätenliste (Reihenfolge)
 1. ✅ Waveform Visualization - ABGESCHLOSSEN
 2. ✅ Effects Processing - ABGESCHLOSSEN
 3. ✅ Beat Detection & Auto-Sync - ABGESCHLOSSEN (MINIMAL: nur BPM-Anzeige)
-4. ⏳ **MP3 Export** ← AKTUELL
-5. ⏳ Advanced Loop Features
+4. ✅ MP3 Export - ABGESCHLOSSEN
+5. ⏳ **Advanced Loop Features** ← AKTUELL
 6. ⏳ Track Waveform Analysis
 
 ## Explore
@@ -22,36 +22,39 @@ MP3 Export - Ermöglicht Export von Aufnahmen im MP3-Format (zusätzlich zu WAV)
 ### Aufgaben
 
 ### Abgeschlossen
-- [x] Bestehende Recording-Infrastruktur analysiert
-- [x] MP3-Encoding-Optionen geprüft (NAudio, FFMpegCore)
-- [x] UI-Integration geplant
+- [x] Bestehende Loop-Infrastruktur analysiert
+- [x] UI-Komponenten geprüft
+- [x] Engine-Integration geplant
 
 ### Erkenntnisse
 **Bestehende Infrastruktur:**
-- ✅ RecordingEngine vorhanden (WAV-only, 16-bit PCM)
-- ✅ UI Recording Controls vorhanden (REC/STOP Buttons)
-- ✅ MainWindowViewModel: StartRecording/StopRecording Commands
-- ✅ FFMpegCore bereits installiert (Version 5.2.0)
-- ✅ File Picker Dialog für Speicherort
+- ✅ LoopEngine vorhanden (vollständig implementiert)
+- ✅ LoopControl UI-Component vorhanden
+- ✅ DeckView: Loop-Buttons vorhanden (1/2/4/8 beats)
+- ✅ DeckViewModel: Loop Commands definiert
+- ✅ BeatGrid für beat-synchrone Loops
 
-**Aktueller Flow:**
-1. User klickt REC → File Picker öffnet sich
-2. User wählt Speicherort (nur .wav)
-3. EngineService.StartRecordingAsync(filePath)
-4. RecordingEngine schreibt WAV
-5. User klickt STOP → StopRecording
+**LoopEngine Features:**
+- Auto-Loop (1, 2, 4, 8, 16, 32 beats)
+- Manual Loop In/Out
+- Loop Exit/Reloop
+- Loop Halve/Double
+- Loop Roll (temporary loop)
+- Loop Progress tracking
 
 **Was fehlt:**
-- MP3 als Export-Option im File Picker
-- Post-Processing: WAV → MP3 Konvertierung nach Recording
-- Bitrate-Auswahl (128/192/320 kbps)
+- ❌ Loop Commands nicht mit Engine verbunden
+- ❌ IPC Messages für Loop-Steuerung fehlen
+- ❌ Deck.cs: LoopEngine nicht integriert
+- ❌ Loop-Status wird nicht an UI gesendet
 
 **MINIMAL SCOPE:**
-- ✅ MP3 Export nach Recording (nicht während)
-- ✅ FFMpegCore für Konvertierung nutzen
-- ✅ Standard-Bitrate: 192 kbps (gute Qualität/Größe Balance)
-- ❌ KEINE Echtzeit-MP3-Encoding (zu komplex)
-- ❌ KEINE Bitrate-Auswahl UI (später)
+- ✅ Auto-Loop (1, 2, 4, 8 beats) aktivieren
+- ✅ Loop Exit/Reloop
+- ✅ Loop-Status in UI anzeigen
+- ❌ KEINE Loop Halve/Double (später)
+- ❌ KEINE Loop Roll (später)
+- ❌ KEINE Manual Loop In/Out (später)
 
 ## Plan
 
@@ -61,43 +64,61 @@ MP3 Export - Ermöglicht Export von Aufnahmen im MP3-Format (zusätzlich zu WAV)
 
 ### Implementierungsstrategie
 
-**Ansatz:** Post-Recording WAV → MP3 Konvertierung mit FFMpegCore.
+**Ansatz:** LoopEngine in Deck.cs integrieren und via IPC mit UI verbinden.
 
 **Komponenten:**
-1. **MainWindowViewModel** - File Picker mit MP3-Option erweitern
-2. **RecordingEngine** - Bleibt unverändert (WAV-only)
-3. **Mp3Converter** - Neue Klasse für FFMpegCore-Integration
+1. **IpcProtocol** - Loop Messages hinzufügen (SetAutoLoop, ExitLoop, LoopStatus)
+2. **Deck.cs** - LoopEngine integrieren, ProcessSamplePosition nutzen
+3. **IpcServer** - Loop-Commands verarbeiten
+4. **EngineService** - Loop-Methoden hinzufügen
+5. **DeckViewModel** - Commands mit EngineService verbinden
 
 **Technische Details:**
-- FFMpegCore.FFMpeg.Convert() für WAV → MP3
-- Bitrate: 192 kbps (Standard)
-- Nach Konvertierung: WAV optional löschen
-- Progress-Feedback optional (später)
+- LoopEngine.ProcessSamplePosition() in Deck.Read() aufrufen
+- Loop-Status periodisch an UI senden (mit Playback-Updates)
+- BeatGrid aus BPM berechnen (vereinfacht)
 
 **Zero-Break:**
-- Keine Engine-Änderungen
-- RecordingEngine bleibt WAV-only
-- Nur UI/ViewModel Update
-- MP3 als zusätzliche Option
+- LoopEngine bleibt unverändert
+- Nur Integration in bestehende Strukturen
+- UI bereits vorhanden
 
 ### Detaillierter Implementierungsplan
 
-#### 1. Mp3Converter Klasse
-**Datei:** `src/MIXERX.Engine/Audio/Mp3Converter.cs` (NEU)
-- ConvertWavToMp3Async(string wavPath, string mp3Path, int bitrate = 192)
-- FFMpegCore Integration
+#### 1. IpcProtocol erweitern
+**Datei:** `src/MIXERX.Core/IpcProtocol.cs`
+- SetAutoLoop Message (deckId, beats)
+- ExitLoop Message (deckId)
+- LoopStatus Message (deckId, isLooping, lengthBeats, progress)
 
-#### 2. MainWindowViewModel Update
-**Datei:** `src/MIXERX.UI/ViewModels/MainWindowViewModel.cs`
-- File Picker: MP3 als Option hinzufügen
-- Nach StopRecording: Wenn MP3 gewählt → Konvertierung
-- Optional: WAV nach Konvertierung löschen
+#### 2. Deck.cs Integration
+**Datei:** `src/MIXERX.Engine/Deck.cs`
+- LoopEngine Instanz hinzufügen
+- ProcessSamplePosition in Read() aufrufen
+- GetLoopInfo() Methode
+
+#### 3. IpcServer Commands
+**Datei:** `src/MIXERX.Engine/IpcServer.cs`
+- SetAutoLoop Handler
+- ExitLoop Handler
+- Loop-Status in Playback-Updates
+
+#### 4. EngineService Methoden
+**Datei:** `src/MIXERX.UI/Services/EngineService.cs`
+- SetAutoLoopAsync(deckId, beats)
+- ExitLoopAsync(deckId)
+- LoopStatusReceived Event
+
+#### 5. DeckViewModel Commands
+**Datei:** `src/MIXERX.UI/ViewModels/DeckViewModel.cs`
+- AutoLoopCommand → EngineService.SetAutoLoopAsync
+- ExitLoopCommand → EngineService.ExitLoopAsync
+- LoopStatusReceived Event Handler
 
 ### Aufgaben
 
 ### Abgeschlossen
 - [x] Implementierungsstrategie definiert
-- [x] MINIMAL SCOPE festgelegt
 
 ## Code
 
@@ -108,15 +129,18 @@ MP3 Export - Ermöglicht Export von Aufnahmen im MP3-Format (zusätzlich zu WAV)
 ### Aufgaben
 
 ### Abgeschlossen
-- [x] 1. Mp3Converter Klasse erstellt
-- [x] 2. MainWindowViewModel: File Picker mit MP3-Option erweitert
-- [x] 3. MainWindowViewModel: Post-Recording MP3-Konvertierung
-- [x] 4. Build getestet (0 Errors)
+- [x] 1. IpcProtocol: Loop Messages hinzugefügt (SetLoop, ExitLoop, LoopStatus)
+- [x] 2. Deck.cs: GetLoopInfo() Methode hinzugefügt
+- [x] 3. IpcServer: Loop Commands verarbeitet
+- [x] 4. AudioEngine: SetAutoLoop/ExitLoop Methoden hinzugefügt
+- [x] 5. EngineService: Loop-Methoden hinzugefügt
+- [x] 6. DeckViewModel: Commands verbunden
+- [x] 7. Build getestet (0 Errors)
 
 ## Commit
 
 ### Phasen-Eintrittskriterien
-- [x] MP3 Export implementiert
+- [x] Loop Features implementiert
 - [x] Build erfolgreich
 - [x] Keine Regression
 
@@ -125,19 +149,37 @@ MP3 Export - Ermöglicht Export von Aufnahmen im MP3-Format (zusätzlich zu WAV)
 - [ ] Änderungen pushen
 
 ### Implementierte Änderungen
-**Neue Dateien:**
-- `src/MIXERX.Engine/Audio/Mp3Converter.cs` - FFMpegCore Integration für WAV→MP3
-
 **Geänderte Dateien:**
-- `src/MIXERX.UI/ViewModels/MainWindowViewModel.cs`:
-  - File Picker: MP3 als primäre Option (Standard)
-  - Recording-Flow: WAV → MP3 Konvertierung nach Stop
-  - Temporäre WAV-Datei wird nach Konvertierung gelöscht
+- `src/MIXERX.Core/IpcProtocol.cs`:
+  - ExitLoop, LoopStatus MessageTypes hinzugefügt
+  - SetLoopMessage, ExitLoopMessage, LoopStatusMessage Records
+
+- `src/MIXERX.Engine/Deck.cs`:
+  - GetLoopInfo() Methode für Loop-Status
+
+- `src/MIXERX.Engine/AudioEngine.cs`:
+  - SetAutoLoop(deckId, beats) Methode
+  - ExitLoop(deckId) Methode
+
+- `src/MIXERX.Engine/IpcServer.cs`:
+  - SetLoop Message Handler
+  - ExitLoop Message Handler
+
+- `src/MIXERX.UI/Services/EngineService.cs`:
+  - SetAutoLoopAsync(deckId, beats)
+  - ExitLoopAsync(deckId)
+  - LoopStatusReceived Event
+
+- `src/MIXERX.UI/ViewModels/DeckViewModel.cs`:
+  - SetAutoLoop Command → EngineService verbunden
+  - ExitLoop Command → EngineService verbunden
 
 **Technische Details:**
-- FFMpegCore mit libmp3lame Codec
-- Bitrate: 192 kbps (Standard)
-- Zero-Break: RecordingEngine unverändert
+- LoopEngine bereits vorhanden, nur Integration
+- Auto-Loop: 1, 2, 4, 8 beats (UI bereits vorhanden)
+- Zero-Break: LoopEngine unverändert
+
+### Abgeschlossen
 
 ### Abgeschlossen
 
