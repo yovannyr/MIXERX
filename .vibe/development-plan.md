@@ -4,7 +4,7 @@
 *Workflow: [epcc](https://mrsimpson.github.io/responsible-vibe-mcp/workflows/epcc)*
 
 ## Goal
-Implement audio metering (VU meters) for monitoring master output levels - essential for preventing clipping and maintaining proper levels.
+Create basic functional DJ interface with deck controls, making MIXERX visually usable.
 
 ## Explore
 
@@ -15,6 +15,8 @@ Implement audio metering (VU meters) for monitoring master output levels - essen
 
 ### Completed
 - [x] Created development plan file
+- [x] Verified Avalonia UI framework
+- [x] Checked existing MainWindow structure
 
 ## Plan
 
@@ -23,19 +25,21 @@ Implement audio metering (VU meters) for monitoring master output levels - essen
 
 ### Implementation Strategy
 
-**Approach:** Create AudioMeter class for peak and RMS level detection.
+**Approach:** Create minimal but functional deck control UI.
 
-**Design:**
-- Peak level detection (instant)
-- RMS level detection (average)
-- Decay for smooth meter movement
-- Per-channel metering (L/R)
-- dB scale output
+**Components to implement:**
+1. Deck control panel (Play/Pause/Cue buttons)
+2. Tempo slider
+3. Volume fader
+4. Track info display
+5. Simple transport controls
+
+**Keep it minimal:** Focus on core DJ controls only.
 
 ### Tasks
 
 ### Completed
-- [x] Define metering approach
+- [x] Define UI components
 
 ## Code
 
@@ -43,10 +47,10 @@ Implement audio metering (VU meters) for monitoring master output levels - essen
 - [x] Plan complete
 
 ### Tasks
-- [ ] Create Mixer/AudioMeter.cs
-- [ ] Add metering to AudioEngine
-- [ ] Expose GetMeterLevels() method
-- [ ] Build and verify
+- [ ] Update DeckView.axaml with basic controls
+- [ ] Update DeckViewModel with commands
+- [ ] Wire up to EngineService
+- [ ] Test UI functionality
 
 ### Completed
 *None yet*
@@ -54,7 +58,7 @@ Implement audio metering (VU meters) for monitoring master output levels - essen
 ## Commit
 
 ### Phase Entrance Criteria
-- [ ] Metering implemented
+- [ ] UI implemented
 - [ ] Build successful
 
 ### Tasks

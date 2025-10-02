@@ -25,10 +25,10 @@
                 <MenuItem Header="_Open Project..." Command="{Binding OpenProjectCommand}" InputGesture="Ctrl+O"/>
                 <Separator/>
                 <MenuItem Header="_Save Project" Command="{Binding SaveProjectCommand}" InputGesture="Ctrl+S"/>
-                <MenuItem Header="Save Project _As..."/>
+                <MenuItem Header="Save Project _As..." Command="{Binding SaveProjectAsCommand}"/>
                 <Separator/>
-                <MenuItem Header="Import _Audio Files..."/>
-                <MenuItem Header="_Export Mix..."/>
+                <MenuItem Header="Import _Audio Files..." Command="{Binding ImportAudioCommand}"/>
+                <MenuItem Header="_Export Mix..." Command="{Binding ExportMixCommand}"/>
                 <Separator/>
                 <MenuItem Header="E_xit" Command="{Binding ExitCommand}" InputGesture="Alt+F4"/>
             </MenuItem>
@@ -41,25 +41,25 @@
             </MenuItem>
             
             <MenuItem Header="_View">
-                <MenuItem Header="Show _Library"/>
-                <MenuItem Header="Show _Controller Mapping"/>
-                <MenuItem Header="Show _Effects Panel"/>
+                <MenuItem Header="Show _Library" Command="{Binding ShowLibraryCommand}"/>
+                <MenuItem Header="Show _Controller Mapping" Command="{Binding ShowControllerMappingCommand}"/>
+                <MenuItem Header="Show _Effects Panel" Command="{Binding ShowEffectsPanelCommand}"/>
                 <Separator/>
-                <MenuItem Header="_Full Screen" InputGesture="F11"/>
+                <MenuItem Header="_Full Screen" Command="{Binding ToggleFullScreenCommand}" InputGesture="F11"/>
             </MenuItem>
             
             <MenuItem Header="_Tools">
-                <MenuItem Header="_Audio Settings..."/>
-                <MenuItem Header="_MIDI Settings..."/>
-                <MenuItem Header="_Controller Mapping..."/>
+                <MenuItem Header="_Audio Settings..." Command="{Binding AudioSettingsCommand}"/>
+                <MenuItem Header="_MIDI Settings..." Command="{Binding MidiSettingsCommand}"/>
+                <MenuItem Header="_Controller Mapping..." Command="{Binding ControllerMappingCommand}"/>
                 <Separator/>
-                <MenuItem Header="_Analyze Tracks"/>
-                <MenuItem Header="_Sync Library"/>
+                <MenuItem Header="_Analyze Tracks" Command="{Binding AnalyzeTracksCommand}"/>
+                <MenuItem Header="_Sync Library" Command="{Binding SyncLibraryCommand}"/>
             </MenuItem>
             
             <MenuItem Header="_Help">
                 <MenuItem Header="_Keyboard Shortcuts" Command="{Binding ShowKeyboardShortcutsCommand}"/>
-                <MenuItem Header="_User Manual"/>
+                <MenuItem Header="_User Manual" Command="{Binding ShowUserManualCommand}"/>
                 <Separator/>
                 <MenuItem Header="_About MIXERX" Command="{Binding AboutCommand}"/>
             </MenuItem>

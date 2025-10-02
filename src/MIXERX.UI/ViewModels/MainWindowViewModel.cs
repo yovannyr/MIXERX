@@ -37,6 +37,21 @@ public class MainWindowViewModel : ViewModelBase
         AboutCommand = ReactiveCommand.Create(ShowAbout);
         ShowKeyboardShortcutsCommand = ReactiveCommand.Create(ShowKeyboardShortcuts);
         
+        // Additional menu commands
+        SaveProjectAsCommand = ReactiveCommand.CreateFromTask(SaveProjectAs);
+        ImportAudioCommand = ReactiveCommand.CreateFromTask(ImportAudio);
+        ExportMixCommand = ReactiveCommand.CreateFromTask(ExportMix);
+        ShowLibraryCommand = ReactiveCommand.Create(ShowLibrary);
+        ShowControllerMappingCommand = ReactiveCommand.Create(ShowControllerMapping);
+        ShowEffectsPanelCommand = ReactiveCommand.Create(ShowEffectsPanel);
+        ToggleFullScreenCommand = ReactiveCommand.Create(ToggleFullScreen);
+        AudioSettingsCommand = ReactiveCommand.Create(ShowAudioSettings);
+        MidiSettingsCommand = ReactiveCommand.Create(ShowMidiSettings);
+        ControllerMappingCommand = ReactiveCommand.Create(ShowControllerMappingDialog);
+        AnalyzeTracksCommand = ReactiveCommand.CreateFromTask(AnalyzeTracks);
+        SyncLibraryCommand = ReactiveCommand.CreateFromTask(SyncLibrary);
+        ShowUserManualCommand = ReactiveCommand.Create(ShowUserManual);
+        
         // Auto-start engine
         _ = Task.Run(async () => await StartEngine());
     }
@@ -65,6 +80,19 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> PreferencesCommand { get; }
     public ReactiveCommand<Unit, Unit> AboutCommand { get; }
     public ReactiveCommand<Unit, Unit> ShowKeyboardShortcutsCommand { get; }
+    public ReactiveCommand<Unit, Unit> SaveProjectAsCommand { get; }
+    public ReactiveCommand<Unit, Unit> ImportAudioCommand { get; }
+    public ReactiveCommand<Unit, Unit> ExportMixCommand { get; }
+    public ReactiveCommand<Unit, Unit> ShowLibraryCommand { get; }
+    public ReactiveCommand<Unit, Unit> ShowControllerMappingCommand { get; }
+    public ReactiveCommand<Unit, Unit> ShowEffectsPanelCommand { get; }
+    public ReactiveCommand<Unit, Unit> ToggleFullScreenCommand { get; }
+    public ReactiveCommand<Unit, Unit> AudioSettingsCommand { get; }
+    public ReactiveCommand<Unit, Unit> MidiSettingsCommand { get; }
+    public ReactiveCommand<Unit, Unit> ControllerMappingCommand { get; }
+    public ReactiveCommand<Unit, Unit> AnalyzeTracksCommand { get; }
+    public ReactiveCommand<Unit, Unit> SyncLibraryCommand { get; }
+    public ReactiveCommand<Unit, Unit> ShowUserManualCommand { get; }
 
     private async Task StartEngine()
     {
@@ -164,4 +192,61 @@ Ctrl+L - Load Track to focused deck";
 
         System.Diagnostics.Debug.WriteLine(shortcuts);
     }
+    
+    private async Task SaveProjectAs()
+    {
+        await SaveProject();
+    }
+    
+    private async Task ImportAudio()
+    {
+        var desktop = App.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+        var topLevel = desktop?.MainWindow;
+        
+        if (topLevel?.StorageProvider != null)
+        {
+            var options = new FilePickerOpenOptions
+            {
+                Title = "Import Audio Files",
+                AllowMultiple = true,
+                FileTypeFilter = [new FilePickerFileType("Audio Files") 
+                { 
+                    Patterns = ["*.mp3", "*.flac", "*.wav", "*.aac", "*.ogg", "*.m4a"] 
+                }]
+            };
+
+            await topLevel.StorageProvider.OpenFilePickerAsync(options);
+        }
+    }
+    
+    private async Task ExportMix()
+    {
+        var desktop = App.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+        var topLevel = desktop?.MainWindow;
+        
+        if (topLevel?.StorageProvider != null)
+        {
+            var options = new FilePickerSaveOptions
+            {
+                Title = "Export Mix",
+                FileTypeChoices = [new FilePickerFileType("Audio Files") 
+                { 
+                    Patterns = ["*.wav", "*.mp3"] 
+                }]
+            };
+
+            await topLevel.StorageProvider.SaveFilePickerAsync(options);
+        }
+    }
+    
+    private void ShowLibrary() { }
+    private void ShowControllerMapping() { }
+    private void ShowEffectsPanel() { }
+    private void ToggleFullScreen() { }
+    private void ShowAudioSettings() { }
+    private void ShowMidiSettings() { }
+    private void ShowControllerMappingDialog() { }
+    private async Task AnalyzeTracks() { await Task.CompletedTask; }
+    private async Task SyncLibrary() { await Task.CompletedTask; }
+    private void ShowUserManual() { }
 }
