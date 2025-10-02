@@ -1,10 +1,145 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MIXERX.MAUI.ViewModels"
              x:Class="MIXERX.MAUI.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="Settings"
              BackgroundColor="{StaticResource BackgroundDark}">
-    <StackLayout Padding="20" VerticalOptions="Center">
-        <Label Text="Settings" Style="{StaticResource HeaderLabel}" HorizontalOptions="Center"/>
-        <Label Text="Coming soon..." HorizontalOptions="Center" Margin="0,20,0,0"/>
-    </StackLayout>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            
+            <!-- Audio Settings -->
+            <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="15">
+                <StackLayout Spacing="10">
+                    <Label Text="AUDIO" Style="{StaticResource HeaderLabel}"/>
+                    
+                    <Grid ColumnDefinitions="150,*" RowSpacing="10">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Audio Driver" VerticalOptions="Center"/>
+                        <Picker Grid.Row="0" Grid.Column="1" SelectedItem="{Binding AudioDriver}">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>WASAPI</x:String>
+                                    <x:String>CoreAudio</x:String>
+                                    <x:String>ASIO</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                        
+                        <Label Grid.Row="1" Grid.Column="0" Text="Sample Rate" VerticalOptions="Center"/>
+                        <Picker Grid.Row="1" Grid.Column="1" SelectedItem="{Binding SampleRate}">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:Int32}">
+                                    <x:Int32>44100</x:Int32>
+                                    <x:Int32>48000</x:Int32>
+                                    <x:Int32>96000</x:Int32>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                        
+                        <Label Grid.Row="2" Grid.Column="0" Text="Buffer Size" VerticalOptions="Center"/>
+                        <Picker Grid.Row="2" Grid.Column="1" SelectedItem="{Binding BufferSize}">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:Int32}">
+                                    <x:Int32>128</x:Int32>
+                                    <x:Int32>256</x:Int32>
+                                    <x:Int32>512</x:Int32>
+                                    <x:Int32>1024</x:Int32>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                        
+                        <Label Grid.Row="3" Grid.Column="0" Text="Master Volume" VerticalOptions="Center"/>
+                        <Slider Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding MasterVolume}"/>
+                    </Grid>
+                </StackLayout>
+            </Frame>
+
+            <!-- Deck Settings -->
+            <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="15">
+                <StackLayout Spacing="10">
+                    <Label Text="DECKS" Style="{StaticResource HeaderLabel}"/>
+                    
+                    <Grid ColumnDefinitions="150,*" RowSpacing="10">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Tempo Range" VerticalOptions="Center"/>
+                        <Picker Grid.Row="0" Grid.Column="1" SelectedItem="{Binding TempoRange}">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>±6%</x:String>
+                                    <x:String>±8%</x:String>
+                                    <x:String>±10%</x:String>
+                                    <x:String>±20%</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </Grid>
+                    
+                    <CheckBox Content="Keylock Default ON" IsChecked="{Binding KeylockDefaultOn}"/>
+                    <CheckBox Content="Show Energy Overlay" IsChecked="{Binding ShowEnergyOverlay}"/>
+                    <CheckBox Content="Show Beat Markers" IsChecked="{Binding ShowBeatMarkers}"/>
+                </StackLayout>
+            </Frame>
+
+            <!-- Recording Settings -->
+            <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="15">
+                <StackLayout Spacing="10">
+                    <Label Text="RECORDING" Style="{StaticResource HeaderLabel}"/>
+                    
+                    <Grid ColumnDefinitions="150,*" RowSpacing="10">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Format" VerticalOptions="Center"/>
+                        <Picker Grid.Row="0" Grid.Column="1" SelectedItem="{Binding RecordingFormat}">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>WAV</x:String>
+                                    <x:String>MP3</x:String>
+                                    <x:String>FLAC</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </Grid>
+                </StackLayout>
+            </Frame>
+
+            <!-- Display Settings -->
+            <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="15">
+                <StackLayout Spacing="10">
+                    <Label Text="DISPLAY" Style="{StaticResource HeaderLabel}"/>
+                    
+                    <CheckBox Content="Dark Mode" IsChecked="{Binding DarkMode}"/>
+                    
+                    <Grid ColumnDefinitions="150,*" RowSpacing="10">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Display Mode" VerticalOptions="Center"/>
+                        <Picker Grid.Row="0" Grid.Column="1" SelectedItem="{Binding DisplayMode}">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>Horizontal</x:String>
+                                    <x:String>Vertical</x:String>
+                                    <x:String>Extended</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                    </Grid>
+                </StackLayout>
+            </Frame>
+
+            <!-- Privacy Settings -->
+            <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="15">
+                <StackLayout Spacing="10">
+                    <Label Text="PRIVACY" Style="{StaticResource HeaderLabel}"/>
+                    
+                    <CheckBox Content="Send Anonymous Analytics" IsChecked="{Binding SendAnalytics}"/>
+                    <CheckBox Content="Auto Update" IsChecked="{Binding AutoUpdate}"/>
+                </StackLayout>
+            </Frame>
+
+            <!-- Action Buttons -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Grid.Column="0" Text="Reset to Defaults" Command="{Binding ResetSettingsCommand}" Style="{StaticResource DeckButton}"/>
+                <Button Grid.Column="1" Text="Save Settings" Command="{Binding SaveSettingsCommand}" Style="{StaticResource PrimaryButton}"/>
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
 </ContentPage>
