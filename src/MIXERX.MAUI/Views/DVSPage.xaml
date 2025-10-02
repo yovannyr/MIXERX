@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MIXERX.MAUI.ViewModels"
+             x:Class="MIXERX.MAUI.Views.DVSPage"
+             x:DataType="vm:DVSViewModel"
+             Title="DVS Control"
+             BackgroundColor="{StaticResource BackgroundDark}">
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+        
+        <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="20">
+            <StackLayout Spacing="15">
+                <Label Text="DVS CONTROL" Style="{StaticResource HeaderLabel}"/>
+                
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Grid.Column="0" Text="Enable DVS" VerticalOptions="Center"/>
+                    <Switch Grid.Column="1" IsToggled="{Binding IsEnabled}"/>
+                </Grid>
+                
+                <Grid ColumnDefinitions="*,*">
+                    <Label Grid.Column="0" Text="Timecode Type" VerticalOptions="Center"/>
+                    <Picker Grid.Column="1" SelectedItem="{Binding TimecodeType}">
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Serato</x:String>
+                                <x:String>Traktor</x:String>
+                                <x:String>Mixxx</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                </Grid>
+                
+                <Button Text="Calibrate" Command="{Binding CalibrateCommand}" Style="{StaticResource PrimaryButton}"/>
+                
+                <Label Text="{Binding Pitch, StringFormat='Pitch: {0:F2}'}" FontSize="18" HorizontalOptions="Center"/>
+            </StackLayout>
+        </Frame>
+        
+    </VerticalStackLayout>
+
+</ContentPage>
