@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MIXERX.MAUI.Views.SettingsPage"
+             BackgroundColor="{StaticResource BackgroundDark}">
+    <StackLayout Padding="20" VerticalOptions="Center">
+        <Label Text="Settings" Style="{StaticResource HeaderLabel}" HorizontalOptions="Center"/>
+        <Label Text="Coming soon..." HorizontalOptions="Center" Margin="0,20,0,0"/>
+    </StackLayout>
+</ContentPage>

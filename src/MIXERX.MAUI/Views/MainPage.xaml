@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MIXERX.MAUI.ViewModels"
+             x:Class="MIXERX.MAUI.Views.MainPage"
+             x:DataType="vm:MainViewModel"
+             BackgroundColor="{StaticResource BackgroundDark}"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="50,*">
+        
+        <!-- Top Bar -->
+        <Grid Grid.Row="0" BackgroundColor="{StaticResource BackgroundLight}" Padding="15,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackLayout Grid.Column="0" Orientation="Horizontal" VerticalOptions="Center">
+                <Label Text="MIXERX" FontSize="18" FontAttributes="Bold" TextColor="{StaticResource Primary}"/>
+                <Label Text="PRO" FontSize="10" FontAttributes="Bold" TextColor="White" Margin="5,8,0,0"/>
+            </StackLayout>
+
+            <StackLayout Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                <Button Text="⏵ ENGINE" Style="{StaticResource PrimaryButton}" Command="{Binding StartEngineCommand}"/>
+                <Button Text="⏺ REC" BackgroundColor="{StaticResource Accent}" TextColor="White" Command="{Binding StartRecordingCommand}"/>
+            </StackLayout>
+        </Grid>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,400,*" Padding="10">
+            
+            <!-- Deck A -->
+            <Frame Grid.Column="0" BackgroundColor="{StaticResource BackgroundLight}" CornerRadius="8" Padding="15" Margin="0,0,5,0">
+                <StackLayout Spacing="10">
+                    <Label Text="DECK A" Style="{StaticResource HeaderLabel}" TextColor="{StaticResource DeckA}"/>
+                    <Label Text="No Track Loaded" FontSize="14"/>
+                    <Label Text="120.0 BPM" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource DeckA}"/>
+                    
+                    <!-- Waveform Placeholder -->
+                    <Frame HeightRequest="200" BackgroundColor="{StaticResource BackgroundDark}" BorderColor="{StaticResource DeckA}">
+                        <Label Text="WAVEFORM" HorizontalOptions="Center" VerticalOptions="Center" TextColor="{StaticResource TextDisabled}"/>
+                    </Frame>
+                    
+                    <!-- Transport Controls -->
+                    <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="5">
+                        <Button Grid.Column="0" Text="◄◄" Style="{StaticResource DeckButton}"/>
+                        <Button Grid.Column="1" Text="◄" Style="{StaticResource DeckButton}"/>
+                        <Button Grid.Column="2" Text="▶" BackgroundColor="{StaticResource DeckA}" TextColor="{StaticResource BackgroundDark}" FontSize="20" FontAttributes="Bold"/>
+                        <Button Grid.Column="3" Text="►" Style="{StaticResource DeckButton}"/>
+                        <Button Grid.Column="4" Text="►►" Style="{StaticResource DeckButton}"/>
+                    </Grid>
+                    
+                    <!-- Hot Cues -->
+                    <Label Text="HOT CUES" Style="{StaticResource SubHeaderLabel}"/>
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="5">
+                        <Button Grid.Column="0" Text="1" BackgroundColor="{StaticResource HotCue1}" TextColor="White" HeightRequest="40"/>
+                        <Button Grid.Column="1" Text="2" BackgroundColor="{StaticResource HotCue2}" TextColor="White" HeightRequest="40"/>
+                        <Button Grid.Column="2" Text="3" BackgroundColor="{StaticResource HotCue3}" TextColor="{StaticResource BackgroundDark}" HeightRequest="40"/>
+                        <Button Grid.Column="3" Text="4" BackgroundColor="{StaticResource HotCue4}" TextColor="White" HeightRequest="40"/>
+                    </Grid>
+                </StackLayout>
+            </Frame>
+
+            <!-- Mixer -->
+            <Frame Grid.Column="1" BackgroundColor="{StaticResource BackgroundLight}" CornerRadius="8" Padding="15" Margin="5,0">
+                <StackLayout Spacing="10">
+                    <Label Text="MIXER" Style="{StaticResource HeaderLabel}" HorizontalOptions="Center"/>
+                    
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="20">
+                        <!-- Deck A EQ -->
+                        <StackLayout Grid.Column="0" Spacing="10">
+                            <Label Text="DECK A" Style="{StaticResource SubHeaderLabel}" HorizontalOptions="Center"/>
+                            <Label Text="HIGH" FontSize="9" HorizontalOptions="Center"/>
+                            <Slider Minimum="0" Maximum="100" Value="50" Rotation="270" HeightRequest="80"/>
+                            <Label Text="MID" FontSize="9" HorizontalOptions="Center"/>
+                            <Slider Minimum="0" Maximum="100" Value="50" Rotation="270" HeightRequest="80"/>
+                            <Label Text="LOW" FontSize="9" HorizontalOptions="Center"/>
+                            <Slider Minimum="0" Maximum="100" Value="50" Rotation="270" HeightRequest="80"/>
+                        </StackLayout>
+                        
+                        <!-- Deck B EQ -->
+                        <StackLayout Grid.Column="1" Spacing="10">
+                            <Label Text="DECK B" Style="{StaticResource SubHeaderLabel}" HorizontalOptions="Center"/>
+                            <Label Text="HIGH" FontSize="9" HorizontalOptions="Center"/>
+                            <Slider Minimum="0" Maximum="100" Value="50" Rotation="270" HeightRequest="80"/>
+                            <Label Text="MID" FontSize="9" HorizontalOptions="Center"/>
+                            <Slider Minimum="0" Maximum="100" Value="50" Rotation="270" HeightRequest="80"/>
+                            <Label Text="LOW" FontSize="9" HorizontalOptions="Center"/>
+                            <Slider Minimum="0" Maximum="100" Value="50" Rotation="270" HeightRequest="80"/>
+                        </StackLayout>
+                    </Grid>
+                    
+                    <!-- Crossfader -->
+                    <Label Text="CROSSFADER" Style="{StaticResource SubHeaderLabel}" HorizontalOptions="Center" Margin="0,20,0,0"/>
+                    <Slider Minimum="0" Maximum="100" Value="50"/>
+                    <Grid ColumnDefinitions="*,*">
+                        <Label Grid.Column="0" Text="A" FontSize="12" FontAttributes="Bold" TextColor="{StaticResource DeckA}"/>
+                        <Label Grid.Column="1" Text="B" FontSize="12" FontAttributes="Bold" TextColor="{StaticResource DeckB}" HorizontalOptions="End"/>
+                    </Grid>
+                </StackLayout>
+            </Frame>
+
+            <!-- Deck B -->
+            <Frame Grid.Column="2" BackgroundColor="{StaticResource BackgroundLight}" CornerRadius="8" Padding="15" Margin="5,0,0,0">
+                <StackLayout Spacing="10">
+                    <Label Text="DECK B" Style="{StaticResource HeaderLabel}" TextColor="{StaticResource DeckB}"/>
+                    <Label Text="No Track Loaded" FontSize="14"/>
+                    <Label Text="120.0 BPM" FontSize="24" FontAttributes="Bold" TextColor="{StaticResource DeckB}"/>
+                    
+                    <!-- Waveform Placeholder -->
+                    <Frame HeightRequest="200" BackgroundColor="{StaticResource BackgroundDark}" BorderColor="{StaticResource DeckB}">
+                        <Label Text="WAVEFORM" HorizontalOptions="Center" VerticalOptions="Center" TextColor="{StaticResource TextDisabled}"/>
+                    </Frame>
+                    
+                    <!-- Transport Controls -->
+                    <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="5">
+                        <Button Grid.Column="0" Text="◄◄" Style="{StaticResource DeckButton}"/>
+                        <Button Grid.Column="1" Text="◄" Style="{StaticResource DeckButton}"/>
+                        <Button Grid.Column="2" Text="▶" BackgroundColor="{StaticResource DeckB}" TextColor="White" FontSize="20" FontAttributes="Bold"/>
+                        <Button Grid.Column="3" Text="►" Style="{StaticResource DeckButton}"/>
+                        <Button Grid.Column="4" Text="►►" Style="{StaticResource DeckButton}"/>
+                    </Grid>
+                    
+                    <!-- Hot Cues -->
+                    <Label Text="HOT CUES" Style="{StaticResource SubHeaderLabel}"/>
+                    <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="5">
+                        <Button Grid.Column="0" Text="1" BackgroundColor="{StaticResource HotCue1}" TextColor="White" HeightRequest="40"/>
+                        <Button Grid.Column="1" Text="2" BackgroundColor="{StaticResource HotCue2}" TextColor="White" HeightRequest="40"/>
+                        <Button Grid.Column="2" Text="3" BackgroundColor="{StaticResource HotCue3}" TextColor="{StaticResource BackgroundDark}" HeightRequest="40"/>
+                        <Button Grid.Column="3" Text="4" BackgroundColor="{StaticResource HotCue4}" TextColor="White" HeightRequest="40"/>
+                    </Grid>
+                </StackLayout>
+            </Frame>
+
+        </Grid>
+    </Grid>
+
+</ContentPage>
