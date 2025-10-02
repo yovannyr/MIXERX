@@ -4,7 +4,7 @@
 *Workflow: [epcc](https://mrsimpson.github.io/responsible-vibe-mcp/workflows/epcc)*
 
 ## Goal
-Integrate CrossfaderEngine with AudioEngine to enable professional DJ mixing between decks.
+Implement improved time-stretch algorithm with keylock (pitch-independent tempo control) for professional DJ functionality.
 
 ## Explore
 
@@ -15,7 +15,8 @@ Integrate CrossfaderEngine with AudioEngine to enable professional DJ mixing bet
 
 ### Completed
 - [x] Created development plan file
-- [x] Verified CrossfaderEngine exists in Mixer folder
+- [x] Current time-stretch is simple linear interpolation
+- [x] Need better algorithm for quality
 
 ## Plan
 
@@ -24,17 +25,19 @@ Integrate CrossfaderEngine with AudioEngine to enable professional DJ mixing bet
 
 ### Implementation Strategy
 
-**Approach:** Add CrossfaderEngine to AudioEngine and apply crossfader volume to deck outputs.
+**Approach:** Implement WSOLA (Waveform Similarity Overlap-Add) algorithm - simpler than phase vocoder, better than linear interpolation.
 
 **Design:**
-- Add CrossfaderEngine instance to AudioEngine
-- Apply crossfader volume per deck before mixing
-- Expose crossfader controls (position, curve, assignments)
+- WSOLA for time-stretch
+- Maintains pitch while changing tempo
+- Window-based processing
+- Cross-correlation for best overlap
+- Quality: Good enough for DJ use
 
 ### Tasks
 
 ### Completed
-- [x] Define integration approach
+- [x] Choose algorithm (WSOLA)
 
 ## Code
 
@@ -42,9 +45,9 @@ Integrate CrossfaderEngine with AudioEngine to enable professional DJ mixing bet
 - [x] Plan complete
 
 ### Tasks
-- [ ] Add CrossfaderEngine to AudioEngine
-- [ ] Apply crossfader volume in mixing
-- [ ] Add SetCrossfader() method
+- [ ] Create Audio/TimeStretchEngine.cs
+- [ ] Implement WSOLA algorithm
+- [ ] Replace simple interpolation in Deck
 - [ ] Build and verify
 
 ### Completed
@@ -53,7 +56,7 @@ Integrate CrossfaderEngine with AudioEngine to enable professional DJ mixing bet
 ## Commit
 
 ### Phase Entrance Criteria
-- [ ] Crossfader integrated
+- [ ] Time-stretch implemented
 - [ ] Build successful
 
 ### Tasks
@@ -62,7 +65,12 @@ Integrate CrossfaderEngine with AudioEngine to enable professional DJ mixing bet
 *None yet*
 
 ## Key Decisions
-*Important decisions will be documented here as they are made*
+
+### Algorithm Choice: WSOLA
+- Simpler than phase vocoder
+- Better quality than linear interpolation
+- Good for DJ use (tempo range 0.5x-2.0x)
+- No external dependencies needed
 
 ## Notes
 *Additional context and observations*

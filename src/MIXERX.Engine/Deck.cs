@@ -6,6 +6,7 @@ using MIXERX.Engine.Loops;
 using MIXERX.Engine.Cues;
 using MIXERX.Engine.AI;
 using MIXERX.Engine.Codecs;
+using MIXERX.Engine.Audio;
 using System.Collections.Concurrent;
 
 namespace MIXERX.Engine;
@@ -30,6 +31,7 @@ public class Deck : IAudioNode
     private readonly BpmAnalyzer _bpmAnalyzer = new();
     private readonly KeyAnalyzer _keyAnalyzer = new();
     private readonly HotCueEngine _hotCueEngine = new();
+    private readonly TimeStretchEngine _timeStretch = new();
     
     // AI Features
     private readonly NeuralBpmDetector _neuralBpmDetector = new();
@@ -280,19 +282,20 @@ public class Deck : IAudioNode
         
         if (Math.Abs(effectiveTempo - 1.0f) < 0.01f) return; // No stretching needed
 
-        // Simple tempo stretching by sample rate adjustment
-        // In production, use PSOLA or similar algorithm
-        var stretchRatio = 1.0f / effectiveTempo;
+        // Use TimeStretchEngine for better quality
+        var inputSegment = new float[count];
+        Array.Copy(samples, inputSegment, count);
         
-        for (int i = 0; i < count - 1; i++)
+        var stretched = _timeStretch.Stretch(inputSegment, effectiveTempo);
+        
+        // Copy back (truncate or pad as needed)
+        var copyLength = Math.Min(stretched.Length, count);
+        Array.Copy(stretched, samples, copyLength);
+        
+        // Clear remaining if stretched is shorter
+        if (copyLength < count)
         {
-            var sourceIndex = i * stretchRatio;
-            var index1 = (int)sourceIndex;
-            var index2 = Math.Min(index1 + 1, count - 1);
-            var fraction = sourceIndex - index1;
-            
-            // Linear interpolation
-            samples[i] = samples[index1] * (1 - fraction) + samples[index2] * fraction;
+            Array.Clear(samples, copyLength, count - copyLength);
         }
     }
 
