@@ -139,6 +139,13 @@ public class IpcServer : IDisposable
                     _audioEngine.ExitLoop(message.DeckId);
                     break;
 
+                case IpcMessageType.SetSync:
+                    if (message.Data != null && message.Data.TryGetValue("enabled", out var enabled))
+                    {
+                        _audioEngine.SetSync(message.DeckId, Convert.ToBoolean(enabled));
+                    }
+                    break;
+
                 case IpcMessageType.StartRecording:
                     if (!string.IsNullOrEmpty(message.StringParam))
                     {

@@ -15,6 +15,8 @@ public enum IpcMessageType
     SetLoop,
     ExitLoop,
     LoopStatus,
+    BpmDetected,
+    SetSync,
     GetStatus,
     StatusResponse,
     StartRecording,
@@ -97,6 +99,22 @@ public record LoopStatusMessage : IpcMessage
             ["lengthBeats"] = lengthBeats,
             ["progress"] = progress
         };
+    }
+}
+
+public record BpmDetectedMessage : IpcMessage
+{
+    public BpmDetectedMessage(int deckId, float bpm) : base(IpcMessageType.BpmDetected, deckId)
+    {
+        FloatParam = bpm;
+    }
+}
+
+public record SetSyncMessage : IpcMessage
+{
+    public SetSyncMessage(int deckId, bool enabled) : base(IpcMessageType.SetSync, deckId)
+    {
+        Data = new Dictionary<string, object> { ["enabled"] = enabled };
     }
 }
 

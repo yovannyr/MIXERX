@@ -240,6 +240,22 @@ public class AudioEngine : IAudioEngine
         }
     }
 
+    public void SetSync(int deckId, bool enabled)
+    {
+        _syncEngine.SyncDeck(deckId, enabled);
+        
+        // Register deck with SyncEngine if not already
+        if (_decks.TryGetValue(deckId, out var deck) && enabled)
+        {
+            _syncEngine.RegisterDeck(deckId, deck.DetectedBpm, 0, 48000);
+        }
+    }
+
+    public float GetDetectedBpm(int deckId)
+    {
+        return _decks.TryGetValue(deckId, out var deck) ? deck.DetectedBpm : 0;
+    }
+
     public void SetCrossfader(float position)
     {
         _crossfader.Position = position;

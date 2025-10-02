@@ -4,14 +4,14 @@
 *Workflow: [epcc](https://mrsimpson.github.io/responsible-vibe-mcp/workflows/epcc)*
 
 ## Ziel
-Advanced Loop Features - Ermöglicht präzise Loop-Steuerung für DJ-Performances.
+Beat Detection & Auto-Sync - VOLLSTÄNDIG: BPM-Erkennung aus Audio + Deck-Synchronisation.
 
 ## Feature-Prioritätenliste (Reihenfolge)
 1. ✅ Waveform Visualization - ABGESCHLOSSEN
 2. ✅ Effects Processing - ABGESCHLOSSEN
-3. ✅ Beat Detection & Auto-Sync - ABGESCHLOSSEN (MINIMAL: nur BPM-Anzeige)
+3. ⏳ **Beat Detection & Auto-Sync** ← AKTUELL (VOLLSTÄNDIG implementieren)
 4. ✅ MP3 Export - ABGESCHLOSSEN
-5. ⏳ **Advanced Loop Features** ← AKTUELL
+5. ✅ Advanced Loop Features - ABGESCHLOSSEN
 6. ⏳ Track Waveform Analysis
 
 ## Explore
@@ -22,98 +22,101 @@ Advanced Loop Features - Ermöglicht präzise Loop-Steuerung für DJ-Performance
 ### Aufgaben
 
 ### Abgeschlossen
-- [x] Bestehende Loop-Infrastruktur analysiert
-- [x] UI-Komponenten geprüft
-- [x] Engine-Integration geplant
+- [x] Bestehende Infrastruktur analysiert
+- [x] BpmAnalyzer und SyncEngine geprüft
+- [x] Implementierungslücken identifiziert
 
 ### Erkenntnisse
 **Bestehende Infrastruktur:**
-- ✅ LoopEngine vorhanden (vollständig implementiert)
-- ✅ LoopControl UI-Component vorhanden
-- ✅ DeckView: Loop-Buttons vorhanden (1/2/4/8 beats)
-- ✅ DeckViewModel: Loop Commands definiert
-- ✅ BeatGrid für beat-synchrone Loops
+- ✅ BpmAnalyzer vorhanden (Energy-based Beat Detection)
+- ✅ SyncEngine vorhanden (Master/Slave Tempo Sync)
+- ✅ BPM aus Metadaten wird gelesen (TagLib)
+- ✅ UI zeigt BPM an (DeckView Zeile 19)
 
-**LoopEngine Features:**
-- Auto-Loop (1, 2, 4, 8, 16, 32 beats)
-- Manual Loop In/Out
-- Loop Exit/Reloop
-- Loop Halve/Double
-- Loop Roll (temporary loop)
-- Loop Progress tracking
+**Was FEHLT (nicht implementiert):**
+- ❌ BpmAnalyzer wird NICHT verwendet (nur Metadaten)
+- ❌ Detected BPM wird NICHT an UI gesendet
+- ❌ SyncEngine wird NICHT integriert
+- ❌ Sync-Button in UI fehlt
+- ❌ Master Deck Selection fehlt
 
-**Was fehlt:**
-- ❌ Loop Commands nicht mit Engine verbunden
-- ❌ IPC Messages für Loop-Steuerung fehlen
-- ❌ Deck.cs: LoopEngine nicht integriert
-- ❌ Loop-Status wird nicht an UI gesendet
-
-**MINIMAL SCOPE:**
-- ✅ Auto-Loop (1, 2, 4, 8 beats) aktivieren
-- ✅ Loop Exit/Reloop
-- ✅ Loop-Status in UI anzeigen
-- ❌ KEINE Loop Halve/Double (später)
-- ❌ KEINE Loop Roll (später)
-- ❌ KEINE Manual Loop In/Out (später)
+**VOLLSTÄNDIGER SCOPE:**
+- ✅ BPM-Erkennung aus Audio (BpmAnalyzer nutzen)
+- ✅ Detected BPM an UI senden (IPC)
+- ✅ Sync-Button in UI hinzufügen
+- ✅ SyncEngine in AudioEngine integrieren
+- ✅ Master Deck automatisch setzen (erster spielender Deck)
+- ❌ KEINE manuelle Master-Auswahl (später)
+- ❌ KEINE Phase-Sync (später)
 
 ## Plan
 
 ### Phasen-Eintrittskriterien
-- [x] Anforderungen klar definiert (MINIMAL SCOPE)
+- [x] Anforderungen klar definiert (VOLLSTÄNDIG)
 - [x] Technischer Ansatz festgelegt
 
 ### Implementierungsstrategie
 
-**Ansatz:** LoopEngine in Deck.cs integrieren und via IPC mit UI verbinden.
+**Ansatz:** BpmAnalyzer in Deck integrieren + SyncEngine in AudioEngine + Sync UI.
 
 **Komponenten:**
-1. **IpcProtocol** - Loop Messages hinzufügen (SetAutoLoop, ExitLoop, LoopStatus)
-2. **Deck.cs** - LoopEngine integrieren, ProcessSamplePosition nutzen
-3. **IpcServer** - Loop-Commands verarbeiten
-4. **EngineService** - Loop-Methoden hinzufügen
-5. **DeckViewModel** - Commands mit EngineService verbinden
+1. **Deck.cs** - BpmAnalyzer während Playback nutzen, detected BPM speichern
+2. **IpcProtocol** - BpmDetected Message, SetSync Message
+3. **IpcServer** - Detected BPM an UI senden, Sync Commands verarbeiten
+4. **AudioEngine** - SyncEngine integrieren, Tempo-Sync anwenden
+5. **EngineService** - SetSyncAsync Methode, BpmDetected Event
+6. **DeckViewModel** - Sync Command, detected BPM anzeigen
+7. **DeckView** - Sync Button hinzufügen
 
 **Technische Details:**
-- LoopEngine.ProcessSamplePosition() in Deck.Read() aufrufen
-- Loop-Status periodisch an UI senden (mit Playback-Updates)
-- BeatGrid aus BPM berechnen (vereinfacht)
+- BpmAnalyzer.AnalyzeBpm() alle 2048 Samples aufrufen
+- Detected BPM via IPC an UI senden (alle 2 Sekunden)
+- SyncEngine: Erster spielender Deck = Master
+- Sync aktiviert → Tempo automatisch anpassen
+- UI: "SYNC" Button (grün wenn aktiv)
 
 **Zero-Break:**
-- LoopEngine bleibt unverändert
+- BpmAnalyzer und SyncEngine bleiben unverändert
 - Nur Integration in bestehende Strukturen
-- UI bereits vorhanden
 
 ### Detaillierter Implementierungsplan
 
-#### 1. IpcProtocol erweitern
-**Datei:** `src/MIXERX.Core/IpcProtocol.cs`
-- SetAutoLoop Message (deckId, beats)
-- ExitLoop Message (deckId)
-- LoopStatus Message (deckId, isLooping, lengthBeats, progress)
-
-#### 2. Deck.cs Integration
+#### 1. Deck.cs BPM Detection
 **Datei:** `src/MIXERX.Engine/Deck.cs`
-- LoopEngine Instanz hinzufügen
-- ProcessSamplePosition in Read() aufrufen
-- GetLoopInfo() Methode
+- BpmAnalyzer.AnalyzeBpm() in ProcessAudio aufrufen
+- DetectedBpm Property hinzufügen
 
-#### 3. IpcServer Commands
+#### 2. IpcProtocol erweitern
+**Datei:** `src/MIXERX.Core/IpcProtocol.cs`
+- BpmDetected MessageType
+- SetSync MessageType
+- BpmDetectedMessage, SetSyncMessage Records
+
+#### 3. AudioEngine Sync Integration
+**Datei:** `src/MIXERX.Engine/AudioEngine.cs`
+- SyncEngine Instanz
+- SetSync(deckId, enabled) Methode
+- Tempo-Sync in ProcessAudio anwenden
+
+#### 4. IpcServer Updates
 **Datei:** `src/MIXERX.Engine/IpcServer.cs`
-- SetAutoLoop Handler
-- ExitLoop Handler
-- Loop-Status in Playback-Updates
+- BpmDetected Message senden (periodisch)
+- SetSync Handler
 
-#### 4. EngineService Methoden
+#### 5. EngineService
 **Datei:** `src/MIXERX.UI/Services/EngineService.cs`
-- SetAutoLoopAsync(deckId, beats)
-- ExitLoopAsync(deckId)
-- LoopStatusReceived Event
+- SetSyncAsync(deckId, enabled)
+- BpmDetected Event
 
-#### 5. DeckViewModel Commands
+#### 6. DeckViewModel
 **Datei:** `src/MIXERX.UI/ViewModels/DeckViewModel.cs`
-- AutoLoopCommand → EngineService.SetAutoLoopAsync
-- ExitLoopCommand → EngineService.ExitLoopAsync
-- LoopStatusReceived Event Handler
+- SyncCommand
+- IsSynced Property
+- DetectedBpm Property (zusätzlich zu Metadata-BPM)
+
+#### 7. DeckView UI
+**Datei:** `src/MIXERX.UI/Views/DeckView.axaml`
+- SYNC Button hinzufügen
 
 ### Aufgaben
 
@@ -129,13 +132,14 @@ Advanced Loop Features - Ermöglicht präzise Loop-Steuerung für DJ-Performance
 ### Aufgaben
 
 ### Abgeschlossen
-- [x] 1. IpcProtocol: Loop Messages hinzugefügt (SetLoop, ExitLoop, LoopStatus)
-- [x] 2. Deck.cs: GetLoopInfo() Methode hinzugefügt
-- [x] 3. IpcServer: Loop Commands verarbeitet
-- [x] 4. AudioEngine: SetAutoLoop/ExitLoop Methoden hinzugefügt
-- [x] 5. EngineService: Loop-Methoden hinzugefügt
-- [x] 6. DeckViewModel: Commands verbunden
-- [x] 7. Build getestet (0 Errors)
+- [x] 1. Deck.cs: BpmAnalyzer bereits integriert (DetectedBpm Property vorhanden)
+- [x] 2. IpcProtocol: BpmDetected, SetSync Messages hinzugefügt
+- [x] 3. AudioEngine: SyncEngine integriert (SetSync, GetDetectedBpm Methoden)
+- [x] 4. IpcServer: SetSync Handler hinzugefügt
+- [x] 5. EngineService: SetSyncAsync Methode, BpmDetected Event
+- [x] 6. DeckViewModel: Sync Command verbunden, IsSynced Property
+- [x] 7. DeckView: SYNC Button hinzugefügt
+- [x] 8. Build getestet (0 Errors)
 
 ## Commit
 
@@ -145,10 +149,10 @@ Advanced Loop Features - Ermöglicht präzise Loop-Steuerung für DJ-Performance
 - [x] Keine Regression
 
 ### Aufgaben
-- [ ] Git commit erstellen
-- [ ] Änderungen pushen
 
-### Implementierte Änderungen
+### Abgeschlossen
+- [x] Git commit erstellt (9e7738f)
+- [x] Änderungen gepusht
 **Geänderte Dateien:**
 - `src/MIXERX.Core/IpcProtocol.cs`:
   - ExitLoop, LoopStatus MessageTypes hinzugefügt

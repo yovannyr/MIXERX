@@ -21,9 +21,11 @@ public interface IEngineService
     Task StopRecordingAsync();
     Task SetAutoLoopAsync(int deckId, int beats);
     Task ExitLoopAsync(int deckId);
+    Task SetSyncAsync(int deckId, bool enabled);
     bool IsConnected { get; }
     event Action<int, float[]>? WaveformDataReceived;
     event Action<int, bool, int, float>? LoopStatusReceived;
+    event Action<int, float>? BpmDetected;
 }
 
 public class EngineService : IEngineService, IDisposable
@@ -215,8 +217,15 @@ public class EngineService : IEngineService, IDisposable
         var message = new ExitLoopMessage(deckId);
         await SendMessageAsync(message);
     }
+
+    public async Task SetSyncAsync(int deckId, bool enabled)
+    {
+        var message = new SetSyncMessage(deckId, enabled);
+        await SendMessageAsync(message);
+    }
     
     public event Action<int, bool, int, float>? LoopStatusReceived;
+    public event Action<int, float>? BpmDetected;
 
     private Task SendMessageAsync(IpcMessage message)
     {

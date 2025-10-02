@@ -290,6 +290,14 @@ namespace MIXERX.UI.ViewModels
     public ReactiveCommand<Unit, Unit> LoopOutCommand { get; }
     public ReactiveCommand<Unit, Unit> ExitLoopCommand { get; }
 
+    // Sync property
+    private bool _isSynced;
+    public bool IsSynced
+    {
+        get => _isSynced;
+        set => this.RaiseAndSetIfChanged(ref _isSynced, value);
+    }
+
     private async Task PlayPause()
     {
         if (IsPlaying)
@@ -375,12 +383,11 @@ namespace MIXERX.UI.ViewModels
         System.Diagnostics.Debug.WriteLine($"Exit Loop on Deck {_deckId}");
     }
 
-    private Task Sync()
+    private async Task Sync()
     {
-        // Sync this deck to master deck
-        // Implementation would depend on sync service
-        System.Diagnostics.Debug.WriteLine($"Sync requested for Deck {_deckId}");
-        return Task.CompletedTask;
+        IsSynced = !IsSynced;
+        await _engineService.SetSyncAsync(_deckId, IsSynced);
+        System.Diagnostics.Debug.WriteLine($"Sync {(IsSynced ? "enabled" : "disabled")} for Deck {_deckId}");
     }
 
     private async Task ExtractAlbumCoverAsync(string filePath)
