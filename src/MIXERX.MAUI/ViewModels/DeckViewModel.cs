@@ -33,6 +33,9 @@ public partial class DeckViewModel : ObservableObject
     private string key = "Am";
 
     [ObservableProperty]
+    private string camelotKey = "8A";
+
+    [ObservableProperty]
     private bool isPlaying = false;
 
     [ObservableProperty]
@@ -92,6 +95,12 @@ public partial class DeckViewModel : ObservableObject
 
     public string PlayButtonText => IsPlaying ? "⏸" : "▶";
     public string TempoDisplay => $"{(Tempo >= 0 ? "+" : "")}{Tempo:F1}%";
+
+    partial void OnKeyChanged(string value)
+    {
+        var keyService = new Services.KeyDetectionService();
+        CamelotKey = keyService.GetHarmonicKey(value);
+    }
 
     [RelayCommand]
     private void PlayPause()
