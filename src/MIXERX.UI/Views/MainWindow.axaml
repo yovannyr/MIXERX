@@ -90,7 +90,7 @@
 
             <!-- Mixer Section with Crossfader -->
             <Grid Grid.Row="2" Grid.ColumnSpan="2" Background="#1a1a1a" Height="120">
-                <Grid ColumnDefinitions="*,Auto,*" Margin="20">
+                <Grid ColumnDefinitions="*,Auto,*,Auto" Margin="20">
                     
                     <!-- Left Side - Deck A Controls -->
                     <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
@@ -110,6 +110,17 @@
                         <Slider Width="60" Height="20" Minimum="0" Maximum="1" Value="0.8" Margin="5,0"/>
                         <Button Content="CUE" Width="40" Height="30" Background="#333" Foreground="White"/>
                         <TextBlock Text="DECK B" Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0"/>
+                    </StackPanel>
+                    
+                    <!-- Recording Controls -->
+                    <StackPanel Grid.Column="3" Orientation="Vertical" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="20,0,0,0">
+                        <TextBlock Text="RECORDING" Foreground="White" HorizontalAlignment="Center" FontSize="10" Margin="0,0,0,5"/>
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <Button Content="⏺ REC" Width="60" Height="30" Background="#cc0000" Foreground="White" 
+                                    Command="{Binding StartRecordingCommand}"/>
+                            <Button Content="⏹ STOP" Width="60" Height="30" Background="#333" Foreground="White" 
+                                    Command="{Binding StopRecordingCommand}"/>
+                        </StackPanel>
                     </StackPanel>
                     
                 </Grid>

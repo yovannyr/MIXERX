@@ -121,6 +121,17 @@ public class IpcServer : IDisposable
                     }
                     break;
 
+                case IpcMessageType.StartRecording:
+                    if (!string.IsNullOrEmpty(message.StringParam))
+                    {
+                        _audioEngine.StartRecording(message.StringParam);
+                    }
+                    break;
+
+                case IpcMessageType.StopRecording:
+                    _audioEngine.StopRecording();
+                    break;
+
                 case IpcMessageType.GetStatus:
                     return GetDeckStatus(message.DeckId);
             }

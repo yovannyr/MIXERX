@@ -52,6 +52,10 @@ public class MainWindowViewModel : ViewModelBase
         SyncLibraryCommand = ReactiveCommand.CreateFromTask(SyncLibrary);
         ShowUserManualCommand = ReactiveCommand.Create(ShowUserManual);
         
+        // Recording commands
+        StartRecordingCommand = ReactiveCommand.CreateFromTask(StartRecording);
+        StopRecordingCommand = ReactiveCommand.CreateFromTask(StopRecording);
+        
         // Auto-start engine
         _ = Task.Run(async () => await StartEngine());
     }
@@ -93,6 +97,8 @@ public class MainWindowViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> AnalyzeTracksCommand { get; }
     public ReactiveCommand<Unit, Unit> SyncLibraryCommand { get; }
     public ReactiveCommand<Unit, Unit> ShowUserManualCommand { get; }
+    public ReactiveCommand<Unit, Unit> StartRecordingCommand { get; }
+    public ReactiveCommand<Unit, Unit> StopRecordingCommand { get; }
 
     private async Task StartEngine()
     {
@@ -249,4 +255,32 @@ Ctrl+L - Load Track to focused deck";
     private async Task AnalyzeTracks() { await Task.CompletedTask; }
     private async Task SyncLibrary() { await Task.CompletedTask; }
     private void ShowUserManual() { }
+    
+    private async Task StartRecording()
+    {
+        var desktop = App.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+        var topLevel = desktop?.MainWindow;
+        
+        if (topLevel?.StorageProvider != null)
+        {
+            var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+            var options = new FilePickerSaveOptions
+            {
+                Title = "Record Mix",
+                SuggestedFileName = $"MIXERX_Recording_{timestamp}.wav",
+                FileTypeChoices = [new FilePickerFileType("WAV Audio") { Patterns = ["*.wav"] }]
+            };
+
+            var result = await topLevel.StorageProvider.SaveFilePickerAsync(options);
+            if (result != null)
+            {
+                await _engineService.StartRecordingAsync(result.Path.LocalPath);
+            }
+        }
+    }
+    
+    private async Task StopRecording()
+    {
+        await _engineService.StopRecordingAsync();
+    }
 }

@@ -13,6 +13,7 @@ public class AudioEngine : IAudioEngine
     private readonly SyncEngine _syncEngine = new();
     private readonly CrossfaderEngine _crossfader = new();
     private readonly AudioMeter _masterMeter = new();
+    private readonly RecordingEngine _recorder = new();
     private IAudioDriver? _audioDriver;
     private Thread? _audioThread;
     private LockFreeAudioBuffer? _masterBuffer;
@@ -138,6 +139,9 @@ public class AudioEngine : IAudioEngine
         
         // Meter the output
         _masterMeter.Process(output);
+        
+        // Record if active
+        _recorder.ProcessAudio(output);
     }
 
     private void ProcessAudio(Span<float> output)
@@ -233,6 +237,26 @@ public class AudioEngine : IAudioEngine
     public MeterLevels GetMasterLevels()
     {
         return _masterMeter.GetLevels();
+    }
+
+    public bool StartRecording(string filePath)
+    {
+        return _recorder.StartRecording(filePath, 48000, 2);
+    }
+
+    public void StopRecording()
+    {
+        _recorder.StopRecording();
+    }
+
+    public bool IsRecording()
+    {
+        return _recorder.IsRecording;
+    }
+
+    public TimeSpan GetRecordingDuration()
+    {
+        return _recorder.RecordingDuration;
     }
 
     public void Play(int deckId)

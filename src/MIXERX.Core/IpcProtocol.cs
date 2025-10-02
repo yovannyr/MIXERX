@@ -14,7 +14,9 @@ public enum IpcMessageType
     SetCue,
     SetLoop,
     GetStatus,
-    StatusResponse
+    StatusResponse,
+    StartRecording,
+    StopRecording
 }
 
 // Base IPC Message
@@ -93,6 +95,19 @@ public record StatusResponseMessage : IpcMessage
     {
         Data = new Dictionary<string, object> { ["status"] = status };
     }
+}
+
+public record StartRecordingMessage : IpcMessage
+{
+    public StartRecordingMessage(string filePath) : base(IpcMessageType.StartRecording, 0)
+    {
+        StringParam = filePath;
+    }
+}
+
+public record StopRecordingMessage : IpcMessage
+{
+    public StopRecordingMessage() : base(IpcMessageType.StopRecording, 0) { }
 }
 
 // Deck Status

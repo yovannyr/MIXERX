@@ -17,6 +17,8 @@ public interface IEngineService
     Task SetCuePointAsync(int deckId, float position);
     Task SetEffectParameterAsync(int deckId, string effectName, string paramName, float value);
     Task<DeckStatus?> GetStatusAsync(int deckId);
+    Task StartRecordingAsync(string filePath);
+    Task StopRecordingAsync();
     bool IsConnected { get; }
 }
 
@@ -151,6 +153,18 @@ public class EngineService : IEngineService, IDisposable
         }
 
         return null;
+    }
+
+    public async Task StartRecordingAsync(string filePath)
+    {
+        var message = new StartRecordingMessage(filePath);
+        await SendMessageAsync(message);
+    }
+
+    public async Task StopRecordingAsync()
+    {
+        var message = new StopRecordingMessage();
+        await SendMessageAsync(message);
     }
 
     private Task SendMessageAsync(IpcMessage message)
