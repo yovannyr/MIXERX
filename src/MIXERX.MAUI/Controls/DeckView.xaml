@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:controls="clr-namespace:MIXERX.MAUI.Controls"
+             xmlns:vm="clr-namespace:MIXERX.MAUI.ViewModels"
+             x:Class="MIXERX.MAUI.Controls.DeckView"
+             x:DataType="vm:DeckViewModel">
+
+    <Frame BackgroundColor="{StaticResource BackgroundLight}" CornerRadius="8" Padding="15">
+        <StackLayout Spacing="10">
+            
+            <!-- Deck Header -->
+            <Grid ColumnDefinitions="*,Auto">
+                <StackLayout Grid.Column="0">
+                    <Label Text="{Binding DeckName}" Style="{StaticResource HeaderLabel}" TextColor="{Binding DeckColor}"/>
+                    <Label Text="{Binding TrackName}" FontSize="14"/>
+                </StackLayout>
+                <Label Grid.Column="1" Text="{Binding Bpm}" FontSize="24" FontAttributes="Bold" TextColor="{Binding DeckColor}"/>
+            </Grid>
+
+            <!-- Waveform -->
+            <Frame HeightRequest="200" BackgroundColor="{StaticResource BackgroundDark}" BorderColor="{Binding DeckColor}" Padding="0">
+                <controls:WaveformControl 
+                    WaveformData="{Binding WaveformData}"
+                    Position="{Binding Position}"
+                    IsPlaying="{Binding IsPlaying}"
+                    DeckColor="{Binding DeckColor}"/>
+            </Frame>
+
+            <!-- Transport Controls -->
+            <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="5">
+                <Button Grid.Column="0" Text="◄◄" Style="{StaticResource DeckButton}"/>
+                <Button Grid.Column="1" Text="◄" Style="{StaticResource DeckButton}"/>
+                <Button Grid.Column="2" Text="{Binding PlayButtonText}" BackgroundColor="{Binding DeckColor}" TextColor="{StaticResource BackgroundDark}" FontSize="20" FontAttributes="Bold" Command="{Binding PlayPauseCommand}"/>
+                <Button Grid.Column="3" Text="►" Style="{StaticResource DeckButton}"/>
+                <Button Grid.Column="4" Text="►►" Style="{StaticResource DeckButton}"/>
+            </Grid>
+
+            <!-- Hot Cues -->
+            <Label Text="HOT CUES" Style="{StaticResource SubHeaderLabel}"/>
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="5">
+                <Button Grid.Column="0" Text="1" BackgroundColor="{StaticResource HotCue1}" TextColor="White" HeightRequest="40" Command="{Binding SetCueCommand}"/>
+                <Button Grid.Column="1" Text="2" BackgroundColor="{StaticResource HotCue2}" TextColor="White" HeightRequest="40" Command="{Binding SetCueCommand}"/>
+                <Button Grid.Column="2" Text="3" BackgroundColor="{StaticResource HotCue3}" TextColor="{StaticResource BackgroundDark}" HeightRequest="40" Command="{Binding SetCueCommand}"/>
+                <Button Grid.Column="3" Text="4" BackgroundColor="{StaticResource HotCue4}" TextColor="White" HeightRequest="40" Command="{Binding SetCueCommand}"/>
+            </Grid>
+
+            <!-- Loop Controls -->
+            <Label Text="LOOP" Style="{StaticResource SubHeaderLabel}"/>
+            <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="3">
+                <Button Grid.Column="0" Text="1" Style="{StaticResource DeckButton}" HeightRequest="40" Command="{Binding AutoLoopCommand}" CommandParameter="1"/>
+                <Button Grid.Column="1" Text="2" Style="{StaticResource DeckButton}" HeightRequest="40" Command="{Binding AutoLoopCommand}" CommandParameter="2"/>
+                <Button Grid.Column="2" Text="4" Style="{StaticResource DeckButton}" HeightRequest="40" Command="{Binding AutoLoopCommand}" CommandParameter="4"/>
+                <Button Grid.Column="3" Text="8" Style="{StaticResource DeckButton}" HeightRequest="40" Command="{Binding AutoLoopCommand}" CommandParameter="8"/>
+                <Button Grid.Column="4" Text="EXIT" BackgroundColor="{StaticResource Accent}" TextColor="White" HeightRequest="40" Command="{Binding ExitLoopCommand}"/>
+            </Grid>
+
+            <!-- Tempo & Sync -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                <StackLayout Grid.Column="0">
+                    <Label Text="TEMPO" Style="{StaticResource SubHeaderLabel}" HorizontalOptions="Center"/>
+                    <Label Text="{Binding TempoDisplay}" FontSize="16" FontAttributes="Bold" TextColor="{Binding DeckColor}" HorizontalOptions="Center"/>
+                    <Slider Minimum="-8" Maximum="8" Value="{Binding Tempo}"/>
+                </StackLayout>
+                <StackLayout Grid.Column="1">
+                    <Label Text="KEY" Style="{StaticResource SubHeaderLabel}" HorizontalOptions="Center"/>
+                    <Label Text="{Binding Key}" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
+                    <Button Text="SYNC" BackgroundColor="{Binding DeckColor}" TextColor="{StaticResource BackgroundDark}" FontAttributes="Bold" Command="{Binding SyncCommand}"/>
+                </StackLayout>
+                <StackLayout Grid.Column="2">
+                    <Label Text="KEYLOCK" Style="{StaticResource SubHeaderLabel}" HorizontalOptions="Center"/>
+                    <Button Text="🔒 OFF" Style="{StaticResource DeckButton}"/>
+                </StackLayout>
+            </Grid>
+
+        </StackLayout>
+    </Frame>
+
+</ContentView>
