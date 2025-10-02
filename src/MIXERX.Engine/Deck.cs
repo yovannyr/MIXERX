@@ -14,7 +14,7 @@ public class Deck : IAudioNode
 {
     private readonly int _deckId;
     private readonly ConcurrentQueue<DeckCommand> _commandQueue = new();
-    private IAudioDecoder? _decoder;
+    private Codecs.IAudioDecoder? _decoder;
     private AudioData? _currentTrack;
     private bool _isPlaying;
     private float _tempo = 1.0f;
@@ -382,22 +382,11 @@ public class Deck : IAudioNode
         {
             _decoder?.Dispose();
             
-            // Use FFmpegAudioDecoder for all formats (includes WAV fallback)
-            var ffmpegDecoder = new FFmpegAudioDecoder();
-            var audioData = ffmpegDecoder.LoadFile(filePath);
+            var decoder = AudioDecoderFactory.Create(filePath);
+            var audioData = decoder.LoadFile(filePath);
             
-            if (audioData != null)
-            {
-                _currentTrack = audioData;
-                _decoder = ffmpegDecoder as IAudioDecoder;
-            }
-            else
-            {
-                ffmpegDecoder.Dispose();
-                _decoder = null;
-                CurrentTrack = null;
-                return;
-            }
+            _currentTrack = audioData;
+            _decoder = decoder;
             
             CurrentTrack = Path.GetFileNameWithoutExtension(filePath);
             _isPlaying = false;

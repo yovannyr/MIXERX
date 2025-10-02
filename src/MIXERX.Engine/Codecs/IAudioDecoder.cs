@@ -1,9 +1,15 @@
 namespace MIXERX.Engine.Codecs;
 
-public interface IAudioDecoder
+public interface IAudioDecoder : IDisposable
 {
     AudioData LoadFile(string path);
     int ReadSamples(float[] buffer, int offset, int count);
+    int Read(float[] buffer, int offset, int count);
+    bool Seek(TimeSpan position);
+    
+    int SampleRate { get; }
+    int Channels { get; }
+    TimeSpan Duration { get; }
 }
 
 public class AudioData

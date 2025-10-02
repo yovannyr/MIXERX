@@ -7,6 +7,10 @@ public class WavDecoder : IAudioDecoder
     private AudioData? _currentAudio;
     private int _position;
 
+    public int SampleRate => _currentAudio?.SampleRate ?? 0;
+    public int Channels => _currentAudio?.Channels ?? 0;
+    public TimeSpan Duration => _currentAudio?.Duration ?? TimeSpan.Zero;
+
     public AudioData LoadFile(string path)
     {
         if (!File.Exists(path))
@@ -81,5 +85,21 @@ public class WavDecoder : IAudioDecoder
         _position += available;
 
         return available;
+    }
+
+    public int Read(float[] buffer, int offset, int count) => ReadSamples(buffer, offset, count);
+
+    public bool Seek(TimeSpan position)
+    {
+        if (_currentAudio == null) return false;
+        
+        var samplePosition = (int)(position.TotalSeconds * _currentAudio.SampleRate);
+        _position = Math.Clamp(samplePosition, 0, _currentAudio.Samples.Length);
+        return true;
+    }
+
+    public void Dispose()
+    {
+        _currentAudio = null;
     }
 }

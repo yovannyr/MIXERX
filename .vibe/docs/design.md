@@ -49,6 +49,24 @@ public interface IAudioEngine
     AudioMetrics GetMetrics();
 }
 
+public interface IAudioDecoder : IDisposable
+{
+    AudioData LoadFile(string path);
+    int ReadSamples(float[] buffer, int offset, int count);
+    int Read(float[] buffer, int offset, int count);
+    bool Seek(TimeSpan position);
+    int SampleRate { get; }
+    int Channels { get; }
+    TimeSpan Duration { get; }
+}
+```
+
+**Audio Codec Support:**
+- WAV: Native decoder (WavDecoder)
+- MP3/FLAC/AAC/OGG/M4A: FFmpeg-based decoder (FFmpegAudioDecoder)
+- Extensible through IAudioDecoder interface
+- Centralized decoder selection via AudioDecoderFactory
+
 public class AudioConfig
 {
     public int SampleRate { get; set; } = 48000;

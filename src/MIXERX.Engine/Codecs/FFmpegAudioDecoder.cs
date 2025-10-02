@@ -17,40 +17,34 @@ public class FFmpegAudioDecoder : IAudioDecoder
     public int Channels => _channels;
     public TimeSpan Duration => _duration;
 
-    public AudioData? LoadFile(string filePath)
+    public AudioData LoadFile(string filePath)
     {
-        try
+        var extension = Path.GetExtension(filePath).ToLower();
+        
+        // Use FFmpeg for MP3, FLAC, AAC, OGG
+        if (extension is ".mp3" or ".flac" or ".aac" or ".ogg" or ".m4a")
         {
-            var extension = Path.GetExtension(filePath).ToLower();
-            
-            // Use FFmpeg for MP3, FLAC, AAC, OGG
-            if (extension is ".mp3" or ".flac" or ".aac" or ".ogg" or ".m4a")
+            if (LoadWithFFmpeg(filePath))
             {
-                if (LoadWithFFmpeg(filePath))
+                return new AudioData
                 {
-                    return new AudioData
-                    {
-                        Samples = _samples!,
-                        SampleRate = _sampleRate,
-                        Channels = _channels,
-                        Duration = _duration
-                    };
-                }
+                    Samples = _samples!,
+                    SampleRate = _sampleRate,
+                    Channels = _channels,
+                    Duration = _duration
+                };
             }
-            
-            // Fallback to WAV decoder for WAV files
-            if (extension == ".wav")
-            {
-                var wavDecoder = new WavDecoder();
-                return wavDecoder.LoadFile(filePath);
-            }
-            
-            return null;
+            throw new InvalidDataException($"Failed to decode audio file: {filePath}");
         }
-        catch
+        
+        // Fallback to WAV decoder for WAV files
+        if (extension == ".wav")
         {
-            return null;
+            var wavDecoder = new WavDecoder();
+            return wavDecoder.LoadFile(filePath);
         }
+        
+        throw new NotSupportedException($"Unsupported audio format: {extension}");
     }
 
     private bool LoadWithFFmpeg(string filePath)
