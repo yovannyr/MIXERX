@@ -18,6 +18,7 @@ public class Deck : IAudioNode
     private AudioData? _currentTrack;
     private bool _isPlaying;
     private float _tempo = 1.0f;
+    private float _pitchBend = 0.0f;
     private float _volume = 1.0f;
     private float _gain = 1.0f;
     private int _position;
@@ -158,6 +159,11 @@ public class Deck : IAudioNode
         _tempo = Math.Clamp(tempo, 0.5f, 2.0f);
     }
 
+    public void SetPitchBend(float bend)
+    {
+        _pitchBend = Math.Clamp(bend, -0.08f, 0.08f); // ±8%
+    }
+
     public void SetVolume(float volume)
     {
         _volume = Math.Clamp(volume, 0.0f, 1.0f);
@@ -269,11 +275,13 @@ public class Deck : IAudioNode
 
     private void ApplyTempoStretching(float[] samples, int count)
     {
-        if (Math.Abs(_tempo - 1.0f) < 0.01f) return; // No stretching needed
+        var effectiveTempo = _tempo * (1.0f + _pitchBend);
+        
+        if (Math.Abs(effectiveTempo - 1.0f) < 0.01f) return; // No stretching needed
 
         // Simple tempo stretching by sample rate adjustment
         // In production, use PSOLA or similar algorithm
-        var stretchRatio = 1.0f / _tempo;
+        var stretchRatio = 1.0f / effectiveTempo;
         
         for (int i = 0; i < count - 1; i++)
         {
@@ -365,6 +373,10 @@ public class Deck : IAudioNode
             case "tempo":
                 SetTempo(value);
                 break;
+            case "pitchbend":
+            case "pitch":
+                SetPitchBend(value);
+                break;
             case "volume":
                 SetVolume(value);
                 break;
@@ -382,6 +394,7 @@ public class Deck : IAudioNode
     {
         _isPlaying = false;
         _tempo = 1.0f;
+        _pitchBend = 0.0f;
         _volume = 1.0f;
         _gain = 1.0f;
         _cuePoint = null;

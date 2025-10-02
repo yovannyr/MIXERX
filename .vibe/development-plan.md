@@ -4,7 +4,7 @@
 *Workflow: [epcc](https://mrsimpson.github.io/responsible-vibe-mcp/workflows/epcc)*
 
 ## Goal
-Implement Main Cue Point functionality - essential DJ feature for marking and returning to a specific position in a track.
+Implement Pitch Bend functionality for temporary tempo adjustments during beatmatching - essential DJ feature.
 
 ## Explore
 
@@ -15,7 +15,7 @@ Implement Main Cue Point functionality - essential DJ feature for marking and re
 
 ### Completed
 - [x] Created development plan file
-- [x] Verified no main cue exists (only hot cues)
+- [x] Verified no pitch bend exists
 
 ## Plan
 
@@ -24,19 +24,18 @@ Implement Main Cue Point functionality - essential DJ feature for marking and re
 
 ### Implementation Strategy
 
-**Approach:** Add main cue point to Deck with Set/Jump/Clear functionality.
+**Approach:** Add pitch bend to Deck for temporary tempo adjustments.
 
 **Design:**
-- Single main cue point per track
-- SetCue() - marks current position
-- JumpToCue() - returns to cue point
-- ClearCue() - removes cue point
-- Auto-pause on cue jump (DJ standard behavior)
+- Pitch bend range: -8% to +8% (DJ standard)
+- Applied on top of tempo setting
+- Temporary adjustment (resets when released)
+- Combined with tempo for final playback rate
 
 ### Tasks
 
 ### Completed
-- [x] Define cue point design
+- [x] Define pitch bend design
 
 ## Code
 
@@ -46,17 +45,17 @@ Implement Main Cue Point functionality - essential DJ feature for marking and re
 ### Tasks
 
 ### Completed
-- [x] Add _cuePoint field to Deck
-- [x] Add SetCue() method
-- [x] Add JumpToCue() method with auto-pause
-- [x] Add ClearCue() method
-- [x] Add cue point reset
+- [x] Add _pitchBend field to Deck
+- [x] Add SetPitchBend() method with ±8% range
+- [x] Apply pitch bend in tempo calculation
+- [x] Add parameter handling (pitchbend/pitch)
+- [x] Add reset functionality
 - [x] Build and verify
 
 ## Commit
 
 ### Phase Entrance Criteria
-- [ ] Cue point implemented
+- [ ] Pitch bend implemented
 - [ ] Build successful
 
 ### Tasks
