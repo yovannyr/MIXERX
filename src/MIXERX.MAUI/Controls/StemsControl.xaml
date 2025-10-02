@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MIXERX.MAUI.ViewModels"
+             x:Class="MIXERX.MAUI.Controls.StemsControl"
+             x:DataType="vm:StemsViewModel">
+    
+    <StackLayout Spacing="10">
+        
+        <Label Text="STEMS" Style="{StaticResource HeaderLabel}" HorizontalOptions="Center"/>
+        
+        <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="5">
+            <Frame Grid.Column="0" BackgroundColor="#FF6B6B" Padding="10">
+                <StackLayout Spacing="5">
+                    <Label Text="VOCALS" FontSize="10" HorizontalOptions="Center"/>
+                    <Button Text="M" Command="{Binding ToggleMuteCommand}" CommandParameter="0" HeightRequest="30"/>
+                    <Button Text="S" Command="{Binding ToggleSoloCommand}" CommandParameter="0" HeightRequest="30"/>
+                    <Slider Minimum="0" Maximum="1" Value="{Binding Vocals.Volume}" Rotation="270" HeightRequest="80"/>
+                </StackLayout>
+            </Frame>
+            
+            <Frame Grid.Column="1" BackgroundColor="#4ECDC4" Padding="10">
+                <StackLayout Spacing="5">
+                    <Label Text="MELODY" FontSize="10" HorizontalOptions="Center"/>
+                    <Button Text="M" Command="{Binding ToggleMuteCommand}" CommandParameter="1" HeightRequest="30"/>
+                    <Button Text="S" Command="{Binding ToggleSoloCommand}" CommandParameter="1" HeightRequest="30"/>
+                    <Slider Minimum="0" Maximum="1" Value="{Binding Melody.Volume}" Rotation="270" HeightRequest="80"/>
+                </StackLayout>
+            </Frame>
+            
+            <Frame Grid.Column="2" BackgroundColor="#FFE66D" Padding="10">
+                <StackLayout Spacing="5">
+                    <Label Text="BASS" FontSize="10" HorizontalOptions="Center"/>
+                    <Button Text="M" Command="{Binding ToggleMuteCommand}" CommandParameter="2" HeightRequest="30"/>
+                    <Button Text="S" Command="{Binding ToggleSoloCommand}" CommandParameter="2" HeightRequest="30"/>
+                    <Slider Minimum="0" Maximum="1" Value="{Binding Bass.Volume}" Rotation="270" HeightRequest="80"/>
+                </StackLayout>
+            </Frame>
+            
+            <Frame Grid.Column="3" BackgroundColor="#95E1D3" Padding="10">
+                <StackLayout Spacing="5">
+                    <Label Text="DRUMS" FontSize="10" HorizontalOptions="Center"/>
+                    <Button Text="M" Command="{Binding ToggleMuteCommand}" CommandParameter="3" HeightRequest="30"/>
+                    <Button Text="S" Command="{Binding ToggleSoloCommand}" CommandParameter="3" HeightRequest="30"/>
+                    <Slider Minimum="0" Maximum="1" Value="{Binding Drums.Volume}" Rotation="270" HeightRequest="80"/>
+                </StackLayout>
+            </Frame>
+        </Grid>
+        
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+            <Button Grid.Column="0" Text="ACAPELLA" Command="{Binding AcapellaCommand}" Style="{StaticResource PrimaryButton}"/>
+            <Button Grid.Column="1" Text="INSTRUMENTAL" Command="{Binding InstrumentalCommand}" Style="{StaticResource PrimaryButton}"/>
+        </Grid>
+        
+    </StackLayout>
+    
+</ContentView>
