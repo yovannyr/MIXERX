@@ -4,7 +4,7 @@
 *Workflow: [epcc](https://mrsimpson.github.io/responsible-vibe-mcp/workflows/epcc)*
 
 ## Goal
-Implement improved time-stretch algorithm with keylock (pitch-independent tempo control) for professional DJ functionality.
+Implement audio metering (VU meters) for monitoring master output levels - essential for preventing clipping and maintaining proper levels.
 
 ## Explore
 
@@ -15,8 +15,6 @@ Implement improved time-stretch algorithm with keylock (pitch-independent tempo 
 
 ### Completed
 - [x] Created development plan file
-- [x] Current time-stretch is simple linear interpolation
-- [x] Need better algorithm for quality
 
 ## Plan
 
@@ -25,19 +23,19 @@ Implement improved time-stretch algorithm with keylock (pitch-independent tempo 
 
 ### Implementation Strategy
 
-**Approach:** Implement WSOLA (Waveform Similarity Overlap-Add) algorithm - simpler than phase vocoder, better than linear interpolation.
+**Approach:** Create AudioMeter class for peak and RMS level detection.
 
 **Design:**
-- WSOLA for time-stretch
-- Maintains pitch while changing tempo
-- Window-based processing
-- Cross-correlation for best overlap
-- Quality: Good enough for DJ use
+- Peak level detection (instant)
+- RMS level detection (average)
+- Decay for smooth meter movement
+- Per-channel metering (L/R)
+- dB scale output
 
 ### Tasks
 
 ### Completed
-- [x] Choose algorithm (WSOLA)
+- [x] Define metering approach
 
 ## Code
 
@@ -45,9 +43,9 @@ Implement improved time-stretch algorithm with keylock (pitch-independent tempo 
 - [x] Plan complete
 
 ### Tasks
-- [ ] Create Audio/TimeStretchEngine.cs
-- [ ] Implement WSOLA algorithm
-- [ ] Replace simple interpolation in Deck
+- [ ] Create Mixer/AudioMeter.cs
+- [ ] Add metering to AudioEngine
+- [ ] Expose GetMeterLevels() method
 - [ ] Build and verify
 
 ### Completed
@@ -56,7 +54,7 @@ Implement improved time-stretch algorithm with keylock (pitch-independent tempo 
 ## Commit
 
 ### Phase Entrance Criteria
-- [ ] Time-stretch implemented
+- [ ] Metering implemented
 - [ ] Build successful
 
 ### Tasks
@@ -65,12 +63,7 @@ Implement improved time-stretch algorithm with keylock (pitch-independent tempo 
 *None yet*
 
 ## Key Decisions
-
-### Algorithm Choice: WSOLA
-- Simpler than phase vocoder
-- Better quality than linear interpolation
-- Good for DJ use (tempo range 0.5x-2.0x)
-- No external dependencies needed
+*Important decisions will be documented here as they are made*
 
 ## Notes
 *Additional context and observations*

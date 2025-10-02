@@ -12,6 +12,7 @@ public class AudioEngine : IAudioEngine
     private readonly ConcurrentQueue<AudioCommand> _commandQueue = new();
     private readonly SyncEngine _syncEngine = new();
     private readonly CrossfaderEngine _crossfader = new();
+    private readonly AudioMeter _masterMeter = new();
     private IAudioDriver? _audioDriver;
     private Thread? _audioThread;
     private LockFreeAudioBuffer? _masterBuffer;
@@ -134,6 +135,9 @@ public class AudioEngine : IAudioEngine
         // Write to master buffer and read to output
         _masterBuffer.Write(mixBuffer);
         _masterBuffer.Read(output);
+        
+        // Meter the output
+        _masterMeter.Process(output);
     }
 
     private void ProcessAudio(Span<float> output)
@@ -224,6 +228,11 @@ public class AudioEngine : IAudioEngine
     public void SetCrossfaderCurve(CrossfaderCurve curve)
     {
         _crossfader.Curve = curve;
+    }
+
+    public MeterLevels GetMasterLevels()
+    {
+        return _masterMeter.GetLevels();
     }
 
     public void Play(int deckId)
