@@ -20,6 +20,10 @@
         <ShellContent Route="main" ContentTemplate="{DataTemplate views:MainPage}" />
     </FlyoutItem>
 
+    <FlyoutItem Title="Sampler" Icon="sampler.png">
+        <ShellContent Route="sampler" ContentTemplate="{DataTemplate views:SamplerPage}" />
+    </FlyoutItem>
+
     <FlyoutItem Title="Library" Icon="library.png">
         <ShellContent Route="library" ContentTemplate="{DataTemplate views:LibraryPage}" />
     </FlyoutItem>
