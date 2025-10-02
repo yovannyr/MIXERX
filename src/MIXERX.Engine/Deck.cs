@@ -21,6 +21,7 @@ public class Deck : IAudioNode
     private float _volume = 1.0f;
     private float _gain = 1.0f;
     private int _position;
+    private long? _cuePoint;
     private readonly float[] _readBuffer = new float[8192];
     
     // Advanced features
@@ -165,6 +166,25 @@ public class Deck : IAudioNode
     public void SetGain(float gain)
     {
         _gain = Math.Clamp(gain, 0.0f, 2.0f);
+    }
+
+    public void SetCue()
+    {
+        _cuePoint = _samplePosition;
+    }
+
+    public void JumpToCue()
+    {
+        if (_cuePoint.HasValue)
+        {
+            SetPosition(TimeSpan.FromSeconds(_cuePoint.Value / (double)(_decoder?.SampleRate ?? 48000)));
+            _isPlaying = false; // Pause on cue jump (DJ standard)
+        }
+    }
+
+    public void ClearCue()
+    {
+        _cuePoint = null;
     }
 
     public void SetPosition(TimeSpan position)
@@ -364,6 +384,7 @@ public class Deck : IAudioNode
         _tempo = 1.0f;
         _volume = 1.0f;
         _gain = 1.0f;
+        _cuePoint = null;
         _volume = 1.0f;
         _effectChain.Reset();
         _bpmAnalyzer.Reset();

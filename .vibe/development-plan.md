@@ -4,7 +4,7 @@
 *Workflow: [epcc](https://mrsimpson.github.io/responsible-vibe-mcp/workflows/epcc)*
 
 ## Goal
-Implement Master Limiter effect to prevent output clipping and ensure professional audio output levels.
+Implement Main Cue Point functionality - essential DJ feature for marking and returning to a specific position in a track.
 
 ## Explore
 
@@ -15,7 +15,7 @@ Implement Master Limiter effect to prevent output clipping and ensure profession
 
 ### Completed
 - [x] Created development plan file
-- [x] Reviewed Effects architecture
+- [x] Verified no main cue exists (only hot cues)
 
 ## Plan
 
@@ -24,18 +24,19 @@ Implement Master Limiter effect to prevent output clipping and ensure profession
 
 ### Implementation Strategy
 
-**Approach:** Create LimiterEffect with look-ahead limiting.
+**Approach:** Add main cue point to Deck with Set/Jump/Clear functionality.
 
 **Design:**
-- Threshold: -0.1dB (prevent clipping)
-- Attack: 1ms (fast response)
-- Release: 100ms (smooth recovery)
-- Simple peak detection and gain reduction
+- Single main cue point per track
+- SetCue() - marks current position
+- JumpToCue() - returns to cue point
+- ClearCue() - removes cue point
+- Auto-pause on cue jump (DJ standard behavior)
 
 ### Tasks
 
 ### Completed
-- [x] Define limiter design
+- [x] Define cue point design
 
 ## Code
 
@@ -45,16 +46,17 @@ Implement Master Limiter effect to prevent output clipping and ensure profession
 ### Tasks
 
 ### Completed
-- [x] Create Effects/LimiterEffect.cs
-- [x] Implement peak detection
-- [x] Implement gain reduction with smooth release
-- [x] Add to Deck effect chain
+- [x] Add _cuePoint field to Deck
+- [x] Add SetCue() method
+- [x] Add JumpToCue() method with auto-pause
+- [x] Add ClearCue() method
+- [x] Add cue point reset
 - [x] Build and verify
 
 ## Commit
 
 ### Phase Entrance Criteria
-- [ ] Limiter implemented
+- [ ] Cue point implemented
 - [ ] Build successful
 
 ### Tasks
