@@ -50,9 +50,8 @@ public class Deck : IAudioNode
         // Initialize default effects
         _effectChain.AddEffect(new EQEffect());
         _effectChain.AddEffect(new FilterEffect());
-        // TODO: Fix interface mismatch - ReverbEffect/DelayEffect don't implement IEffect.Process(Span<float>)
-        // _effectChain.AddEffect(new ReverbEffect());
-        // _effectChain.AddEffect(new DelayEffect());
+        _effectChain.AddEffect(new ReverbEffect());
+        _effectChain.AddEffect(new DelayEffect());
     }
 
     public bool IsPlaying => _isPlaying;

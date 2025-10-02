@@ -108,6 +108,7 @@ namespace MIXERX.UI.ViewModels
         
         PlayPauseCommand = ReactiveCommand.CreateFromTask(PlayPause);
         LoadTrackCommand = ReactiveCommand.CreateFromTask(LoadTrack);
+        LoadTrackFromPathCommand = ReactiveCommand.CreateFromTask<string>(LoadTrackFromPath);
         SyncCommand = ReactiveCommand.CreateFromTask(Sync);
         SetCueCommand = ReactiveCommand.CreateFromTask(SetCue);
         
@@ -244,6 +245,7 @@ namespace MIXERX.UI.ViewModels
 
     public ReactiveCommand<Unit, Unit> PlayPauseCommand { get; }
     public ReactiveCommand<Unit, Unit> LoadTrackCommand { get; }
+    public ReactiveCommand<string, Unit> LoadTrackFromPathCommand { get; }
     public ReactiveCommand<Unit, Unit> SyncCommand { get; }
     public ReactiveCommand<Unit, Unit> SetCueCommand { get; }
     
@@ -286,17 +288,22 @@ namespace MIXERX.UI.ViewModels
 
             if (!string.IsNullOrEmpty(filePath))
             {
-                await _engineService.LoadTrackAsync(_deckId, filePath);
-                TrackName = Path.GetFileNameWithoutExtension(filePath);
-                
-                // Extract album cover and generate waveform
-                await ExtractAlbumCoverAsync(filePath);
-                await GenerateWaveformAsync(filePath);
-                
-                // Start periodic status updates to get BPM/Key
-                _ = Task.Run(UpdateTrackInfo);
+                await LoadTrackFromPath(filePath);
             }
         }
+    }
+
+    private async Task LoadTrackFromPath(string filePath)
+    {
+        await _engineService.LoadTrackAsync(_deckId, filePath);
+        TrackName = Path.GetFileNameWithoutExtension(filePath);
+        
+        // Extract album cover and generate waveform
+        await ExtractAlbumCoverAsync(filePath);
+        await GenerateWaveformAsync(filePath);
+        
+        // Start periodic status updates to get BPM/Key
+        _ = Task.Run(UpdateTrackInfo);
     }
 
     private Task SetCue()
@@ -452,5 +459,44 @@ namespace MIXERX.UI.ViewModels
             await Task.Delay(100); // Update 10 times per second for smooth animation
         }
     }
+
+    // Hot Cue functionality
+    public async Task TriggerHotCue(int cueNumber)
+    {
+        var hotCue = GetHotCue(cueNumber);
+        if (hotCue.IsSet)
+        {
+            await _engineService.SetPositionAsync(_deckId, (float)Position);
+        }
+    }
+
+    public async Task SetHotCue(int cueNumber)
+    {
+        var hotCue = GetHotCue(cueNumber);
+        hotCue.IsSet = true;
+        hotCue.Label = $"CUE {cueNumber}";
+        await _engineService.SetCuePointAsync(_deckId, (float)Position);
+    }
+
+    public Task DeleteHotCue(int cueNumber)
+    {
+        var hotCue = GetHotCue(cueNumber);
+        hotCue.IsSet = false;
+        hotCue.Label = string.Empty;
+        return Task.CompletedTask;
+    }
+
+    private HotCueViewModel GetHotCue(int cueNumber) => cueNumber switch
+    {
+        1 => HotCue1,
+        2 => HotCue2,
+        3 => HotCue3,
+        4 => HotCue4,
+        5 => HotCue5,
+        6 => HotCue6,
+        7 => HotCue7,
+        8 => HotCue8,
+        _ => HotCue1
+    };
     }
 }

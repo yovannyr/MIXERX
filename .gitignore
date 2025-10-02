@@ -25,6 +25,15 @@ bld/
 [Ll]og/
 [Ee]xe/
 
+# Ignore build / compiled output
+obj/
+Debug/
+bin/
+**/obj/
+**/Debug/
+**/bin/
+
+
 # Visual Studio 2015/2017 cache/options directory
 .vs/
 # Uncomment if you have tasks that create the project's static files in wwwroot
@@ -533,3 +542,13 @@ ASALocalRun/
 /src/MIXERX.UI/obj/project.nuget.cache
 /*.deb
 /amazon-q.deb
+obj
+bin
+obj
+bin
+obj
+bin
+obj
+bin
+bin
+obj

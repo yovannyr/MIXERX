@@ -60,6 +60,14 @@ public record SetPositionMessage : IpcMessage
     }
 }
 
+public record SetCuePointMessage : IpcMessage
+{
+    public SetCuePointMessage(int deckId, float position) : base(IpcMessageType.SetCue, deckId)
+    {
+        FloatParam = position;
+    }
+}
+
 public record SetEffectParameterMessage : IpcMessage
 {
     public SetEffectParameterMessage(int deckId, string effectName, string paramName, float value) 

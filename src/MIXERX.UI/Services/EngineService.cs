@@ -14,6 +14,7 @@ public interface IEngineService
     Task PauseAsync(int deckId);
     Task SetTempoAsync(int deckId, float tempo);
     Task SetPositionAsync(int deckId, float position);
+    Task SetCuePointAsync(int deckId, float position);
     Task SetEffectParameterAsync(int deckId, string effectName, string paramName, float value);
     Task<DeckStatus?> GetStatusAsync(int deckId);
     bool IsConnected { get; }
@@ -123,6 +124,12 @@ public class EngineService : IEngineService, IDisposable
     public async Task SetPositionAsync(int deckId, float position)
     {
         var message = new SetPositionMessage(deckId, position);
+        await SendMessageAsync(message);
+    }
+
+    public async Task SetCuePointAsync(int deckId, float position)
+    {
+        var message = new SetCuePointMessage(deckId, position);
         await SendMessageAsync(message);
     }
 

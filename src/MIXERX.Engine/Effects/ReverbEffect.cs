@@ -3,7 +3,6 @@ using MIXERX.Engine.Effects;
 
 namespace MIXERX.Engine.Effects;
 
-// TODO: Fix interface mismatch - needs to implement IEffect.Process(Span<float>) instead of current signature
 public class ReverbEffect : IEffect
 {
     private readonly float[] _delayBuffer;
@@ -21,8 +20,6 @@ public class ReverbEffect : IEffect
         _delayBuffer = new float[_delayLength];
     }
 
-    // TODO: This signature doesn't match IEffect.Process(Span<float>) - needs interface alignment
-    // public void Process(Span<float> input, Span<float> output, int sampleCount)
     public void Process(Span<float> buffer)
     {
         if (!IsEnabled)

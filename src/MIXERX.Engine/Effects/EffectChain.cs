@@ -1,12 +1,5 @@
 namespace MIXERX.Engine.Effects;
 
-public interface IEffect
-{
-    void Process(Span<float> samples);
-    void SetParameter(string name, float value);
-    void Reset();
-}
-
 public class EffectChain : IEffect
 {
     private readonly List<IEffect> _effects = new();

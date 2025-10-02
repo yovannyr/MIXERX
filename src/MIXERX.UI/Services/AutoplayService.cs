@@ -90,15 +90,7 @@ public class AutoplayService : IAutoplayService
         var nextTrack = _library.Tracks[_currentTrackIndex];
 
         // Load track to deck
-        // TODO: Fix command parameter type mismatch - expects Unit but got string
-        // deck.LoadTrackCommand.Execute(nextTrack.FilePath);
-        
-        // Temporary workaround until command interface is fixed
-        _ = Task.Run(async () => 
-        {
-            // Simulate loading track - in real implementation use proper deck loading
-            System.Diagnostics.Debug.WriteLine($"Autoplay: Loading {nextTrack.Title} to deck");
-        });
+        deck.LoadTrackFromPathCommand.Execute(nextTrack.FilePath);
         
         // Notify subscribers
         NextTrackSelected?.Invoke(this, nextTrack);

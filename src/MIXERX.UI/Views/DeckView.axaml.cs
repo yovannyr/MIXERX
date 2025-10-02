@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using MIXERX.UI.ViewModels;
 
 namespace MIXERX.UI.Views;
 
@@ -28,16 +29,25 @@ public partial class DeckView : UserControl
 
     private void OnHotCueTriggered(object? sender, int cueNumber)
     {
-        // TODO: Implement logic for when a hot cue is triggered
+        if (DataContext is DeckViewModel viewModel)
+        {
+            _ = viewModel.TriggerHotCue(cueNumber);
+        }
     }
 
     private void OnHotCueSet(object? sender, int cueNumber)
     {
-        // TODO: Implement logic for when a hot cue is set
+        if (DataContext is DeckViewModel viewModel)
+        {
+            _ = viewModel.SetHotCue(cueNumber);
+        }
     }
 
     private void OnHotCueDeleted(object? sender, int cueNumber)
     {
-        // TODO: Implement logic for when a hot cue is deleted
+        if (DataContext is DeckViewModel viewModel)
+        {
+            _ = viewModel.DeleteHotCue(cueNumber);
+        }
     }
 }
