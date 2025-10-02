@@ -32,4 +32,40 @@ public static class WaveformAnalyzer
 
         return waveform;
     }
+
+    public static float[] CalculateEnergyLevels(float[] audioData, int segments = 100)
+    {
+        if (audioData == null || audioData.Length == 0)
+            return Array.Empty<float>();
+
+        var energyLevels = new float[segments];
+        var samplesPerSegment = audioData.Length / segments;
+
+        for (int i = 0; i < segments; i++)
+        {
+            var start = i * samplesPerSegment;
+            var end = Math.Min(start + samplesPerSegment, audioData.Length);
+            
+            // Calculate RMS (Root Mean Square) energy
+            float sumSquares = 0;
+            for (int j = start; j < end; j++)
+            {
+                sumSquares += audioData[j] * audioData[j];
+            }
+            
+            energyLevels[i] = MathF.Sqrt(sumSquares / (end - start));
+        }
+
+        // Normalize to 0.0 - 1.0 range
+        var maxEnergy = energyLevels.Max();
+        if (maxEnergy > 0)
+        {
+            for (int i = 0; i < segments; i++)
+            {
+                energyLevels[i] /= maxEnergy;
+            }
+        }
+
+        return energyLevels;
+    }
 }

@@ -21,6 +21,9 @@ public class WaveformControl : Control
     public static readonly StyledProperty<double> ZoomProperty =
         AvaloniaProperty.Register<WaveformControl, double>(nameof(Zoom), 1.0);
 
+    public static readonly StyledProperty<float[]?> EnergyLevelsProperty =
+        AvaloniaProperty.Register<WaveformControl, float[]?>(nameof(EnergyLevels));
+
     public float[]? WaveformData
     {
         get => GetValue(WaveformDataProperty);
@@ -45,12 +48,18 @@ public class WaveformControl : Control
         set => SetValue(ZoomProperty, Math.Max(0.1, value));
     }
 
+    public float[]? EnergyLevels
+    {
+        get => GetValue(EnergyLevelsProperty);
+        set => SetValue(EnergyLevelsProperty, value);
+    }
+
     private readonly List<double> _cuePoints = new();
     private readonly List<double> _beatMarkers = new();
 
     static WaveformControl()
     {
-        AffectsRender<WaveformControl>(WaveformDataProperty, PositionProperty, IsPlayingProperty, ZoomProperty);
+        AffectsRender<WaveformControl>(WaveformDataProperty, PositionProperty, IsPlayingProperty, ZoomProperty, EnergyLevelsProperty);
     }
 
     public WaveformControl()
@@ -102,6 +111,7 @@ public class WaveformControl : Control
         }
 
         DrawWaveform(context);
+        DrawEnergyOverlay(context);
         DrawBeatMarkers(context);
         DrawCuePoints(context);
         DrawPlayhead(context);
@@ -159,6 +169,46 @@ public class WaveformControl : Control
             
             context.DrawLine(new Pen(waveformBrush, 1), 
                 new Point(x, topY), new Point(x, bottomY));
+        }
+    }
+
+    private void DrawEnergyOverlay(DrawingContext context)
+    {
+        if (EnergyLevels == null || EnergyLevels.Length == 0) return;
+
+        var width = Bounds.Width;
+        var height = Bounds.Height;
+        var segmentWidth = width / EnergyLevels.Length;
+
+        for (int i = 0; i < EnergyLevels.Length; i++)
+        {
+            var energy = EnergyLevels[i];
+            var x = i * segmentWidth;
+            
+            // Color based on energy level: blue (low) -> green (mid) -> red (high)
+            Color color;
+            if (energy < 0.3f)
+            {
+                // Blue to Cyan
+                var t = energy / 0.3f;
+                color = Color.FromArgb(80, (byte)(0 * (1 - t) + 0 * t), (byte)(100 * (1 - t) + 255 * t), (byte)(255 * (1 - t) + 255 * t));
+            }
+            else if (energy < 0.7f)
+            {
+                // Cyan to Green
+                var t = (energy - 0.3f) / 0.4f;
+                color = Color.FromArgb(80, (byte)(0 * (1 - t) + 0 * t), (byte)(255 * (1 - t) + 255 * t), (byte)(255 * (1 - t) + 0 * t));
+            }
+            else
+            {
+                // Green to Red
+                var t = (energy - 0.7f) / 0.3f;
+                color = Color.FromArgb(80, (byte)(0 * (1 - t) + 255 * t), (byte)(255 * (1 - t) + 0 * t), 0);
+            }
+
+            var brush = new SolidColorBrush(color);
+            var rect = new Rect(x, 0, segmentWidth + 1, height);
+            context.FillRectangle(brush, rect);
         }
     }
 

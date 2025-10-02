@@ -4,15 +4,15 @@
 *Workflow: [epcc](https://mrsimpson.github.io/responsible-vibe-mcp/workflows/epcc)*
 
 ## Ziel
-Beat Detection & Auto-Sync - VOLLSTÄNDIG: BPM-Erkennung aus Audio + Deck-Synchronisation.
+Track Waveform Analysis - Ermöglicht visuelle Analyse der Track-Struktur.
 
 ## Feature-Prioritätenliste (Reihenfolge)
 1. ✅ Waveform Visualization - ABGESCHLOSSEN
 2. ✅ Effects Processing - ABGESCHLOSSEN
-3. ⏳ **Beat Detection & Auto-Sync** ← AKTUELL (VOLLSTÄNDIG implementieren)
+3. ✅ **Beat Detection & Auto-Sync** - ABGESCHLOSSEN (VOLLSTÄNDIG)
 4. ✅ MP3 Export - ABGESCHLOSSEN
 5. ✅ Advanced Loop Features - ABGESCHLOSSEN
-6. ⏳ Track Waveform Analysis
+6. ⏳ **Track Waveform Analysis** ← AKTUELL
 
 ## Explore
 
@@ -22,101 +22,73 @@ Beat Detection & Auto-Sync - VOLLSTÄNDIG: BPM-Erkennung aus Audio + Deck-Synchr
 ### Aufgaben
 
 ### Abgeschlossen
-- [x] Bestehende Infrastruktur analysiert
-- [x] BpmAnalyzer und SyncEngine geprüft
-- [x] Implementierungslücken identifiziert
+- [x] Bestehende Waveform-Infrastruktur analysiert
+- [x] Track-Struktur-Analyse-Optionen geprüft
+- [x] Minimal Scope definiert
 
 ### Erkenntnisse
 **Bestehende Infrastruktur:**
-- ✅ BpmAnalyzer vorhanden (Energy-based Beat Detection)
-- ✅ SyncEngine vorhanden (Master/Slave Tempo Sync)
-- ✅ BPM aus Metadaten wird gelesen (TagLib)
-- ✅ UI zeigt BPM an (DeckView Zeile 19)
+- ✅ WaveformControl vorhanden (zeigt Waveform an)
+- ✅ WaveformAnalyzer vorhanden (Peak-Detection)
+- ✅ WaveformData wird bereits an UI gesendet
+- ✅ Cue Points und Beat Markers in WaveformControl
 
-**Was FEHLT (nicht implementiert):**
-- ❌ BpmAnalyzer wird NICHT verwendet (nur Metadaten)
-- ❌ Detected BPM wird NICHT an UI gesendet
-- ❌ SyncEngine wird NICHT integriert
-- ❌ Sync-Button in UI fehlt
-- ❌ Master Deck Selection fehlt
+**Was "Track Waveform Analysis" bedeutet:**
+- Track-Struktur erkennen (Intro, Verse, Chorus, Breakdown, Outro)
+- Energy-Level über Zeit analysieren
+- Visuelle Segmente in Waveform anzeigen
+- Hot Cues automatisch an wichtigen Punkten setzen
 
-**VOLLSTÄNDIGER SCOPE:**
-- ✅ BPM-Erkennung aus Audio (BpmAnalyzer nutzen)
-- ✅ Detected BPM an UI senden (IPC)
-- ✅ Sync-Button in UI hinzufügen
-- ✅ SyncEngine in AudioEngine integrieren
-- ✅ Master Deck automatisch setzen (erster spielender Deck)
-- ❌ KEINE manuelle Master-Auswahl (später)
-- ❌ KEINE Phase-Sync (später)
+**MINIMAL SCOPE:**
+- ✅ Energy-Level Analyse (bereits in BpmAnalyzer vorhanden)
+- ✅ Visuelle Energy-Overlay in WaveformControl
+- ✅ Farbcodierung: Niedrig (blau) → Mittel (grün) → Hoch (rot)
+- ❌ KEINE automatische Struktur-Erkennung (zu komplex)
+- ❌ KEINE Auto-Cue-Points (später)
+- ❌ KEINE Phrase-Detection (später)
 
 ## Plan
 
 ### Phasen-Eintrittskriterien
-- [x] Anforderungen klar definiert (VOLLSTÄNDIG)
+- [x] Anforderungen klar definiert (MINIMAL SCOPE)
 - [x] Technischer Ansatz festgelegt
 
 ### Implementierungsstrategie
 
-**Ansatz:** BpmAnalyzer in Deck integrieren + SyncEngine in AudioEngine + Sync UI.
+**Ansatz:** Energy-Level Analyse + visuelles Overlay in WaveformControl.
 
 **Komponenten:**
-1. **Deck.cs** - BpmAnalyzer während Playback nutzen, detected BPM speichern
-2. **IpcProtocol** - BpmDetected Message, SetSync Message
-3. **IpcServer** - Detected BPM an UI senden, Sync Commands verarbeiten
-4. **AudioEngine** - SyncEngine integrieren, Tempo-Sync anwenden
-5. **EngineService** - SetSyncAsync Methode, BpmDetected Event
-6. **DeckViewModel** - Sync Command, detected BPM anzeigen
-7. **DeckView** - Sync Button hinzufügen
+1. **WaveformAnalyzer** - Energy-Level pro Sample berechnen (zusätzlich zu Peaks)
+2. **WaveformControl** - Energy-Overlay rendern (Farbverlauf)
+3. **Deck.cs** - Energy-Daten mit Waveform senden
 
 **Technische Details:**
-- BpmAnalyzer.AnalyzeBpm() alle 2048 Samples aufrufen
-- Detected BPM via IPC an UI senden (alle 2 Sekunden)
-- SyncEngine: Erster spielender Deck = Master
-- Sync aktiviert → Tempo automatisch anpassen
-- UI: "SYNC" Button (grün wenn aktiv)
+- Energy = RMS (Root Mean Square) pro Segment
+- Waveform in Segmente teilen (z.B. 100 Segmente)
+- Energy-Level normalisieren (0.0 - 1.0)
+- Farbcodierung: 0.0-0.3 (blau), 0.3-0.7 (grün), 0.7-1.0 (rot)
+- Overlay als halbtransparente Farbbalken unter Waveform
 
 **Zero-Break:**
-- BpmAnalyzer und SyncEngine bleiben unverändert
-- Nur Integration in bestehende Strukturen
+- WaveformAnalyzer erweitern (nicht ersetzen)
+- WaveformControl Render-Methode erweitern
+- Keine IPC-Änderungen nötig (Energy in WaveformData integrieren)
 
 ### Detaillierter Implementierungsplan
 
-#### 1. Deck.cs BPM Detection
+#### 1. WaveformAnalyzer erweitern
+**Datei:** `src/MIXERX.Engine/Analysis/WaveformAnalyzer.cs`
+- CalculateEnergyLevels() Methode hinzufügen
+- Energy pro Segment berechnen (RMS)
+
+#### 2. Deck.cs Energy-Daten
 **Datei:** `src/MIXERX.Engine/Deck.cs`
-- BpmAnalyzer.AnalyzeBpm() in ProcessAudio aufrufen
-- DetectedBpm Property hinzufügen
+- Energy-Levels mit Waveform senden (als zweites Array)
 
-#### 2. IpcProtocol erweitern
-**Datei:** `src/MIXERX.Core/IpcProtocol.cs`
-- BpmDetected MessageType
-- SetSync MessageType
-- BpmDetectedMessage, SetSyncMessage Records
-
-#### 3. AudioEngine Sync Integration
-**Datei:** `src/MIXERX.Engine/AudioEngine.cs`
-- SyncEngine Instanz
-- SetSync(deckId, enabled) Methode
-- Tempo-Sync in ProcessAudio anwenden
-
-#### 4. IpcServer Updates
-**Datei:** `src/MIXERX.Engine/IpcServer.cs`
-- BpmDetected Message senden (periodisch)
-- SetSync Handler
-
-#### 5. EngineService
-**Datei:** `src/MIXERX.UI/Services/EngineService.cs`
-- SetSyncAsync(deckId, enabled)
-- BpmDetected Event
-
-#### 6. DeckViewModel
-**Datei:** `src/MIXERX.UI/ViewModels/DeckViewModel.cs`
-- SyncCommand
-- IsSynced Property
-- DetectedBpm Property (zusätzlich zu Metadata-BPM)
-
-#### 7. DeckView UI
-**Datei:** `src/MIXERX.UI/Views/DeckView.axaml`
-- SYNC Button hinzufügen
+#### 3. WaveformControl Rendering
+**Datei:** `src/MIXERX.UI/Controls/WaveformControl.cs`
+- EnergyLevels Property hinzufügen
+- Energy-Overlay in Render() zeichnen
 
 ### Aufgaben
 
@@ -132,14 +104,9 @@ Beat Detection & Auto-Sync - VOLLSTÄNDIG: BPM-Erkennung aus Audio + Deck-Synchr
 ### Aufgaben
 
 ### Abgeschlossen
-- [x] 1. Deck.cs: BpmAnalyzer bereits integriert (DetectedBpm Property vorhanden)
-- [x] 2. IpcProtocol: BpmDetected, SetSync Messages hinzugefügt
-- [x] 3. AudioEngine: SyncEngine integriert (SetSync, GetDetectedBpm Methoden)
-- [x] 4. IpcServer: SetSync Handler hinzugefügt
-- [x] 5. EngineService: SetSyncAsync Methode, BpmDetected Event
-- [x] 6. DeckViewModel: Sync Command verbunden, IsSynced Property
-- [x] 7. DeckView: SYNC Button hinzugefügt
-- [x] 8. Build getestet (0 Errors)
+- [x] 1. WaveformAnalyzer: CalculateEnergyLevels() Methode hinzugefügt
+- [x] 2. WaveformControl: EnergyLevels Property + Energy-Overlay Rendering
+- [x] 3. Build getestet (0 Errors)
 
 ## Commit
 
