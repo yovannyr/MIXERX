@@ -8,8 +8,13 @@ public partial class MainViewModel : ObservableObject
 {
     private readonly Services.IAudioEngineService _audioEngine;
 
+    [ObservableProperty]
+    private bool is4DeckMode = false;
+
     public DeckViewModel DeckA { get; }
     public DeckViewModel DeckB { get; }
+    public DeckViewModel DeckC { get; }
+    public DeckViewModel DeckD { get; }
     public ObservableCollection<DeckViewModel> Decks { get; }
 
     public MainViewModel(Services.IAudioEngineService audioEngine)
@@ -18,17 +23,35 @@ public partial class MainViewModel : ObservableObject
         
         DeckA = new DeckViewModel 
         { 
-            DeckName = "DECK A",
+            DeckName = "DECK 1",
             DeckColor = Color.FromArgb("#00D9FF")
         };
         
         DeckB = new DeckViewModel 
         { 
-            DeckName = "DECK B",
+            DeckName = "DECK 2",
             DeckColor = Color.FromArgb("#FF6B35")
         };
 
-        Decks = new ObservableCollection<DeckViewModel> { DeckA, DeckB };
+        DeckC = new DeckViewModel 
+        { 
+            DeckName = "DECK 3",
+            DeckColor = Color.FromArgb("#00D9FF")
+        };
+        
+        DeckD = new DeckViewModel 
+        { 
+            DeckName = "DECK 4",
+            DeckColor = Color.FromArgb("#FF6B35")
+        };
+
+        Decks = new ObservableCollection<DeckViewModel> { DeckA, DeckB, DeckC, DeckD };
+    }
+
+    [RelayCommand]
+    private void Toggle4DeckMode()
+    {
+        Is4DeckMode = !Is4DeckMode;
     }
 
     [RelayCommand]

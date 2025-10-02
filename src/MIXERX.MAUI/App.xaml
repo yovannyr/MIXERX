@@ -13,6 +13,7 @@
             <!-- Converters -->
             <converters:BoolToSyncTextConverter x:Key="BoolToSyncText"/>
             <converters:BoolToSyncColorConverter x:Key="BoolToSyncColor"/>
+            <converters:InvertedBoolConverter x:Key="InvertedBoolConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

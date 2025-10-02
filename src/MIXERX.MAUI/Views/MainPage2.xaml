@@ -10,26 +10,41 @@
     <Grid RowDefinitions="40,*,250">
         
         <!-- Top Bar -->
-        <Grid Grid.Row="0" BackgroundColor="#1A1A1A" ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto">
+        <Grid Grid.Row="0" BackgroundColor="#1A1A1A" ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto">
             <Label Grid.Column="0" Text="⚙" FontSize="20" Margin="10,0" VerticalOptions="Center"/>
             <Label Grid.Column="1" Text="1" FontSize="16" Margin="5,0" VerticalOptions="Center"/>
             <Label Grid.Column="2" Text="2" FontSize="16" Margin="5,0" VerticalOptions="Center" TextColor="#00D9FF"/>
-            <Label Grid.Column="3" Text="Extended ▼" FontSize="14" Margin="10,0" VerticalOptions="Center"/>
-            <Label Grid.Column="4" Text="Link" FontSize="14" Margin="10,0" VerticalOptions="Center"/>
-            <Label Grid.Column="5" Text="MIDI" FontSize="14" Margin="10,0" VerticalOptions="Center"/>
-            <Button Grid.Column="6" Text="⚙" WidthRequest="30" HeightRequest="30" Margin="5,0"/>
-            <Button Grid.Column="7" Text="REC" BackgroundColor="#FF0000" WidthRequest="50" HeightRequest="30" Margin="5,0" Command="{Binding StartRecordingCommand}"/>
-            <Button Grid.Column="8" Text="FX" WidthRequest="40" HeightRequest="30" Margin="5,0"/>
-            <Button Grid.Column="9" Text="🎧" WidthRequest="40" HeightRequest="30" Margin="5,0"/>
-            <StackLayout Grid.Column="10" Orientation="Horizontal" HorizontalOptions="End" Margin="10,0">
+            <Button Grid.Column="3" Text="4" FontSize="16" Margin="5,0" VerticalOptions="Center" BackgroundColor="{Binding Is4DeckMode, Converter={StaticResource BoolToSyncColor}}" Command="{Binding Toggle4DeckModeCommand}" WidthRequest="30" HeightRequest="30"/>
+            <Label Grid.Column="4" Text="Extended ▼" FontSize="14" Margin="10,0" VerticalOptions="Center"/>
+            <Label Grid.Column="5" Text="Link" FontSize="14" Margin="10,0" VerticalOptions="Center"/>
+            <Label Grid.Column="6" Text="MIDI" FontSize="14" Margin="10,0" VerticalOptions="Center"/>
+            <Button Grid.Column="7" Text="⚙" WidthRequest="30" HeightRequest="30" Margin="5,0"/>
+            <Button Grid.Column="8" Text="REC" BackgroundColor="#FF0000" WidthRequest="50" HeightRequest="30" Margin="5,0" Command="{Binding StartRecordingCommand}"/>
+            <Button Grid.Column="9" Text="FX" WidthRequest="40" HeightRequest="30" Margin="5,0"/>
+            <Button Grid.Column="10" Text="🎧" WidthRequest="40" HeightRequest="30" Margin="5,0"/>
+            <StackLayout Grid.Column="11" Orientation="Horizontal" HorizontalOptions="End" Margin="10,0">
                 <Label Text="MIXERX" FontSize="18" FontAttributes="Bold" VerticalOptions="Center" Margin="0,0,5,0" TextColor="#00FF88"/>
                 <Label Text="PRO" FontSize="18" VerticalOptions="Center"/>
             </StackLayout>
-            <Label Grid.Column="11" Text="11:21" FontSize="14" Margin="10,0" VerticalOptions="Center"/>
+            <Label Grid.Column="12" Text="11:21" FontSize="14" Margin="10,0" VerticalOptions="Center"/>
         </Grid>
 
-        <!-- Main Deck Area -->
-        <Grid Grid.Row="1" ColumnDefinitions="*,*">
+        <!-- Main Deck Area - 2 or 4 Decks -->
+        <Grid Grid.Row="1" x:Name="DeckArea">
+            <!-- 2-Deck Layout -->
+            <Grid ColumnDefinitions="*,*" IsVisible="{Binding Is4DeckMode, Converter={StaticResource InvertedBoolConverter}}">
+                <ContentView Grid.Column="0" Content="{Binding DeckA}" ContentTemplate="{StaticResource DeckTemplate}"/>
+                <ContentView Grid.Column="1" Content="{Binding DeckB}" ContentTemplate="{StaticResource DeckTemplate}"/>
+            </Grid>
+
+            <!-- 4-Deck Layout -->
+            <Grid RowDefinitions="*,*" ColumnDefinitions="*,*" IsVisible="{Binding Is4DeckMode}">
+                <ContentView Grid.Row="0" Grid.Column="0" Content="{Binding DeckA}" ContentTemplate="{StaticResource CompactDeckTemplate}"/>
+                <ContentView Grid.Row="0" Grid.Column="1" Content="{Binding DeckB}" ContentTemplate="{StaticResource CompactDeckTemplate}"/>
+                <ContentView Grid.Row="1" Grid.Column="0" Content="{Binding DeckC}" ContentTemplate="{StaticResource CompactDeckTemplate}"/>
+                <ContentView Grid.Row="1" Grid.Column="1" Content="{Binding DeckD}" ContentTemplate="{StaticResource CompactDeckTemplate}"/>
+            </Grid>
+        </Grid>
             
             <!-- DECK 1 (Left) -->
             <Grid Grid.Column="0" RowDefinitions="Auto,Auto,*,Auto" Margin="5" BackgroundColor="#0D0D0D" BindingContext="{Binding DeckA}">
