@@ -1,0 +1,353 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MIXERX.UI.ViewModels"
+        xmlns:views="using:MIXERX.UI.Views"
+        xmlns:controls="using:MIXERX.UI.Controls"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+        x:Class="MIXERX.UI.Views.MainWindow2"
+        x:DataType="vm:MainWindowViewModel"
+        Title="MIXERX PRO - Next Generation DJ Software"
+        Width="1920" Height="1080"
+        Background="#000000"
+        WindowStartupLocation="CenterScreen">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="40,*,280">
+        
+        <!-- TOP BAR - Sleek Header -->
+        <Border Grid.Row="0" Background="#0d0d0d" BorderBrush="#1a1a1a" BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="200,*,200">
+                <!-- Logo -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="15,0">
+                    <TextBlock Text="MIXERX" FontSize="18" FontWeight="Bold" Foreground="#00ff88" VerticalAlignment="Center"/>
+                    <TextBlock Text="PRO" FontSize="10" FontWeight="Bold" Foreground="#ffffff" VerticalAlignment="Center" Margin="5,8,0,0"/>
+                </StackPanel>
+                
+                <!-- Center Controls -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
+                    <Button Content="⏵ START ENGINE" Background="#00ff88" Foreground="#000" Padding="15,5" FontWeight="Bold" CornerRadius="3"/>
+                    <Button Content="⏺ REC" Background="#ff0044" Foreground="#fff" Padding="15,5" FontWeight="Bold" CornerRadius="3"/>
+                    <TextBlock Text="00:00:00" FontSize="16" FontFamily="Consolas" Foreground="#00ff88" VerticalAlignment="Center"/>
+                </StackPanel>
+                
+                <!-- Right Controls -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="15,0" Spacing="10">
+                    <Button Content="⚙" Width="30" Height="30" Background="#1a1a1a" Foreground="#fff" FontSize="16"/>
+                    <Button Content="?" Width="30" Height="30" Background="#1a1a1a" Foreground="#fff" FontSize="16"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- MAIN DECK AREA -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,400,*" Background="#0a0a0a">
+            
+            <!-- LEFT DECK -->
+            <Border Grid.Column="0" Background="#0f0f0f" Margin="10,10,5,10" CornerRadius="8" BorderBrush="#1a1a1a" BorderThickness="1">
+                <Grid RowDefinitions="60,200,80,*,100">
+                    
+                    <!-- Deck Header -->
+                    <Border Grid.Row="0" Background="#1a1a1a" CornerRadius="8,8,0,0" Padding="15,10">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="DECK A" FontSize="10" Foreground="#00ff88" FontWeight="Bold"/>
+                                <TextBlock Text="No Track Loaded" FontSize="14" Foreground="#fff" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
+                                <TextBlock Text="120.0" FontSize="24" FontWeight="Bold" Foreground="#00ff88"/>
+                                <TextBlock Text="BPM" FontSize="10" Foreground="#666" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Waveform Display -->
+                    <Border Grid.Row="1" Background="#000" Margin="10" CornerRadius="4" BorderBrush="#00ff88" BorderThickness="1">
+                        <Grid>
+                            <controls:WaveformControl Height="200"/>
+                            <TextBlock Text="LOAD TRACK" FontSize="16" Foreground="#333" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Transport Controls -->
+                    <Grid Grid.Row="2" Margin="15,0" ColumnDefinitions="*,*,*,*,*">
+                        <Button Grid.Column="0" Content="◄◄" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
+                        <Button Grid.Column="1" Content="◄" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
+                        <Button Grid.Column="2" Content="▶" FontSize="24" Height="50" Background="#00ff88" Foreground="#000" CornerRadius="4" FontWeight="Bold"/>
+                        <Button Grid.Column="3" Content="►" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
+                        <Button Grid.Column="4" Content="►►" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
+                    </Grid>
+
+                    <!-- Hot Cues & Loop Controls -->
+                    <Grid Grid.Row="3" Margin="15,10">
+                        <Grid RowDefinitions="Auto,10,Auto,10,Auto">
+                            <!-- Hot Cues -->
+                            <TextBlock Grid.Row="0" Text="HOT CUES" FontSize="10" Foreground="#666" FontWeight="Bold"/>
+                            <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*" Height="40">
+                                <Button Grid.Column="0" Content="1" Background="#ff0044" Foreground="#fff" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0"/>
+                                <Button Grid.Column="1" Content="2" Background="#ff8800" Foreground="#fff" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0"/>
+                                <Button Grid.Column="2" Content="3" Background="#00ff88" Foreground="#000" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0"/>
+                                <Button Grid.Column="3" Content="4" Background="#0088ff" Foreground="#fff" FontWeight="Bold" CornerRadius="4"/>
+                            </Grid>
+                            
+                            <!-- Loop Controls -->
+                            <TextBlock Grid.Row="4" Text="LOOP" FontSize="10" Foreground="#666" FontWeight="Bold" Margin="0,10,0,5"/>
+                            <Grid Grid.Row="4" ColumnDefinitions="*,*,*,*,*" Height="40" Margin="0,25,0,0">
+                                <Button Grid.Column="0" Content="1" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
+                                <Button Grid.Column="1" Content="2" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
+                                <Button Grid.Column="2" Content="4" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
+                                <Button Grid.Column="3" Content="8" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
+                                <Button Grid.Column="4" Content="EXIT" Background="#ff0044" Foreground="#fff" FontSize="9" CornerRadius="4"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Deck Controls -->
+                    <Grid Grid.Row="4" Background="#1a1a1a" ColumnDefinitions="*,*,*">
+                        <StackPanel Grid.Column="0" Margin="15,10">
+                            <TextBlock Text="TEMPO" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                            <TextBlock Text="+0.0%" FontSize="16" Foreground="#00ff88" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <Slider Minimum="-8" Maximum="8" Value="0" Margin="0,5,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="15,10">
+                            <TextBlock Text="KEY" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                            <TextBlock Text="--" FontSize="16" Foreground="#fff" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <Button Content="SYNC" Background="#00ff88" Foreground="#000" Height="30" Margin="0,5,0,0" FontWeight="Bold" CornerRadius="3"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Margin="15,10">
+                            <TextBlock Text="KEYLOCK" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                            <Button Content="🔒 OFF" Background="#1a1a1a" Foreground="#fff" Height="30" Margin="0,10,0,0" CornerRadius="3"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- CENTER MIXER -->
+            <Border Grid.Column="1" Background="#0f0f0f" Margin="5,10" CornerRadius="8" BorderBrush="#1a1a1a" BorderThickness="1">
+                <Grid RowDefinitions="60,*,120">
+                    
+                    <!-- Mixer Header -->
+                    <Border Grid.Row="0" Background="#1a1a1a" CornerRadius="8,8,0,0" Padding="15,10">
+                        <TextBlock Text="MIXER" FontSize="14" Foreground="#00ff88" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+
+                    <!-- EQ & Filters -->
+                    <Grid Grid.Row="1" ColumnDefinitions="*,*" Margin="20,20">
+                        <!-- Deck A EQ -->
+                        <StackPanel Grid.Column="0" Spacing="15">
+                            <TextBlock Text="DECK A" FontSize="10" Foreground="#666" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            
+                            <StackPanel>
+                                <TextBlock Text="HIGH" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                                <Slider Minimum="0" Maximum="100" Value="50" Orientation="Vertical" Height="80" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            
+                            <StackPanel>
+                                <TextBlock Text="MID" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                                <Slider Minimum="0" Maximum="100" Value="50" Orientation="Vertical" Height="80" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            
+                            <StackPanel>
+                                <TextBlock Text="LOW" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                                <Slider Minimum="0" Maximum="100" Value="50" Orientation="Vertical" Height="80" HorizontalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="FILTER" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                                <Slider Minimum="0" Maximum="100" Value="50" Orientation="Vertical" Height="60" HorizontalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="GAIN" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                                <Slider Minimum="0" Maximum="100" Value="75" Orientation="Vertical" Height="60" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Deck B EQ -->
+                        <StackPanel Grid.Column="1" Spacing="15">
+                            <TextBlock Text="DECK B" FontSize="10" Foreground="#666" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            
+                            <StackPanel>
+                                <TextBlock Text="HIGH" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                                <Slider Minimum="0" Maximum="100" Value="50" Orientation="Vertical" Height="80" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            
+                            <StackPanel>
+                                <TextBlock Text="MID" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                                <Slider Minimum="0" Maximum="100" Value="50" Orientation="Vertical" Height="80" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            
+                            <StackPanel>
+                                <TextBlock Text="LOW" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                                <Slider Minimum="0" Maximum="100" Value="50" Orientation="Vertical" Height="80" HorizontalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="FILTER" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                                <Slider Minimum="0" Maximum="100" Value="50" Orientation="Vertical" Height="60" HorizontalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel>
+                                <TextBlock Text="GAIN" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                                <Slider Minimum="0" Maximum="100" Value="75" Orientation="Vertical" Height="60" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Crossfader & Master -->
+                    <Grid Grid.Row="2" Background="#1a1a1a" RowDefinitions="*,*">
+                        <Grid Grid.Row="0" ColumnDefinitions="*,*" Margin="20,10">
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="CUE" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                                <Slider Minimum="0" Maximum="100" Value="75" Orientation="Vertical" Height="40" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="MASTER" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                                <Slider Minimum="0" Maximum="100" Value="85" Orientation="Vertical" Height="40" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                        
+                        <StackPanel Grid.Row="1" Margin="20,0,20,15">
+                            <TextBlock Text="CROSSFADER" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                            <Slider Minimum="0" Maximum="100" Value="50" Margin="0,5,0,0"/>
+                            <Grid ColumnDefinitions="*,*" Margin="0,5,0,0">
+                                <TextBlock Grid.Column="0" Text="A" FontSize="12" Foreground="#00ff88" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="1" Text="B" FontSize="12" Foreground="#0088ff" FontWeight="Bold" HorizontalAlignment="Right"/>
+                            </Grid>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!-- RIGHT DECK (DECK B) -->
+            <Border Grid.Column="2" Background="#0f0f0f" Margin="5,10,10,10" CornerRadius="8" BorderBrush="#1a1a1a" BorderThickness="1">
+                <Grid RowDefinitions="60,200,80,*,100">
+                    
+                    <!-- Deck Header -->
+                    <Border Grid.Row="0" Background="#1a1a1a" CornerRadius="8,8,0,0" Padding="15,10">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="DECK B" FontSize="10" Foreground="#0088ff" FontWeight="Bold"/>
+                                <TextBlock Text="No Track Loaded" FontSize="14" Foreground="#fff" Margin="0,2,0,0"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
+                                <TextBlock Text="120.0" FontSize="24" FontWeight="Bold" Foreground="#0088ff"/>
+                                <TextBlock Text="BPM" FontSize="10" Foreground="#666" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Waveform Display -->
+                    <Border Grid.Row="1" Background="#000" Margin="10" CornerRadius="4" BorderBrush="#0088ff" BorderThickness="1">
+                        <Grid>
+                            <controls:WaveformControl Height="200"/>
+                            <TextBlock Text="LOAD TRACK" FontSize="16" Foreground="#333" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- Transport Controls -->
+                    <Grid Grid.Row="2" Margin="15,0" ColumnDefinitions="*,*,*,*,*">
+                        <Button Grid.Column="0" Content="◄◄" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
+                        <Button Grid.Column="1" Content="◄" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
+                        <Button Grid.Column="2" Content="▶" FontSize="24" Height="50" Background="#0088ff" Foreground="#fff" CornerRadius="4" FontWeight="Bold"/>
+                        <Button Grid.Column="3" Content="►" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
+                        <Button Grid.Column="4" Content="►►" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
+                    </Grid>
+
+                    <!-- Hot Cues & Loop Controls -->
+                    <Grid Grid.Row="3" Margin="15,10">
+                        <Grid RowDefinitions="Auto,10,Auto,10,Auto">
+                            <!-- Hot Cues -->
+                            <TextBlock Grid.Row="0" Text="HOT CUES" FontSize="10" Foreground="#666" FontWeight="Bold"/>
+                            <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*" Height="40">
+                                <Button Grid.Column="0" Content="1" Background="#ff0044" Foreground="#fff" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0"/>
+                                <Button Grid.Column="1" Content="2" Background="#ff8800" Foreground="#fff" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0"/>
+                                <Button Grid.Column="2" Content="3" Background="#00ff88" Foreground="#000" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0"/>
+                                <Button Grid.Column="3" Content="4" Background="#0088ff" Foreground="#fff" FontWeight="Bold" CornerRadius="4"/>
+                            </Grid>
+                            
+                            <!-- Loop Controls -->
+                            <TextBlock Grid.Row="4" Text="LOOP" FontSize="10" Foreground="#666" FontWeight="Bold" Margin="0,10,0,5"/>
+                            <Grid Grid.Row="4" ColumnDefinitions="*,*,*,*,*" Height="40" Margin="0,25,0,0">
+                                <Button Grid.Column="0" Content="1" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
+                                <Button Grid.Column="1" Content="2" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
+                                <Button Grid.Column="2" Content="4" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
+                                <Button Grid.Column="3" Content="8" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
+                                <Button Grid.Column="4" Content="EXIT" Background="#ff0044" Foreground="#fff" FontSize="9" CornerRadius="4"/>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Deck Controls -->
+                    <Grid Grid.Row="4" Background="#1a1a1a" ColumnDefinitions="*,*,*">
+                        <StackPanel Grid.Column="0" Margin="15,10">
+                            <TextBlock Text="TEMPO" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                            <TextBlock Text="+0.0%" FontSize="16" Foreground="#0088ff" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <Slider Minimum="-8" Maximum="8" Value="0" Margin="0,5,0,0"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1" Margin="15,10">
+                            <TextBlock Text="KEY" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                            <TextBlock Text="--" FontSize="16" Foreground="#fff" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <Button Content="SYNC" Background="#0088ff" Foreground="#fff" Height="30" Margin="0,5,0,0" FontWeight="Bold" CornerRadius="3"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2" Margin="15,10">
+                            <TextBlock Text="KEYLOCK" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
+                            <Button Content="🔒 OFF" Background="#1a1a1a" Foreground="#fff" Height="30" Margin="0,10,0,0" CornerRadius="3"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- LIBRARY SECTION -->
+        <Border Grid.Row="2" Background="#0f0f0f" Margin="10,0,10,10" CornerRadius="8" BorderBrush="#1a1a1a" BorderThickness="1">
+            <Grid RowDefinitions="40,*">
+                <!-- Library Header -->
+                <Border Grid.Row="0" Background="#1a1a1a" CornerRadius="8,8,0,0" Padding="15,0">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <TextBlock Grid.Column="0" Text="LIBRARY" FontSize="12" Foreground="#00ff88" FontWeight="Bold" VerticalAlignment="Center"/>
+                        
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+                            <Button Content="All" Background="#00ff88" Foreground="#000" Padding="10,5" FontSize="10" FontWeight="Bold" CornerRadius="3"/>
+                            <Button Content="Playlists" Background="#1a1a1a" Foreground="#fff" Padding="10,5" FontSize="10" CornerRadius="3"/>
+                            <Button Content="Crates" Background="#1a1a1a" Foreground="#fff" Padding="10,5" FontSize="10" CornerRadius="3"/>
+                            <Button Content="History" Background="#1a1a1a" Foreground="#fff" Padding="10,5" FontSize="10" CornerRadius="3"/>
+                        </StackPanel>
+                        
+                        <TextBox Grid.Column="2" Watermark="🔍 Search tracks..." Width="250" Background="#0a0a0a" Foreground="#fff" BorderBrush="#333" CornerRadius="3"/>
+                    </Grid>
+                </Border>
+
+                <!-- Library Content -->
+                <Border Grid.Row="1" Background="#0a0a0a" Margin="10" CornerRadius="4">
+                    <Grid RowDefinitions="30,*">
+                        <!-- Column Headers -->
+                        <Grid Grid.Row="0" Background="#1a1a1a" ColumnDefinitions="*,200,200,80,60,80,120">
+                            <TextBlock Grid.Column="0" Text="TRACK" FontSize="10" Foreground="#666" Margin="10,0" VerticalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="1" Text="ARTIST" FontSize="10" Foreground="#666" Margin="10,0" VerticalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="2" Text="ALBUM" FontSize="10" Foreground="#666" Margin="10,0" VerticalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="3" Text="BPM" FontSize="10" Foreground="#666" Margin="10,0" VerticalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="4" Text="KEY" FontSize="10" Foreground="#666" Margin="10,0" VerticalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="5" Text="TIME" FontSize="10" Foreground="#666" Margin="10,0" VerticalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock Grid.Column="6" Text="GENRE" FontSize="10" Foreground="#666" Margin="10,0" VerticalAlignment="Center" FontWeight="Bold"/>
+                        </Grid>
+                        
+                        <!-- Track List -->
+                        <ScrollViewer Grid.Row="1">
+                            <StackPanel>
+                                <TextBlock Text="No tracks in library. Import audio files to get started." 
+                                          FontSize="12" Foreground="#666" 
+                                          HorizontalAlignment="Center" 
+                                          VerticalAlignment="Center" 
+                                          Margin="0,50,0,0"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
