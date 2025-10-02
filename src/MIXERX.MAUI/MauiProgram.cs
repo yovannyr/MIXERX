@@ -23,11 +23,21 @@ public static class MauiProgram
             });
 
         // Register services
-        builder.Services.AddSingleton<Services.IEngineService, Services.EngineService>();
+        builder.Services.AddSingleton<Services.IAudioEngineService, Services.AudioEngineService>();
+        
+        // Register platform-specific audio service
+#if WINDOWS
+        builder.Services.AddSingleton<Services.IPlatformAudioService, Platforms.Windows.WindowsAudioService>();
+#elif MACCATALYST
+        builder.Services.AddSingleton<Services.IPlatformAudioService, Platforms.MacCatalyst.MacAudioService>();
+#elif ANDROID
+        builder.Services.AddSingleton<Services.IPlatformAudioService, Platforms.Android.AndroidAudioService>();
+#elif IOS
+        builder.Services.AddSingleton<Services.IPlatformAudioService, Platforms.iOS.iOSAudioService>();
+#endif
         
         // Register ViewModels
         builder.Services.AddTransient<ViewModels.MainViewModel>();
-        builder.Services.AddTransient<ViewModels.DeckViewModel>();
         builder.Services.AddTransient<ViewModels.LibraryViewModel>();
         builder.Services.AddTransient<ViewModels.SettingsViewModel>();
         
@@ -43,3 +53,4 @@ public static class MauiProgram
         return builder.Build();
     }
 }
+

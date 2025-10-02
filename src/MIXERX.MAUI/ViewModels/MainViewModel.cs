@@ -5,14 +5,14 @@ namespace MIXERX.MAUI.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {
-    private readonly Services.IEngineService _engineService;
+    private readonly Services.IAudioEngineService _audioEngine;
 
     public DeckViewModel DeckA { get; }
     public DeckViewModel DeckB { get; }
 
-    public MainViewModel(Services.IEngineService engineService)
+    public MainViewModel(Services.IAudioEngineService audioEngine)
     {
-        _engineService = engineService;
+        _audioEngine = audioEngine;
         
         DeckA = new DeckViewModel 
         { 
@@ -30,7 +30,7 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private async Task StartEngine()
     {
-        await _engineService.StartEngineAsync();
+        await _audioEngine.StartEngineAsync();
     }
 
     [RelayCommand]
