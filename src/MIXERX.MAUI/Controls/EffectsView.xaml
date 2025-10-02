@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MIXERX.MAUI.ViewModels"
+             x:Class="MIXERX.MAUI.Controls.EffectsView"
+             x:DataType="vm:DeckViewModel">
+    
+    <StackLayout Spacing="10" Padding="10">
+        
+        <Label Text="EFFECTS" Style="{StaticResource HeaderLabel}" HorizontalOptions="Center"/>
+        
+        <!-- Filter -->
+        <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="10">
+            <StackLayout Spacing="5">
+                <Label Text="FILTER" Style="{StaticResource SubHeaderLabel}"/>
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="5">
+                    <Label Grid.Row="0" Grid.Column="0" Text="Cutoff" FontSize="12"/>
+                    <Slider Grid.Row="0" Grid.Column="1" Minimum="0" Maximum="2" Value="{Binding FilterCutoff}"/>
+                    <Label Grid.Row="1" Grid.Column="0" Text="Resonance" FontSize="12"/>
+                    <Slider Grid.Row="1" Grid.Column="1" Minimum="0" Maximum="1" Value="{Binding FilterResonance}"/>
+                </Grid>
+            </StackLayout>
+        </Frame>
+        
+        <!-- Reverb -->
+        <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="10">
+            <StackLayout Spacing="5">
+                <Label Text="REVERB" Style="{StaticResource SubHeaderLabel}"/>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <Label Grid.Column="0" Text="Wet" FontSize="12"/>
+                    <Slider Grid.Column="1" Minimum="0" Maximum="1" Value="{Binding ReverbWet}"/>
+                </Grid>
+            </StackLayout>
+        </Frame>
+        
+        <!-- Delay -->
+        <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="10">
+            <StackLayout Spacing="5">
+                <Label Text="DELAY" Style="{StaticResource SubHeaderLabel}"/>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <Label Grid.Column="0" Text="Mix" FontSize="12"/>
+                    <Slider Grid.Column="1" Minimum="0" Maximum="1" Value="{Binding DelayMix}"/>
+                </Grid>
+            </StackLayout>
+        </Frame>
+        
+    </StackLayout>
+    
+</ContentView>

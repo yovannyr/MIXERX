@@ -66,6 +66,20 @@ public partial class DeckViewModel : ObservableObject
     [ObservableProperty]
     private double eqHigh = 1.0;
 
+    // Filter Controls
+    [ObservableProperty]
+    private double filterCutoff = 1.0;
+
+    [ObservableProperty]
+    private double filterResonance = 0.1;
+
+    // Effects Controls
+    [ObservableProperty]
+    private double reverbWet = 0.0;
+
+    [ObservableProperty]
+    private double delayMix = 0.0;
+
     // Hot Cues
     public HotCueViewModel HotCue1 { get; } = new();
     public HotCueViewModel HotCue2 { get; } = new();

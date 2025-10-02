@@ -4,7 +4,7 @@
              x:Class="MIXERX.MAUI.Controls.MixerView"
              BackgroundColor="{StaticResource BackgroundLight}">
     
-    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,*,Auto" Padding="15">
+    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,*,Auto,Auto" Padding="15">
         
         <!-- Header -->
         <Label Grid.Row="0" Grid.ColumnSpan="2" Text="MIXER" 
@@ -15,29 +15,37 @@
         <StackLayout Grid.Row="1" Grid.Column="0" Spacing="5">
             <Label Text="DECK A" Style="{StaticResource SubHeaderLabel}" HorizontalOptions="Center"/>
             <Label Text="HIGH" FontSize="9" HorizontalOptions="Center"/>
-            <Slider x:Name="HighA" Minimum="0" Maximum="1" Value="0.5" Rotation="270" HeightRequest="80"/>
+            <Slider x:Name="HighA" Minimum="0" Maximum="2" Value="1" Rotation="270" HeightRequest="80"/>
             <Label Text="MID" FontSize="9" HorizontalOptions="Center"/>
-            <Slider x:Name="MidA" Minimum="0" Maximum="1" Value="0.5" Rotation="270" HeightRequest="80"/>
+            <Slider x:Name="MidA" Minimum="0" Maximum="2" Value="1" Rotation="270" HeightRequest="80"/>
             <Label Text="LOW" FontSize="9" HorizontalOptions="Center"/>
-            <Slider x:Name="LowA" Minimum="0" Maximum="1" Value="0.5" Rotation="270" HeightRequest="80"/>
-            <Label Text="GAIN" FontSize="9" HorizontalOptions="Center" Margin="0,10,0,0"/>
-            <Slider x:Name="GainA" Minimum="0" Maximum="1" Value="0.7" Rotation="270" HeightRequest="60"/>
+            <Slider x:Name="LowA" Minimum="0" Maximum="2" Value="1" Rotation="270" HeightRequest="80"/>
         </StackLayout>
         
         <StackLayout Grid.Row="1" Grid.Column="1" Spacing="5">
             <Label Text="DECK B" Style="{StaticResource SubHeaderLabel}" HorizontalOptions="Center"/>
             <Label Text="HIGH" FontSize="9" HorizontalOptions="Center"/>
-            <Slider x:Name="HighB" Minimum="0" Maximum="1" Value="0.5" Rotation="270" HeightRequest="80"/>
+            <Slider x:Name="HighB" Minimum="0" Maximum="2" Value="1" Rotation="270" HeightRequest="80"/>
             <Label Text="MID" FontSize="9" HorizontalOptions="Center"/>
-            <Slider x:Name="MidB" Minimum="0" Maximum="1" Value="0.5" Rotation="270" HeightRequest="80"/>
+            <Slider x:Name="MidB" Minimum="0" Maximum="2" Value="1" Rotation="270" HeightRequest="80"/>
             <Label Text="LOW" FontSize="9" HorizontalOptions="Center"/>
-            <Slider x:Name="LowB" Minimum="0" Maximum="1" Value="0.5" Rotation="270" HeightRequest="80"/>
-            <Label Text="GAIN" FontSize="9" HorizontalOptions="Center" Margin="0,10,0,0"/>
-            <Slider x:Name="GainB" Minimum="0" Maximum="1" Value="0.7" Rotation="270" HeightRequest="60"/>
+            <Slider x:Name="LowB" Minimum="0" Maximum="2" Value="1" Rotation="270" HeightRequest="80"/>
         </StackLayout>
         
+        <!-- Gain Controls -->
+        <Grid Grid.Row="2" Grid.ColumnSpan="2" ColumnDefinitions="*,*" ColumnSpacing="20" Margin="0,10,0,0">
+            <StackLayout Grid.Column="0">
+                <Label Text="GAIN A" FontSize="9" HorizontalOptions="Center"/>
+                <Slider x:Name="GainA" Minimum="0" Maximum="2" Value="1"/>
+            </StackLayout>
+            <StackLayout Grid.Column="1">
+                <Label Text="GAIN B" FontSize="9" HorizontalOptions="Center"/>
+                <Slider x:Name="GainB" Minimum="0" Maximum="2" Value="1"/>
+            </StackLayout>
+        </Grid>
+        
         <!-- Crossfader -->
-        <StackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="5" Margin="0,20,0,0">
+        <StackLayout Grid.Row="3" Grid.ColumnSpan="2" Spacing="5" Margin="0,20,0,0">
             <Label Text="CROSSFADER" Style="{StaticResource SubHeaderLabel}" HorizontalOptions="Center"/>
             <Slider x:Name="Crossfader" Minimum="0" Maximum="1" Value="0.5"/>
             <Grid ColumnDefinitions="*,*">
