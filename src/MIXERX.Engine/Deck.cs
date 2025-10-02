@@ -53,6 +53,7 @@ public class Deck : IAudioNode
         _effectChain.AddEffect(new FilterEffect());
         _effectChain.AddEffect(new ReverbEffect());
         _effectChain.AddEffect(new DelayEffect());
+        _effectChain.AddEffect(new LimiterEffect());
     }
 
     public bool IsPlaying => _isPlaying;

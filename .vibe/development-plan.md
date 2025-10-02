@@ -4,7 +4,7 @@
 *Workflow: [epcc](https://mrsimpson.github.io/responsible-vibe-mcp/workflows/epcc)*
 
 ## Goal
-Implement Gain Control with soft clipping for professional audio level management per deck.
+Implement Master Limiter effect to prevent output clipping and ensure professional audio output levels.
 
 ## Explore
 
@@ -15,7 +15,7 @@ Implement Gain Control with soft clipping for professional audio level managemen
 
 ### Completed
 - [x] Created development plan file
-- [x] Identified need for gain control in Deck
+- [x] Reviewed Effects architecture
 
 ## Plan
 
@@ -24,17 +24,18 @@ Implement Gain Control with soft clipping for professional audio level managemen
 
 ### Implementation Strategy
 
-**Approach:** Add gain control to Deck with soft clipping to prevent distortion.
+**Approach:** Create LimiterEffect with look-ahead limiting.
 
 **Design:**
-- Gain range: 0.0 to 2.0 (0dB to +6dB)
-- Soft clipping using tanh function
-- Apply after effects, before output
+- Threshold: -0.1dB (prevent clipping)
+- Attack: 1ms (fast response)
+- Release: 100ms (smooth recovery)
+- Simple peak detection and gain reduction
 
 ### Tasks
 
 ### Completed
-- [x] Define implementation approach
+- [x] Define limiter design
 
 ## Code
 
@@ -44,16 +45,16 @@ Implement Gain Control with soft clipping for professional audio level managemen
 ### Tasks
 
 ### Completed
-- [x] Add _gain field to Deck
-- [x] Add SetGain() method
-- [x] Apply gain with soft clipping in ProcessAudio()
-- [x] Add gain parameter handling
+- [x] Create Effects/LimiterEffect.cs
+- [x] Implement peak detection
+- [x] Implement gain reduction with smooth release
+- [x] Add to Deck effect chain
 - [x] Build and verify
 
 ## Commit
 
 ### Phase Entrance Criteria
-- [ ] Gain control implemented
+- [ ] Limiter implemented
 - [ ] Build successful
 
 ### Tasks
