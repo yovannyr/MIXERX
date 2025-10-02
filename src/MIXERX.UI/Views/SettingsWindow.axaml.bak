@@ -1,0 +1,128 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="700"
+        x:Class="MIXERX.UI.Views.SettingsWindow"
+        Title="MIXERX Settings"
+        Width="900" Height="700"
+        Background="#1a1a1a"
+        WindowStartupLocation="CenterOwner">
+
+    <Grid RowDefinitions="50,*">
+        
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#0d0d0d" BorderBrush="#00ff88" BorderThickness="0,0,0,2">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="20,0" VerticalAlignment="Center">
+                    <TextBlock Text="MIXERX" FontSize="18" FontWeight="Bold" Foreground="#00ff88"/>
+                    <TextBlock Text="SETTINGS" FontSize="18" FontWeight="Bold" Foreground="#fff" Margin="10,0,0,0"/>
+                </StackPanel>
+                <Button Grid.Column="1" Content="✕" Width="40" Height="40" Background="Transparent" Foreground="#fff" FontSize="20" Click="CloseButton_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" ColumnDefinitions="200,*">
+            
+            <!-- Tab Navigation -->
+            <Border Grid.Column="0" Background="#0f0f0f" BorderBrush="#1a1a1a" BorderThickness="0,0,1,0">
+                <StackPanel Margin="0,20,0,0">
+                    <Button Content="DJ Preferences" Background="#00ff88" Foreground="#000" Height="40" Margin="10,0" FontWeight="Bold" CornerRadius="4"/>
+                    <Button Content="Audio" Background="#1a1a1a" Foreground="#fff" Height="40" Margin="10,5" CornerRadius="4"/>
+                    <Button Content="Library &amp; Display" Background="#1a1a1a" Foreground="#fff" Height="40" Margin="10,5" CornerRadius="4"/>
+                    <Button Content="FX" Background="#1a1a1a" Foreground="#fff" Height="40" Margin="10,5" CornerRadius="4"/>
+                    <Button Content="MIDI" Background="#1a1a1a" Foreground="#fff" Height="40" Margin="10,5" CornerRadius="4"/>
+                    <Button Content="Expansion Packs" Background="#1a1a1a" Foreground="#fff" Height="40" Margin="10,5" CornerRadius="4"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Settings Content -->
+            <ScrollViewer Grid.Column="1" Background="#0a0a0a">
+                <StackPanel Margin="30,20">
+                    
+                    <!-- LIBRARY Section -->
+                    <TextBlock Text="LIBRARY" FontSize="14" Foreground="#00ff88" FontWeight="Bold" Margin="0,0,0,15"/>
+                    
+                    <CheckBox Content="Show iTunes Library" Foreground="#fff" Margin="0,5" IsChecked="True"/>
+                    <CheckBox Content="Protect Library" Foreground="#fff" Margin="0,5"/>
+                    <CheckBox Content="Custom Crate Columns" Foreground="#fff" Margin="0,5"/>
+                    <CheckBox Content="Center on Selected Song" Foreground="#fff" Margin="0,5"/>
+                    <CheckBox Content="Include Subcrate Tracks" Foreground="#fff" Margin="0,5" IsChecked="True"/>
+                    
+                    <Grid ColumnDefinitions="200,*" Margin="0,15,0,0">
+                        <TextBlock Grid.Column="0" Text="Played Track Color" Foreground="#999" VerticalAlignment="Center"/>
+                        <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
+                            <ComboBoxItem Content="Blue" IsSelected="True"/>
+                            <ComboBoxItem Content="Red"/>
+                            <ComboBoxItem Content="Green"/>
+                            <ComboBoxItem Content="Yellow"/>
+                            <ComboBoxItem Content="Orange"/>
+                            <ComboBoxItem Content="Purple"/>
+                        </ComboBox>
+                    </Grid>
+                    
+                    <CheckBox Content="Reset Played Tracks on Exit" Foreground="#fff" Margin="0,10"/>
+                    <Button Content="Reset Played Tracks" Background="#1a1a1a" Foreground="#fff" Width="150" HorizontalAlignment="Left" Margin="0,5" CornerRadius="3"/>
+                    
+                    <Grid ColumnDefinitions="200,*" Margin="0,15,0,0">
+                        <TextBlock Grid.Column="0" Text="Library Text Size" Foreground="#999" VerticalAlignment="Center"/>
+                        <Slider Grid.Column="1" Minimum="8" Maximum="20" Value="12" Width="300" HorizontalAlignment="Left"/>
+                    </Grid>
+
+                    <!-- DISPLAY Section -->
+                    <TextBlock Text="DISPLAY" FontSize="14" Foreground="#00ff88" FontWeight="Bold" Margin="0,30,0,15"/>
+                    
+                    <CheckBox Content="Show Tempo Matching Display" Foreground="#fff" Margin="0,5"/>
+                    <CheckBox Content="Hide Track/Artist (AM Mode)" Foreground="#fff" Margin="0,5"/>
+                    <CheckBox Content="EQ Colored Waveforms" Foreground="#fff" Margin="0,5"/>
+                    <CheckBox Content="Color Key Display" Foreground="#fff" Margin="0,5" IsChecked="True"/>
+                    <CheckBox Content="Performance Pad Cue Layout" Foreground="#fff" Margin="0,5" IsChecked="True"/>
+                    
+                    <Grid ColumnDefinitions="200,*" Margin="0,15,0,0">
+                        <TextBlock Grid.Column="0" Text="Show Key As" Foreground="#999" VerticalAlignment="Center"/>
+                        <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
+                            <ComboBoxItem Content="Camelot" IsSelected="True"/>
+                            <ComboBoxItem Content="Standard"/>
+                            <ComboBoxItem Content="Open Key"/>
+                        </ComboBox>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="200,*" Margin="0,15,0,0">
+                        <TextBlock Grid.Column="0" Text="Deck BPM Display" Foreground="#999" VerticalAlignment="Center"/>
+                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                            <RadioButton Content="1 Decimal Place" Foreground="#fff" IsChecked="True"/>
+                            <RadioButton Content="2 Decimal Places" Foreground="#fff" Margin="0,5"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="200,*" Margin="0,15,0,0">
+                        <TextBlock Grid.Column="0" Text="Maximum Screen Updates Per Second" Foreground="#999" VerticalAlignment="Top" TextWrapping="Wrap" Width="180"/>
+                        <StackPanel Grid.Column="1">
+                            <Slider Minimum="5" Maximum="60" Value="30" Width="300" HorizontalAlignment="Left"/>
+                            <TextBlock Text="5    10    15    20    30    40    50    60" FontSize="9" Foreground="#666" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <TextBlock Text="Live Update Smart Crates will refresh on application restart." 
+                              FontSize="10" Foreground="#666" Margin="0,15" TextWrapping="Wrap"/>
+                    
+                    <CheckBox Content="Hi-Res Screen Display" Foreground="#fff" Margin="0,10"/>
+
+                    <!-- PRIVACY Section -->
+                    <CheckBox Content="Send Usage Data to MIXERX" Foreground="#fff" Margin="0,30,0,5" IsChecked="True"/>
+                    <TextBlock Text="Help MIXERX provide you with a more personalized experience and improve products, features and support by automatically sending information about how you use MIXERX. Collection of this information will not affect performance." 
+                              FontSize="10" Foreground="#666" Margin="20,0,0,0" TextWrapping="Wrap" MaxWidth="600" HorizontalAlignment="Left"/>
+
+                    <!-- Bottom Buttons -->
+                    <StackPanel Orientation="Horizontal" Margin="0,40,0,20" Spacing="10">
+                        <Button Content="Apply" Background="#00ff88" Foreground="#000" Width="100" Height="35" FontWeight="Bold" CornerRadius="4"/>
+                        <Button Content="Cancel" Background="#1a1a1a" Foreground="#fff" Width="100" Height="35" CornerRadius="4" Click="CloseButton_Click"/>
+                        <Button Content="Reset to Defaults" Background="#1a1a1a" Foreground="#fff" Width="150" Height="35" CornerRadius="4"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Window>

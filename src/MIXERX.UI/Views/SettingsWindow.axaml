@@ -9,7 +9,7 @@
         Background="#1a1a1a"
         WindowStartupLocation="CenterOwner">
 
-    <Grid RowDefinitions="50,*">
+    <Grid RowDefinitions="50,*,60">
         
         <!-- Header -->
         <Border Grid.Row="0" Background="#0d0d0d" BorderBrush="#00ff88" BorderThickness="0,0,0,2">
@@ -22,107 +22,303 @@
             </Grid>
         </Border>
 
-        <!-- Main Content -->
-        <Grid Grid.Row="1" ColumnDefinitions="200,*">
+        <!-- Tab Control -->
+        <TabControl Grid.Row="1" Background="#0a0a0a" Margin="10">
             
-            <!-- Tab Navigation -->
-            <Border Grid.Column="0" Background="#0f0f0f" BorderBrush="#1a1a1a" BorderThickness="0,0,1,0">
-                <StackPanel Margin="0,20,0,0">
-                    <Button Content="DJ Preferences" Background="#00ff88" Foreground="#000" Height="40" Margin="10,0" FontWeight="Bold" CornerRadius="4"/>
-                    <Button Content="Audio" Background="#1a1a1a" Foreground="#fff" Height="40" Margin="10,5" CornerRadius="4"/>
-                    <Button Content="Library &amp; Display" Background="#1a1a1a" Foreground="#fff" Height="40" Margin="10,5" CornerRadius="4"/>
-                    <Button Content="FX" Background="#1a1a1a" Foreground="#fff" Height="40" Margin="10,5" CornerRadius="4"/>
-                    <Button Content="MIDI" Background="#1a1a1a" Foreground="#fff" Height="40" Margin="10,5" CornerRadius="4"/>
-                    <Button Content="Expansion Packs" Background="#1a1a1a" Foreground="#fff" Height="40" Margin="10,5" CornerRadius="4"/>
-                </StackPanel>
-            </Border>
-
-            <!-- Settings Content -->
-            <ScrollViewer Grid.Column="1" Background="#0a0a0a">
-                <StackPanel Margin="30,20">
-                    
-                    <!-- LIBRARY Section -->
-                    <TextBlock Text="LIBRARY" FontSize="14" Foreground="#00ff88" FontWeight="Bold" Margin="0,0,0,15"/>
-                    
-                    <CheckBox Content="Show iTunes Library" Foreground="#fff" Margin="0,5" IsChecked="True"/>
-                    <CheckBox Content="Protect Library" Foreground="#fff" Margin="0,5"/>
-                    <CheckBox Content="Custom Crate Columns" Foreground="#fff" Margin="0,5"/>
-                    <CheckBox Content="Center on Selected Song" Foreground="#fff" Margin="0,5"/>
-                    <CheckBox Content="Include Subcrate Tracks" Foreground="#fff" Margin="0,5" IsChecked="True"/>
-                    
-                    <Grid ColumnDefinitions="200,*" Margin="0,15,0,0">
-                        <TextBlock Grid.Column="0" Text="Played Track Color" Foreground="#999" VerticalAlignment="Center"/>
-                        <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
-                            <ComboBoxItem Content="Blue" IsSelected="True"/>
-                            <ComboBoxItem Content="Red"/>
-                            <ComboBoxItem Content="Green"/>
-                            <ComboBoxItem Content="Yellow"/>
-                            <ComboBoxItem Content="Orange"/>
-                            <ComboBoxItem Content="Purple"/>
-                        </ComboBox>
-                    </Grid>
-                    
-                    <CheckBox Content="Reset Played Tracks on Exit" Foreground="#fff" Margin="0,10"/>
-                    <Button Content="Reset Played Tracks" Background="#1a1a1a" Foreground="#fff" Width="150" HorizontalAlignment="Left" Margin="0,5" CornerRadius="3"/>
-                    
-                    <Grid ColumnDefinitions="200,*" Margin="0,15,0,0">
-                        <TextBlock Grid.Column="0" Text="Library Text Size" Foreground="#999" VerticalAlignment="Center"/>
-                        <Slider Grid.Column="1" Minimum="8" Maximum="20" Value="12" Width="300" HorizontalAlignment="Left"/>
-                    </Grid>
-
-                    <!-- DISPLAY Section -->
-                    <TextBlock Text="DISPLAY" FontSize="14" Foreground="#00ff88" FontWeight="Bold" Margin="0,30,0,15"/>
-                    
-                    <CheckBox Content="Show Tempo Matching Display" Foreground="#fff" Margin="0,5"/>
-                    <CheckBox Content="Hide Track/Artist (AM Mode)" Foreground="#fff" Margin="0,5"/>
-                    <CheckBox Content="EQ Colored Waveforms" Foreground="#fff" Margin="0,5"/>
-                    <CheckBox Content="Color Key Display" Foreground="#fff" Margin="0,5" IsChecked="True"/>
-                    <CheckBox Content="Performance Pad Cue Layout" Foreground="#fff" Margin="0,5" IsChecked="True"/>
-                    
-                    <Grid ColumnDefinitions="200,*" Margin="0,15,0,0">
-                        <TextBlock Grid.Column="0" Text="Show Key As" Foreground="#999" VerticalAlignment="Center"/>
-                        <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
-                            <ComboBoxItem Content="Camelot" IsSelected="True"/>
-                            <ComboBoxItem Content="Standard"/>
-                            <ComboBoxItem Content="Open Key"/>
-                        </ComboBox>
-                    </Grid>
-
-                    <Grid ColumnDefinitions="200,*" Margin="0,15,0,0">
-                        <TextBlock Grid.Column="0" Text="Deck BPM Display" Foreground="#999" VerticalAlignment="Center"/>
-                        <StackPanel Grid.Column="1" Orientation="Vertical">
-                            <RadioButton Content="1 Decimal Place" Foreground="#fff" IsChecked="True"/>
-                            <RadioButton Content="2 Decimal Places" Foreground="#fff" Margin="0,5"/>
-                        </StackPanel>
-                    </Grid>
-
-                    <Grid ColumnDefinitions="200,*" Margin="0,15,0,0">
-                        <TextBlock Grid.Column="0" Text="Maximum Screen Updates Per Second" Foreground="#999" VerticalAlignment="Top" TextWrapping="Wrap" Width="180"/>
-                        <StackPanel Grid.Column="1">
-                            <Slider Minimum="5" Maximum="60" Value="30" Width="300" HorizontalAlignment="Left"/>
-                            <TextBlock Text="5    10    15    20    30    40    50    60" FontSize="9" Foreground="#666" Margin="0,2,0,0"/>
-                        </StackPanel>
-                    </Grid>
-
-                    <TextBlock Text="Live Update Smart Crates will refresh on application restart." 
-                              FontSize="10" Foreground="#666" Margin="0,15" TextWrapping="Wrap"/>
-                    
-                    <CheckBox Content="Hi-Res Screen Display" Foreground="#fff" Margin="0,10"/>
-
-                    <!-- PRIVACY Section -->
-                    <CheckBox Content="Send Usage Data to MIXERX" Foreground="#fff" Margin="0,30,0,5" IsChecked="True"/>
-                    <TextBlock Text="Help MIXERX provide you with a more personalized experience and improve products, features and support by automatically sending information about how you use MIXERX. Collection of this information will not affect performance." 
-                              FontSize="10" Foreground="#666" Margin="20,0,0,0" TextWrapping="Wrap" MaxWidth="600" HorizontalAlignment="Left"/>
-
-                    <!-- Bottom Buttons -->
-                    <StackPanel Orientation="Horizontal" Margin="0,40,0,20" Spacing="10">
-                        <Button Content="Apply" Background="#00ff88" Foreground="#000" Width="100" Height="35" FontWeight="Bold" CornerRadius="4"/>
-                        <Button Content="Cancel" Background="#1a1a1a" Foreground="#fff" Width="100" Height="35" CornerRadius="4" Click="CloseButton_Click"/>
-                        <Button Content="Reset to Defaults" Background="#1a1a1a" Foreground="#fff" Width="150" Height="35" CornerRadius="4"/>
+            <!-- Audio Tab -->
+            <TabItem Header="Audio">
+                <ScrollViewer>
+                    <StackPanel Margin="20">
+                        <TextBlock Text="AUDIO SETTINGS" FontSize="14" Foreground="#00ff88" FontWeight="Bold" Margin="0,0,0,15"/>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Audio Driver" Foreground="#999" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
+                                <ComboBoxItem Content="WASAPI" IsSelected="True"/>
+                                <ComboBoxItem Content="CoreAudio"/>
+                                <ComboBoxItem Content="ASIO"/>
+                            </ComboBox>
+                        </Grid>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Sample Rate" Foreground="#999" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
+                                <ComboBoxItem Content="44100 Hz"/>
+                                <ComboBoxItem Content="48000 Hz" IsSelected="True"/>
+                                <ComboBoxItem Content="96000 Hz"/>
+                            </ComboBox>
+                        </Grid>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Buffer Size" Foreground="#999" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
+                                <ComboBoxItem Content="128 samples"/>
+                                <ComboBoxItem Content="256 samples"/>
+                                <ComboBoxItem Content="512 samples" IsSelected="True"/>
+                                <ComboBoxItem Content="1024 samples"/>
+                            </ComboBox>
+                        </Grid>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Master Volume" Foreground="#999" VerticalAlignment="Center"/>
+                            <Slider Grid.Column="1" Minimum="0" Maximum="100" Value="85" Width="300" HorizontalAlignment="Left"/>
+                        </Grid>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Cue Volume" Foreground="#999" VerticalAlignment="Center"/>
+                            <Slider Grid.Column="1" Minimum="0" Maximum="100" Value="75" Width="300" HorizontalAlignment="Left"/>
+                        </Grid>
                     </StackPanel>
+                </ScrollViewer>
+            </TabItem>
 
-                </StackPanel>
-            </ScrollViewer>
-        </Grid>
+            <!-- Decks Tab -->
+            <TabItem Header="Decks">
+                <ScrollViewer>
+                    <StackPanel Margin="20">
+                        <TextBlock Text="DECK SETTINGS" FontSize="14" Foreground="#00ff88" FontWeight="Bold" Margin="0,0,0,15"/>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Tempo Range" Foreground="#999" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
+                                <ComboBoxItem Content="±6%"/>
+                                <ComboBoxItem Content="±8%" IsSelected="True"/>
+                                <ComboBoxItem Content="±10%"/>
+                                <ComboBoxItem Content="±20%"/>
+                            </ComboBox>
+                        </Grid>
+                        
+                        <CheckBox Content="Keylock Default ON" Foreground="#fff" Margin="0,10"/>
+                        <CheckBox Content="Show Energy Overlay" Foreground="#fff" Margin="0,10" IsChecked="True"/>
+                        <CheckBox Content="Show Beat Markers" Foreground="#fff" Margin="0,10" IsChecked="True"/>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Waveform Zoom" Foreground="#999" VerticalAlignment="Center"/>
+                            <Slider Grid.Column="1" Minimum="0.5" Maximum="5" Value="1" Width="300" HorizontalAlignment="Left"/>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Effects & Loops Tab -->
+            <TabItem Header="Effects &amp; Loops">
+                <ScrollViewer>
+                    <StackPanel Margin="20">
+                        <TextBlock Text="EFFECTS" FontSize="14" Foreground="#00ff88" FontWeight="Bold" Margin="0,0,0,15"/>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Reverb Wet (Default)" Foreground="#999" VerticalAlignment="Center"/>
+                            <Slider Grid.Column="1" Minimum="0" Maximum="100" Value="30" Width="300" HorizontalAlignment="Left"/>
+                        </Grid>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Delay Mix (Default)" Foreground="#999" VerticalAlignment="Center"/>
+                            <Slider Grid.Column="1" Minimum="0" Maximum="100" Value="50" Width="300" HorizontalAlignment="Left"/>
+                        </Grid>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Filter Cutoff (Default)" Foreground="#999" VerticalAlignment="Center"/>
+                            <Slider Grid.Column="1" Minimum="0" Maximum="100" Value="50" Width="300" HorizontalAlignment="Left"/>
+                        </Grid>
+                        
+                        <CheckBox Content="Bypass Effects on Track Load" Foreground="#fff" Margin="0,10"/>
+                        
+                        <TextBlock Text="LOOPS" FontSize="14" Foreground="#00ff88" FontWeight="Bold" Margin="0,20,0,15"/>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Default Loop Length" Foreground="#999" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
+                                <ComboBoxItem Content="1 beat"/>
+                                <ComboBoxItem Content="2 beats"/>
+                                <ComboBoxItem Content="4 beats" IsSelected="True"/>
+                                <ComboBoxItem Content="8 beats"/>
+                            </ComboBox>
+                        </Grid>
+                        
+                        <CheckBox Content="Loop Quantize (Beat Snap)" Foreground="#fff" Margin="0,10" IsChecked="True"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Library & Display Tab -->
+            <TabItem Header="Library &amp; Display">
+                <ScrollViewer>
+                    <StackPanel Margin="20">
+                        <TextBlock Text="LIBRARY" FontSize="14" Foreground="#00ff88" FontWeight="Bold" Margin="0,0,0,15"/>
+                        
+                        <CheckBox Content="Auto-Import on Startup" Foreground="#fff" Margin="0,5" IsChecked="True"/>
+                        <CheckBox Content="Show iTunes Library" Foreground="#fff" Margin="0,5"/>
+                        <CheckBox Content="Analyze Tracks on Import (BPM/Key)" Foreground="#fff" Margin="0,5" IsChecked="True"/>
+                        <CheckBox Content="Protect Library" Foreground="#fff" Margin="0,5"/>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,15">
+                            <TextBlock Text="Played Track Color" Foreground="#999" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
+                                <ComboBoxItem Content="Blue" IsSelected="True"/>
+                                <ComboBoxItem Content="Red"/>
+                                <ComboBoxItem Content="Green"/>
+                                <ComboBoxItem Content="Yellow"/>
+                            </ComboBox>
+                        </Grid>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Library Text Size" Foreground="#999" VerticalAlignment="Center"/>
+                            <Slider Grid.Column="1" Minimum="8" Maximum="20" Value="12" Width="300" HorizontalAlignment="Left"/>
+                        </Grid>
+                        
+                        <TextBlock Text="DISPLAY" FontSize="14" Foreground="#00ff88" FontWeight="Bold" Margin="0,20,0,15"/>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="BPM Decimal Places" Foreground="#999" VerticalAlignment="Center"/>
+                            <StackPanel Grid.Column="1">
+                                <RadioButton Content="1 Decimal" Foreground="#fff" IsChecked="True"/>
+                                <RadioButton Content="2 Decimals" Foreground="#fff" Margin="0,5"/>
+                            </StackPanel>
+                        </Grid>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Key Notation" Foreground="#999" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
+                                <ComboBoxItem Content="Camelot" IsSelected="True"/>
+                                <ComboBoxItem Content="Standard"/>
+                                <ComboBoxItem Content="Open Key"/>
+                            </ComboBox>
+                        </Grid>
+                        
+                        <CheckBox Content="Color Key Display" Foreground="#fff" Margin="0,10" IsChecked="True"/>
+                        <CheckBox Content="Hi-Res Screen Display" Foreground="#fff" Margin="0,5"/>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Max Screen Updates (FPS)" Foreground="#999" VerticalAlignment="Center"/>
+                            <Slider Grid.Column="1" Minimum="5" Maximum="60" Value="30" Width="300" HorizontalAlignment="Left"/>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Recording Tab -->
+            <TabItem Header="Recording">
+                <ScrollViewer>
+                    <StackPanel Margin="20">
+                        <TextBlock Text="RECORDING SETTINGS" FontSize="14" Foreground="#00ff88" FontWeight="Bold" Margin="0,0,0,15"/>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Default Format" Foreground="#999" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
+                                <ComboBoxItem Content="WAV"/>
+                                <ComboBoxItem Content="MP3" IsSelected="True"/>
+                            </ComboBox>
+                        </Grid>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="MP3 Bitrate" Foreground="#999" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
+                                <ComboBoxItem Content="128 kbps"/>
+                                <ComboBoxItem Content="192 kbps" IsSelected="True"/>
+                                <ComboBoxItem Content="256 kbps"/>
+                                <ComboBoxItem Content="320 kbps"/>
+                            </ComboBox>
+                        </Grid>
+                        
+                        <CheckBox Content="Auto-Delete WAV after MP3 Conversion" Foreground="#fff" Margin="0,10" IsChecked="True"/>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,15">
+                            <TextBlock Text="Recording Directory" Foreground="#999" VerticalAlignment="Center"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBox Width="300" Text="%USERPROFILE%/Music/MIXERX" IsReadOnly="True"/>
+                                <Button Content="Browse..." Margin="10,0,0,0" Background="#1a1a1a" Foreground="#fff" CornerRadius="3"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- MIDI Tab -->
+            <TabItem Header="MIDI">
+                <ScrollViewer>
+                    <StackPanel Margin="20">
+                        <TextBlock Text="MIDI SETTINGS" FontSize="14" Foreground="#00ff88" FontWeight="Bold" Margin="0,0,0,15"/>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="MIDI Device" Foreground="#999" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" Width="300" HorizontalAlignment="Left">
+                                <ComboBoxItem Content="None" IsSelected="True"/>
+                                <ComboBoxItem Content="(No devices detected)"/>
+                            </ComboBox>
+                        </Grid>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,15">
+                            <TextBlock Text="Controller Mapping" Foreground="#999" VerticalAlignment="Center"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <TextBox Width="300" Text="No mapping loaded" IsReadOnly="True"/>
+                                <Button Content="Load..." Margin="10,0,0,0" Background="#1a1a1a" Foreground="#fff" CornerRadius="3"/>
+                            </StackPanel>
+                        </Grid>
+                        
+                        <CheckBox Content="MIDI Learn Mode" Foreground="#fff" Margin="0,10"/>
+                        <CheckBox Content="MIDI Clock Sync" Foreground="#fff" Margin="0,5"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Performance Tab -->
+            <TabItem Header="Performance">
+                <ScrollViewer>
+                    <StackPanel Margin="20">
+                        <TextBlock Text="PERFORMANCE SETTINGS" FontSize="14" Foreground="#00ff88" FontWeight="Bold" Margin="0,0,0,15"/>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Hot Cue Count" Foreground="#999" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
+                                <ComboBoxItem Content="4 Cues" IsSelected="True"/>
+                                <ComboBoxItem Content="8 Cues"/>
+                                <ComboBoxItem Content="16 Cues"/>
+                            </ComboBox>
+                        </Grid>
+                        
+                        <Grid ColumnDefinitions="200,*" Margin="0,10">
+                            <TextBlock Text="Pad Layout" Foreground="#999" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Column="1" Width="200" HorizontalAlignment="Left">
+                                <ComboBoxItem Content="Default" IsSelected="True"/>
+                                <ComboBoxItem Content="Compact"/>
+                                <ComboBoxItem Content="Extended"/>
+                            </ComboBox>
+                        </Grid>
+                        
+                        <CheckBox Content="Full Screen on Startup" Foreground="#fff" Margin="0,10"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Privacy Tab -->
+            <TabItem Header="Privacy">
+                <ScrollViewer>
+                    <StackPanel Margin="20">
+                        <TextBlock Text="PRIVACY SETTINGS" FontSize="14" Foreground="#00ff88" FontWeight="Bold" Margin="0,0,0,15"/>
+                        
+                        <CheckBox Content="Send Usage Data to MIXERX" Foreground="#fff" Margin="0,10" IsChecked="True"/>
+                        <TextBlock Text="Help MIXERX improve by automatically sending information about how you use the software." 
+                                  FontSize="10" Foreground="#666" Margin="20,0,0,10" TextWrapping="Wrap" MaxWidth="600" HorizontalAlignment="Left"/>
+                        
+                        <CheckBox Content="Send Crash Reports" Foreground="#fff" Margin="0,10" IsChecked="True"/>
+                        <TextBlock Text="Automatically send crash reports to help us fix bugs faster." 
+                                  FontSize="10" Foreground="#666" Margin="20,0,0,10" TextWrapping="Wrap" MaxWidth="600" HorizontalAlignment="Left"/>
+                        
+                        <CheckBox Content="Anonymous Statistics" Foreground="#fff" Margin="0,10" IsChecked="True"/>
+                        <TextBlock Text="Share anonymous usage statistics to help improve MIXERX." 
+                                  FontSize="10" Foreground="#666" Margin="20,0,0,10" TextWrapping="Wrap" MaxWidth="600" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
+        <!-- Bottom Buttons -->
+        <Border Grid.Row="2" Background="#0f0f0f" BorderBrush="#1a1a1a" BorderThickness="0,1,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,10" Spacing="10">
+                <Button Content="Apply" Background="#00ff88" Foreground="#000" Width="100" Height="35" FontWeight="Bold" CornerRadius="4" Click="ApplyButton_Click"/>
+                <Button Content="Cancel" Background="#1a1a1a" Foreground="#fff" Width="100" Height="35" CornerRadius="4" Click="CloseButton_Click"/>
+                <Button Content="Reset to Defaults" Background="#1a1a1a" Foreground="#fff" Width="150" Height="35" CornerRadius="4" Click="ResetButton_Click"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
