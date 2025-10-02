@@ -5,141 +5,136 @@
              x:Class="MIXERX.MAUI.Views.SettingsPage"
              x:DataType="vm:SettingsViewModel"
              Title="Settings"
-             BackgroundColor="{StaticResource BackgroundDark}">
+             BackgroundColor="#2A2A2A">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
-            
-            <!-- Audio Settings -->
-            <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="15">
-                <StackLayout Spacing="10">
-                    <Label Text="AUDIO" Style="{StaticResource HeaderLabel}"/>
+    <Grid RowDefinitions="60,Auto,*,40">
+        
+        <!-- Top Bar -->
+        <Grid Grid.Row="0" BackgroundColor="#1A1A1A" ColumnDefinitions="*,Auto,Auto,Auto,Auto" Padding="15,0">
+            <StackLayout Grid.Column="0" Orientation="Horizontal" VerticalOptions="Center">
+                <Label Text="MIXERX" FontSize="18" FontAttributes="Bold" TextColor="#00FF88" Margin="0,0,5,0"/>
+                <Label Text="PRO" FontSize="18" TextColor="White"/>
+            </StackLayout>
+            <Label Grid.Column="1" Text="Master" FontSize="14" VerticalOptions="Center" Margin="10,0"/>
+            <Button Grid.Column="2" Text="🎧" WidthRequest="40" HeightRequest="40" Margin="5,0"/>
+            <Button Grid.Column="3" Text="My Serato" WidthRequest="100" HeightRequest="35" Margin="5,0"/>
+            <Button Grid.Column="4" Text="⚙" WidthRequest="40" HeightRequest="40" BackgroundColor="#0088FF" Margin="5,0"/>
+        </Grid>
+
+        <!-- Tabs -->
+        <Grid Grid.Row="1" BackgroundColor="#1A1A1A" ColumnDefinitions="*,*,*,*,*" Padding="0">
+            <Button Grid.Column="0" Text="DJ Preferences" BackgroundColor="#2A2A2A" TextColor="White" CornerRadius="0"/>
+            <Button Grid.Column="1" Text="Audio" BackgroundColor="#2A2A2A" TextColor="White" CornerRadius="0"/>
+            <Button Grid.Column="2" Text="Library &amp; Display" BackgroundColor="#0088FF" TextColor="White" CornerRadius="0"/>
+            <Button Grid.Column="3" Text="FX" BackgroundColor="#2A2A2A" TextColor="White" CornerRadius="0"/>
+            <Button Grid.Column="4" Text="Expansion Packs" BackgroundColor="#2A2A2A" TextColor="White" CornerRadius="0"/>
+        </Grid>
+
+        <!-- Content Area with Blue Border -->
+        <Frame Grid.Row="2" BorderColor="#0088FF" BackgroundColor="#2A2A2A" Margin="20" Padding="0" CornerRadius="0">
+            <ScrollView>
+                <Grid RowDefinitions="Auto,Auto" Padding="20">
                     
-                    <Grid ColumnDefinitions="150,*" RowSpacing="10">
-                        <Label Grid.Row="0" Grid.Column="0" Text="Audio Driver" VerticalOptions="Center"/>
-                        <Picker Grid.Row="0" Grid.Column="1" SelectedItem="{Binding AudioDriver}">
-                            <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>WASAPI</x:String>
-                                    <x:String>CoreAudio</x:String>
-                                    <x:String>ASIO</x:String>
-                                </x:Array>
-                            </Picker.ItemsSource>
-                        </Picker>
+                    <!-- LIBRARY Section -->
+                    <StackLayout Grid.Row="0" Spacing="15">
+                        <Label Text="LIBRARY" FontSize="14" FontAttributes="Bold" TextColor="#888" Margin="0,0,0,10"/>
                         
-                        <Label Grid.Row="1" Grid.Column="0" Text="Sample Rate" VerticalOptions="Center"/>
-                        <Picker Grid.Row="1" Grid.Column="1" SelectedItem="{Binding SampleRate}">
-                            <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:Int32}">
-                                    <x:Int32>44100</x:Int32>
-                                    <x:Int32>48000</x:Int32>
-                                    <x:Int32>96000</x:Int32>
-                                </x:Array>
-                            </Picker.ItemsSource>
-                        </Picker>
+                        <CheckBox Content="Show iTunes Library" IsChecked="True" TextColor="White"/>
+                        <CheckBox Content="Protect Library" IsChecked="False" TextColor="White"/>
+                        <CheckBox Content="Custom Crate Columns" IsChecked="False" TextColor="White"/>
+                        <CheckBox Content="Center on Selected Song" IsChecked="False" TextColor="White"/>
+                        <CheckBox Content="Include Subcrate Tracks" IsChecked="True" TextColor="White"/>
+
+                        <Grid ColumnDefinitions="200,*" Margin="0,10,0,0">
+                            <Label Grid.Column="0" Text="Played Track Color" VerticalOptions="Center" TextColor="White"/>
+                            <Picker Grid.Column="1" SelectedItem="Blue" BackgroundColor="#1A1A1A" TextColor="White">
+                                <Picker.ItemsSource>
+                                    <x:Array Type="{x:Type x:String}">
+                                        <x:String>Blue</x:String>
+                                        <x:String>Green</x:String>
+                                        <x:String>Red</x:String>
+                                        <x:String>Yellow</x:String>
+                                    </x:Array>
+                                </Picker.ItemsSource>
+                            </Picker>
+                        </Grid>
+
+                        <CheckBox Content="Reset Played Tracks on Exit" IsChecked="False" TextColor="White" Margin="0,10,0,0"/>
+                        <Button Text="Reset Played Tracks" BackgroundColor="#3A3A3A" TextColor="White" HorizontalOptions="Start" WidthRequest="150" Margin="0,5,0,0"/>
+
+                        <Grid ColumnDefinitions="200,*" Margin="0,15,0,0">
+                            <Label Grid.Column="0" Text="Library Text Size" VerticalOptions="Center" TextColor="White"/>
+                            <Slider Grid.Column="1" Minimum="8" Maximum="16" Value="12" BackgroundColor="#1A1A1A"/>
+                        </Grid>
+                    </StackLayout>
+
+                    <!-- DISPLAY Section -->
+                    <StackLayout Grid.Row="1" Spacing="15" Margin="0,30,0,0">
+                        <Label Text="DISPLAY" FontSize="14" FontAttributes="Bold" TextColor="#888" Margin="0,0,0,10"/>
                         
-                        <Label Grid.Row="2" Grid.Column="0" Text="Buffer Size" VerticalOptions="Center"/>
-                        <Picker Grid.Row="2" Grid.Column="1" SelectedItem="{Binding BufferSize}">
-                            <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:Int32}">
-                                    <x:Int32>128</x:Int32>
-                                    <x:Int32>256</x:Int32>
-                                    <x:Int32>512</x:Int32>
-                                    <x:Int32>1024</x:Int32>
-                                </x:Array>
-                            </Picker.ItemsSource>
-                        </Picker>
-                        
-                        <Label Grid.Row="3" Grid.Column="0" Text="Master Volume" VerticalOptions="Center"/>
-                        <Slider Grid.Row="3" Grid.Column="1" Minimum="0" Maximum="100" Value="{Binding MasterVolume}"/>
-                    </Grid>
-                </StackLayout>
-            </Frame>
+                        <CheckBox Content="Show Tempo Matching Display" IsChecked="False" TextColor="White"/>
+                        <CheckBox Content="Hide Track/Artist (AM Mode)" IsChecked="False" TextColor="White"/>
+                        <CheckBox Content="EQ Colored Waveforms" IsChecked="False" TextColor="White"/>
+                        <CheckBox Content="Color Key Display" IsChecked="True" TextColor="White"/>
+                        <CheckBox Content="Performance Pad Cue Layout" IsChecked="True" TextColor="White"/>
 
-            <!-- Deck Settings -->
-            <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="15">
-                <StackLayout Spacing="10">
-                    <Label Text="DECKS" Style="{StaticResource HeaderLabel}"/>
-                    
-                    <Grid ColumnDefinitions="150,*" RowSpacing="10">
-                        <Label Grid.Row="0" Grid.Column="0" Text="Tempo Range" VerticalOptions="Center"/>
-                        <Picker Grid.Row="0" Grid.Column="1" SelectedItem="{Binding TempoRange}">
-                            <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>±6%</x:String>
-                                    <x:String>±8%</x:String>
-                                    <x:String>±10%</x:String>
-                                    <x:String>±20%</x:String>
-                                </x:Array>
-                            </Picker.ItemsSource>
-                        </Picker>
-                    </Grid>
-                    
-                    <CheckBox Content="Keylock Default ON" IsChecked="{Binding KeylockDefaultOn}"/>
-                    <CheckBox Content="Show Energy Overlay" IsChecked="{Binding ShowEnergyOverlay}"/>
-                    <CheckBox Content="Show Beat Markers" IsChecked="{Binding ShowBeatMarkers}"/>
-                </StackLayout>
-            </Frame>
+                        <Grid ColumnDefinitions="200,*" Margin="0,10,0,0">
+                            <Label Grid.Column="0" Text="Show Key As" VerticalOptions="Center" TextColor="White"/>
+                            <Picker Grid.Column="1" SelectedItem="Camelot" BackgroundColor="#1A1A1A" TextColor="White">
+                                <Picker.ItemsSource>
+                                    <x:Array Type="{x:Type x:String}">
+                                        <x:String>Camelot</x:String>
+                                        <x:String>Musical</x:String>
+                                        <x:String>OpenKey</x:String>
+                                    </x:Array>
+                                </Picker.ItemsSource>
+                            </Picker>
+                        </Grid>
 
-            <!-- Recording Settings -->
-            <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="15">
-                <StackLayout Spacing="10">
-                    <Label Text="RECORDING" Style="{StaticResource HeaderLabel}"/>
-                    
-                    <Grid ColumnDefinitions="150,*" RowSpacing="10">
-                        <Label Grid.Row="0" Grid.Column="0" Text="Format" VerticalOptions="Center"/>
-                        <Picker Grid.Row="0" Grid.Column="1" SelectedItem="{Binding RecordingFormat}">
-                            <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>WAV</x:String>
-                                    <x:String>MP3</x:String>
-                                    <x:String>FLAC</x:String>
-                                </x:Array>
-                            </Picker.ItemsSource>
-                        </Picker>
-                    </Grid>
-                </StackLayout>
-            </Frame>
+                        <Label Text="Live Update Smart Crates will refresh on application restart." FontSize="11" TextColor="#888" Margin="0,10,0,0"/>
 
-            <!-- Display Settings -->
-            <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="15">
-                <StackLayout Spacing="10">
-                    <Label Text="DISPLAY" Style="{StaticResource HeaderLabel}"/>
-                    
-                    <CheckBox Content="Dark Mode" IsChecked="{Binding DarkMode}"/>
-                    
-                    <Grid ColumnDefinitions="150,*" RowSpacing="10">
-                        <Label Grid.Row="0" Grid.Column="0" Text="Display Mode" VerticalOptions="Center"/>
-                        <Picker Grid.Row="0" Grid.Column="1" SelectedItem="{Binding DisplayMode}">
-                            <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>Horizontal</x:String>
-                                    <x:String>Vertical</x:String>
-                                    <x:String>Extended</x:String>
-                                </x:Array>
-                            </Picker.ItemsSource>
-                        </Picker>
-                    </Grid>
-                </StackLayout>
-            </Frame>
+                        <CheckBox Content="Hi-Res Screen Display" IsChecked="False" TextColor="White" Margin="0,10,0,0"/>
 
-            <!-- Privacy Settings -->
-            <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="15">
-                <StackLayout Spacing="10">
-                    <Label Text="PRIVACY" Style="{StaticResource HeaderLabel}"/>
-                    
-                    <CheckBox Content="Send Anonymous Analytics" IsChecked="{Binding SendAnalytics}"/>
-                    <CheckBox Content="Auto Update" IsChecked="{Binding AutoUpdate}"/>
-                </StackLayout>
-            </Frame>
+                        <Grid ColumnDefinitions="Auto,*" Margin="0,15,0,0">
+                            <Label Grid.Column="0" Text="Deck BPM Display" VerticalOptions="Center" TextColor="White" Margin="0,0,20,0"/>
+                            <StackLayout Grid.Column="1" Orientation="Vertical" Spacing="5">
+                                <RadioButton Content="1 Decimal Place" IsChecked="True" TextColor="White"/>
+                                <RadioButton Content="2 Decimal Places" IsChecked="False" TextColor="White"/>
+                            </StackLayout>
+                        </Grid>
 
-            <!-- Action Buttons -->
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                <Button Grid.Column="0" Text="Reset to Defaults" Command="{Binding ResetSettingsCommand}" Style="{StaticResource DeckButton}"/>
-                <Button Grid.Column="1" Text="Save Settings" Command="{Binding SaveSettingsCommand}" Style="{StaticResource PrimaryButton}"/>
-            </Grid>
+                        <Grid ColumnDefinitions="200,*" Margin="0,15,0,0">
+                            <Label Grid.Column="0" Text="Maximum Screen Updates Per Second" VerticalOptions="Center" TextColor="White"/>
+                            <Slider Grid.Column="1" Minimum="5" Maximum="60" Value="30" BackgroundColor="#1A1A1A"/>
+                        </Grid>
 
-        </VerticalStackLayout>
-    </ScrollView>
+                        <CheckBox Content="Send Usage Data to Serato" IsChecked="True" TextColor="White" Margin="0,20,0,0"/>
+                        <Label Text="Help Serato provide you with a more personalised experience and improve products, features and support by automatically sending information about how you use Serato DJ. Collection of this information will not affect performance." 
+                               FontSize="11" 
+                               TextColor="#888" 
+                               Margin="20,5,0,0"/>
+                    </StackLayout>
+
+                </Grid>
+            </ScrollView>
+        </Frame>
+
+        <!-- Bottom Bar -->
+        <Grid Grid.Row="3" BackgroundColor="#1A1A1A" ColumnDefinitions="Auto,*,Auto,Auto" Padding="10,0">
+            <Label Grid.Column="0" Text="Check For Updates" FontSize="12" VerticalOptions="Center" TextColor="White"/>
+            <Label Grid.Column="1" Text="Version 2.0.0 (200577) 64bit" FontSize="12" VerticalOptions="Center" TextColor="#888" Margin="20,0,0,0"/>
+            <Label Grid.Column="2" Text="Language" FontSize="12" VerticalOptions="Center" TextColor="White" Margin="0,0,10,0"/>
+            <Picker Grid.Column="3" SelectedItem="English" BackgroundColor="#2A2A2A" TextColor="White" WidthRequest="120">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>English</x:String>
+                        <x:String>Deutsch</x:String>
+                        <x:String>Español</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+        </Grid>
+
+    </Grid>
 
 </ContentPage>
