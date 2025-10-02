@@ -47,6 +47,7 @@ public class Deck : IAudioNode
     private string _detectedKey = "";
     private float _aiConfidence;
     private KeyDetectionResult? _keyDetectionResult;
+    private float[]? _waveformData;
 
     public Deck(int deckId)
     {
@@ -72,6 +73,7 @@ public class Deck : IAudioNode
     public LoopInfo? LoopInfo => _loopEngine?.GetLoopInfo();
     public HotCue[] HotCues => _hotCueEngine.GetAllHotCues();
     public KeyDetectionResult? KeyDetectionResult => _keyDetectionResult;
+    public float[]? WaveformData => _waveformData;
 
     // AI-powered analysis methods
     public HarmonicMixingRecommendation GetHarmonicRecommendations(IEnumerable<string> availableKeys)
@@ -450,6 +452,9 @@ public class Deck : IAudioNode
             _aiConfidence = 0;
             _keyDetectionResult = null;
             _loopEngine?.ExitLoop();
+            
+            // Analyze waveform
+            _waveformData = WaveformAnalyzer.AnalyzeWaveform(audioData.Samples);
             
             // Load hot cues for this track
             _hotCueEngine.LoadHotCuesFromTrack(filePath);

@@ -20,6 +20,7 @@ public interface IEngineService
     Task StartRecordingAsync(string filePath);
     Task StopRecordingAsync();
     bool IsConnected { get; }
+    event Action<int, float[]>? WaveformDataReceived;
 }
 
 public class EngineService : IEngineService, IDisposable
@@ -31,6 +32,8 @@ public class EngineService : IEngineService, IDisposable
     private readonly object _lock = new();
 
     public bool IsConnected => _pipeClient?.IsConnected == true;
+    
+    public event Action<int, float[]>? WaveformDataReceived;
 
     public async Task<bool> StartEngineAsync()
     {
@@ -103,6 +106,37 @@ public class EngineService : IEngineService, IDisposable
     {
         var message = new LoadTrackMessage(deckId, filePath);
         await SendMessageAsync(message);
+        
+        // Wait for waveform data response
+        await Task.Run(() =>
+        {
+            try
+            {
+                lock (_lock)
+                {
+                    if (_reader != null && IsConnected)
+                    {
+                        var responseJson = _reader.ReadLine();
+                        if (!string.IsNullOrEmpty(responseJson))
+                        {
+                            var response = IpcSerializer.Deserialize(responseJson);
+                            if (response?.Type == IpcMessageType.WaveformData && response.Data != null)
+                            {
+                                if (response.Data.TryGetValue("waveform", out var waveformObj))
+                                {
+                                    var waveformData = waveformObj as float[] ?? Array.Empty<float>();
+                                    WaveformDataReceived?.Invoke(deckId, waveformData);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore errors
+            }
+        });
     }
 
     public async Task PlayAsync(int deckId)

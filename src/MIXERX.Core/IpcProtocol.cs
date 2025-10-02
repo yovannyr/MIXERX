@@ -16,7 +16,8 @@ public enum IpcMessageType
     GetStatus,
     StatusResponse,
     StartRecording,
-    StopRecording
+    StopRecording,
+    WaveformData
 }
 
 // Base IPC Message
@@ -108,6 +109,14 @@ public record StartRecordingMessage : IpcMessage
 public record StopRecordingMessage : IpcMessage
 {
     public StopRecordingMessage() : base(IpcMessageType.StopRecording, 0) { }
+}
+
+public record WaveformDataMessage : IpcMessage
+{
+    public WaveformDataMessage(int deckId, float[] waveformData) : base(IpcMessageType.WaveformData, deckId)
+    {
+        Data = new Dictionary<string, object> { ["waveform"] = waveformData };
+    }
 }
 
 // Deck Status

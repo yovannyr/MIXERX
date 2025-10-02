@@ -106,6 +106,9 @@ namespace MIXERX.UI.ViewModels
         _deckId = deckId;
         _engineService = engineService;
         
+        // Subscribe to waveform data
+        _engineService.WaveformDataReceived += OnWaveformDataReceived;
+        
         PlayPauseCommand = ReactiveCommand.CreateFromTask(PlayPause);
         LoadTrackCommand = ReactiveCommand.CreateFromTask(LoadTrack);
         LoadTrackFromPathCommand = ReactiveCommand.CreateFromTask<string>(LoadTrackFromPath);
@@ -121,6 +124,14 @@ namespace MIXERX.UI.ViewModels
         LoopInCommand = ReactiveCommand.CreateFromTask(SetLoopIn);
         LoopOutCommand = ReactiveCommand.CreateFromTask(SetLoopOut);
         ExitLoopCommand = ReactiveCommand.CreateFromTask(ExitLoop);
+    }
+
+    private void OnWaveformDataReceived(int deckId, float[] waveformData)
+    {
+        if (deckId == _deckId)
+        {
+            WaveformData = waveformData;
+        }
     }
 
     public string TrackName
@@ -298,9 +309,8 @@ namespace MIXERX.UI.ViewModels
         await _engineService.LoadTrackAsync(_deckId, filePath);
         TrackName = Path.GetFileNameWithoutExtension(filePath);
         
-        // Extract album cover and generate waveform
+        // Extract album cover (waveform comes via WaveformDataReceived event)
         await ExtractAlbumCoverAsync(filePath);
-        await GenerateWaveformAsync(filePath);
         
         // Start periodic status updates to get BPM/Key
         _ = Task.Run(UpdateTrackInfo);
@@ -393,6 +403,9 @@ namespace MIXERX.UI.ViewModels
         }
     }
 
+    // OLD: Mock waveform generation - replaced by real waveform data from Engine
+    // Waveform data now comes via WaveformDataReceived event after LoadTrack
+    /*
     private async Task GenerateWaveformAsync(string filePath)
     {
         try
@@ -421,6 +434,7 @@ namespace MIXERX.UI.ViewModels
             WaveformData = new float[1000];
         }
     }
+    */
 
     private async Task UpdateTrackInfo()
     {

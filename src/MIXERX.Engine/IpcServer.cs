@@ -58,7 +58,7 @@ public class IpcServer : IDisposable
                     var message = IpcSerializer.Deserialize(messageJson);
                     if (message == null) continue;
 
-                    var response = ProcessMessage(message);
+                    var response = ProcessMessage(message, writer);
                     if (response != null)
                     {
                         writer.WriteLine(IpcSerializer.Serialize(response));
@@ -82,7 +82,7 @@ public class IpcServer : IDisposable
         }
     }
 
-    private IpcMessage? ProcessMessage(IpcMessage message)
+    private IpcMessage? ProcessMessage(IpcMessage message, StreamWriter writer)
     {
         try
         {
@@ -92,6 +92,13 @@ public class IpcServer : IDisposable
                     if (!string.IsNullOrEmpty(message.StringParam))
                     {
                         _audioEngine.LoadTrack(message.DeckId, message.StringParam);
+                        // Send waveform data after track load
+                        var waveformData = _audioEngine.GetWaveformData(message.DeckId);
+                        if (waveformData != null && waveformData.Length > 0)
+                        {
+                            var waveformMsg = new WaveformDataMessage(message.DeckId, waveformData);
+                            writer.WriteLine(IpcSerializer.Serialize(waveformMsg));
+                        }
                     }
                     break;
 

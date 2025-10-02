@@ -259,6 +259,11 @@ public class AudioEngine : IAudioEngine
         return _recorder.RecordingDuration;
     }
 
+    public float[]? GetWaveformData(int deckId)
+    {
+        return _decks.TryGetValue(deckId, out var deck) ? deck.WaveformData : null;
+    }
+
     public void Play(int deckId)
     {
         _commandQueue.Enqueue(new AudioCommand(IpcMessageType.Play, deckId));
@@ -278,6 +283,22 @@ public class AudioEngine : IAudioEngine
             CpuUsage = 0.0f
         };
     }
+
+    // TODO: Event-based waveform notification (for future implementation)
+    // Currently using direct IPC send in IpcServer.ProcessMessage after LoadTrack
+    // Uncomment and implement proper event handling if needed for multiple subscribers
+    /*
+    public event Action<int, float[]>? WaveformDataReady;
+    
+    private void SendWaveformData(int deckId)
+    {
+        var waveformData = GetWaveformData(deckId);
+        if (waveformData != null && waveformData.Length > 0)
+        {
+            WaveformDataReady?.Invoke(deckId, waveformData);
+        }
+    }
+    */
 }
 
 public record AudioCommand(IpcMessageType Type, int DeckId)
