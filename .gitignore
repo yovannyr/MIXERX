@@ -338,12 +338,6 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
-/TIM/IlluMontage.WPF/UserControls/ConnectionNotification.xaml
-/TIM/IlluMontage.WPF/UserControls/ConnectionNotification.xaml.cs
-/TIM/LdapTests
-/TIM/TIM.WPF/ViewModels/BauElementProcessDataViewModel - Kopie.cs
-/TIM/TIM.WPF/Settings/appsettings.json
-/PVSmartTest/MyTest-2020_11_121.qtp
 /src/MIXERX.Core/bin/Debug/net9.0/MIXERX.Core.deps.json
 /src/MIXERX.Core/bin/Debug/net9.0/MIXERX.Core.dll
 /src/MIXERX.Core/bin/Debug/net9.0/MIXERX.Core.pdb
@@ -550,5 +544,7 @@ obj
 bin
 obj
 bin
+bin
+obj
 bin
 obj
