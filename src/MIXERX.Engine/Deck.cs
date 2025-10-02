@@ -58,6 +58,7 @@ public class Deck : IAudioNode
         _effectChain.AddEffect(new LimiterEffect());
     }
 
+    public int DeckId => _deckId;
     public bool IsPlaying => _isPlaying;
     public string? CurrentTrack { get; private set; }
     public TimeSpan Position => _decoder?.Duration ?? TimeSpan.Zero;

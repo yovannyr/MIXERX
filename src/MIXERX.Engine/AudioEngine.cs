@@ -1,6 +1,7 @@
 using MIXERX.Core;
 using MIXERX.Engine.Audio;
 using MIXERX.Engine.Sync;
+using MIXERX.Engine.Mixer;
 using System.Collections.Concurrent;
 
 namespace MIXERX.Engine;
@@ -10,6 +11,7 @@ public class AudioEngine : IAudioEngine
     private readonly Dictionary<int, Deck> _decks = new();
     private readonly ConcurrentQueue<AudioCommand> _commandQueue = new();
     private readonly SyncEngine _syncEngine = new();
+    private readonly CrossfaderEngine _crossfader = new();
     private IAudioDriver? _audioDriver;
     private Thread? _audioThread;
     private LockFreeAudioBuffer? _masterBuffer;
@@ -110,7 +112,7 @@ public class AudioEngine : IAudioEngine
     {
         if (_masterBuffer == null) return;
 
-        // Mix all decks
+        // Mix all decks with crossfader
         var mixBuffer = new float[output.Length];
         foreach (var deck in _decks.Values)
         {
@@ -119,9 +121,12 @@ public class AudioEngine : IAudioEngine
                 var deckBuffer = new float[output.Length];
                 deck.GetAudioSamples(deckBuffer, output.Length);
                 
+                // Apply crossfader volume
+                var crossfaderVolume = _crossfader.GetDeckVolume(deck.DeckId);
+                
                 for (int i = 0; i < output.Length; i++)
                 {
-                    mixBuffer[i] += deckBuffer[i];
+                    mixBuffer[i] += deckBuffer[i] * crossfaderVolume;
                 }
             }
         }
@@ -209,6 +214,16 @@ public class AudioEngine : IAudioEngine
         {
             deck.SetEffectParameter(effectName, paramName, value);
         }
+    }
+
+    public void SetCrossfader(float position)
+    {
+        _crossfader.Position = position;
+    }
+
+    public void SetCrossfaderCurve(CrossfaderCurve curve)
+    {
+        _crossfader.Curve = curve;
     }
 
     public void Play(int deckId)

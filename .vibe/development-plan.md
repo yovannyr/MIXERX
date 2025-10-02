@@ -4,7 +4,7 @@
 *Workflow: [epcc](https://mrsimpson.github.io/responsible-vibe-mcp/workflows/epcc)*
 
 ## Goal
-Implement Pitch Bend functionality for temporary tempo adjustments during beatmatching - essential DJ feature.
+Integrate CrossfaderEngine with AudioEngine to enable professional DJ mixing between decks.
 
 ## Explore
 
@@ -15,7 +15,7 @@ Implement Pitch Bend functionality for temporary tempo adjustments during beatma
 
 ### Completed
 - [x] Created development plan file
-- [x] Verified no pitch bend exists
+- [x] Verified CrossfaderEngine exists in Mixer folder
 
 ## Plan
 
@@ -24,18 +24,17 @@ Implement Pitch Bend functionality for temporary tempo adjustments during beatma
 
 ### Implementation Strategy
 
-**Approach:** Add pitch bend to Deck for temporary tempo adjustments.
+**Approach:** Add CrossfaderEngine to AudioEngine and apply crossfader volume to deck outputs.
 
 **Design:**
-- Pitch bend range: -8% to +8% (DJ standard)
-- Applied on top of tempo setting
-- Temporary adjustment (resets when released)
-- Combined with tempo for final playback rate
+- Add CrossfaderEngine instance to AudioEngine
+- Apply crossfader volume per deck before mixing
+- Expose crossfader controls (position, curve, assignments)
 
 ### Tasks
 
 ### Completed
-- [x] Define pitch bend design
+- [x] Define integration approach
 
 ## Code
 
@@ -43,19 +42,18 @@ Implement Pitch Bend functionality for temporary tempo adjustments during beatma
 - [x] Plan complete
 
 ### Tasks
+- [ ] Add CrossfaderEngine to AudioEngine
+- [ ] Apply crossfader volume in mixing
+- [ ] Add SetCrossfader() method
+- [ ] Build and verify
 
 ### Completed
-- [x] Add _pitchBend field to Deck
-- [x] Add SetPitchBend() method with ±8% range
-- [x] Apply pitch bend in tempo calculation
-- [x] Add parameter handling (pitchbend/pitch)
-- [x] Add reset functionality
-- [x] Build and verify
+*None yet*
 
 ## Commit
 
 ### Phase Entrance Criteria
-- [ ] Pitch bend implemented
+- [ ] Crossfader integrated
 - [ ] Build successful
 
 ### Tasks
