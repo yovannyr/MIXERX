@@ -36,24 +36,26 @@
                 <Button Grid.Column="4" Text="►►" Style="{StaticResource DeckButton}"/>
             </Grid>
 
-            <!-- Hot Cues -->
+            <!-- Hot Cues (8 cues) -->
             <Label Text="HOT CUES" Style="{StaticResource SubHeaderLabel}"/>
-            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="5">
-                <Button Grid.Column="0" Text="1" BackgroundColor="{StaticResource HotCue1}" TextColor="White" HeightRequest="40" Command="{Binding SetCueCommand}"/>
-                <Button Grid.Column="1" Text="2" BackgroundColor="{StaticResource HotCue2}" TextColor="White" HeightRequest="40" Command="{Binding SetCueCommand}"/>
-                <Button Grid.Column="2" Text="3" BackgroundColor="{StaticResource HotCue3}" TextColor="{StaticResource BackgroundDark}" HeightRequest="40" Command="{Binding SetCueCommand}"/>
-                <Button Grid.Column="3" Text="4" BackgroundColor="{StaticResource HotCue4}" TextColor="White" HeightRequest="40" Command="{Binding SetCueCommand}"/>
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="5" RowDefinitions="Auto,Auto" RowSpacing="5">
+                <controls:HotCueButton Grid.Row="0" Grid.Column="0" CueNumber="1" CueColor="{StaticResource HotCue1}" TapCommand="{Binding TriggerCueCommand}" HeightRequest="40"/>
+                <controls:HotCueButton Grid.Row="0" Grid.Column="1" CueNumber="2" CueColor="{StaticResource HotCue2}" TapCommand="{Binding TriggerCueCommand}" HeightRequest="40"/>
+                <controls:HotCueButton Grid.Row="0" Grid.Column="2" CueNumber="3" CueColor="{StaticResource HotCue3}" TapCommand="{Binding TriggerCueCommand}" HeightRequest="40"/>
+                <controls:HotCueButton Grid.Row="0" Grid.Column="3" CueNumber="4" CueColor="{StaticResource HotCue4}" TapCommand="{Binding TriggerCueCommand}" HeightRequest="40"/>
+                <controls:HotCueButton Grid.Row="1" Grid.Column="0" CueNumber="5" CueColor="{StaticResource HotCue1}" TapCommand="{Binding TriggerCueCommand}" HeightRequest="40"/>
+                <controls:HotCueButton Grid.Row="1" Grid.Column="1" CueNumber="6" CueColor="{StaticResource HotCue2}" TapCommand="{Binding TriggerCueCommand}" HeightRequest="40"/>
+                <controls:HotCueButton Grid.Row="1" Grid.Column="2" CueNumber="7" CueColor="{StaticResource HotCue3}" TapCommand="{Binding TriggerCueCommand}" HeightRequest="40"/>
+                <controls:HotCueButton Grid.Row="1" Grid.Column="3" CueNumber="8" CueColor="{StaticResource HotCue4}" TapCommand="{Binding TriggerCueCommand}" HeightRequest="40"/>
             </Grid>
 
             <!-- Loop Controls -->
             <Label Text="LOOP" Style="{StaticResource SubHeaderLabel}"/>
-            <Grid ColumnDefinitions="*,*,*,*,*" ColumnSpacing="3">
-                <Button Grid.Column="0" Text="1" Style="{StaticResource DeckButton}" HeightRequest="40" Command="{Binding AutoLoopCommand}" CommandParameter="1"/>
-                <Button Grid.Column="1" Text="2" Style="{StaticResource DeckButton}" HeightRequest="40" Command="{Binding AutoLoopCommand}" CommandParameter="2"/>
-                <Button Grid.Column="2" Text="4" Style="{StaticResource DeckButton}" HeightRequest="40" Command="{Binding AutoLoopCommand}" CommandParameter="4"/>
-                <Button Grid.Column="3" Text="8" Style="{StaticResource DeckButton}" HeightRequest="40" Command="{Binding AutoLoopCommand}" CommandParameter="8"/>
-                <Button Grid.Column="4" Text="EXIT" BackgroundColor="{StaticResource Accent}" TextColor="White" HeightRequest="40" Command="{Binding ExitLoopCommand}"/>
-            </Grid>
+            <controls:LoopControl 
+                SetLoopCommand="{Binding AutoLoopCommand}"
+                HalveLoopCommand="{Binding HalveLoopCommand}"
+                DoubleLoopCommand="{Binding DoubleLoopCommand}"
+                ExitLoopCommand="{Binding ExitLoopCommand}"/>
 
             <!-- Tempo & Sync -->
             <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
@@ -65,7 +67,11 @@
                 <StackLayout Grid.Column="1">
                     <Label Text="KEY" Style="{StaticResource SubHeaderLabel}" HorizontalOptions="Center"/>
                     <Label Text="{Binding Key}" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
-                    <Button Text="SYNC" BackgroundColor="{Binding DeckColor}" TextColor="{StaticResource BackgroundDark}" FontAttributes="Bold" Command="{Binding SyncCommand}"/>
+                    <Button Text="{Binding IsSynced, Converter={StaticResource BoolToSyncText}}" 
+                            BackgroundColor="{Binding IsSynced, Converter={StaticResource BoolToSyncColor}}" 
+                            TextColor="{StaticResource BackgroundDark}" 
+                            FontAttributes="Bold" 
+                            Command="{Binding SyncCommand}"/>
                 </StackLayout>
                 <StackLayout Grid.Column="2">
                     <Label Text="KEYLOCK" Style="{StaticResource SubHeaderLabel}" HorizontalOptions="Center"/>
