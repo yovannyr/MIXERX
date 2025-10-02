@@ -30,15 +30,15 @@
                 
                 <!-- Center Controls -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="20">
-                    <Button Content="⏵ START ENGINE" Background="#00ff88" Foreground="#000" Padding="15,5" FontWeight="Bold" CornerRadius="3"/>
-                    <Button Content="⏺ REC" Background="#ff0044" Foreground="#fff" Padding="15,5" FontWeight="Bold" CornerRadius="3"/>
+                    <Button Content="⏵ START ENGINE" Background="#00ff88" Foreground="#000" Padding="15,5" FontWeight="Bold" CornerRadius="3" Command="{Binding StartEngineCommand}"/>
+                    <Button Content="⏺ REC" Background="#ff0044" Foreground="#fff" Padding="15,5" FontWeight="Bold" CornerRadius="3" Command="{Binding StartRecordingCommand}"/>
                     <TextBlock Text="00:00:00" FontSize="16" FontFamily="Consolas" Foreground="#00ff88" VerticalAlignment="Center"/>
                 </StackPanel>
                 
                 <!-- Right Controls -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="15,0" Spacing="10">
-                    <Button Content="⚙" Width="30" Height="30" Background="#1a1a1a" Foreground="#fff" FontSize="16"/>
-                    <Button Content="?" Width="30" Height="30" Background="#1a1a1a" Foreground="#fff" FontSize="16"/>
+                    <Button Content="⚙" Width="30" Height="30" Background="#1a1a1a" Foreground="#fff" FontSize="16" Command="{Binding PreferencesCommand}"/>
+                    <Button Content="?" Width="30" Height="30" Background="#1a1a1a" Foreground="#fff" FontSize="16" Command="{Binding ShowUserManualCommand}"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -55,11 +55,10 @@
                         <Grid ColumnDefinitions="*,Auto">
                             <StackPanel Grid.Column="0">
                                 <TextBlock Text="DECK A" FontSize="10" Foreground="#00ff88" FontWeight="Bold"/>
-                                <TextBlock Text="No Track Loaded" FontSize="14" Foreground="#fff" Margin="0,2,0,0"/>
+                                <TextBlock Text="{Binding Deck1.TrackName}" FontSize="14" Foreground="#fff" Margin="0,2,0,0"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
-                                <TextBlock Text="120.0" FontSize="24" FontWeight="Bold" Foreground="#00ff88"/>
-                                <TextBlock Text="BPM" FontSize="10" Foreground="#666" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding Deck1.Bpm}" FontSize="24" FontWeight="Bold" Foreground="#00ff88"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -67,7 +66,10 @@
                     <!-- Waveform Display -->
                     <Border Grid.Row="1" Background="#000" Margin="10" CornerRadius="4" BorderBrush="#00ff88" BorderThickness="1">
                         <Grid>
-                            <controls:WaveformControl Height="200"/>
+                            <controls:WaveformControl Height="200" 
+                                                     WaveformData="{Binding Deck1.WaveformData}"
+                                                     Position="{Binding Deck1.Position}"
+                                                     IsPlaying="{Binding Deck1.IsPlaying}"/>
                             <TextBlock Text="LOAD TRACK" FontSize="16" Foreground="#333" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Grid>
                     </Border>
@@ -76,7 +78,7 @@
                     <Grid Grid.Row="2" Margin="15,0" ColumnDefinitions="*,*,*,*,*">
                         <Button Grid.Column="0" Content="◄◄" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
                         <Button Grid.Column="1" Content="◄" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
-                        <Button Grid.Column="2" Content="▶" FontSize="24" Height="50" Background="#00ff88" Foreground="#000" CornerRadius="4" FontWeight="Bold"/>
+                        <Button Grid.Column="2" Content="▶" FontSize="24" Height="50" Background="#00ff88" Foreground="#000" CornerRadius="4" FontWeight="Bold" Command="{Binding Deck1.PlayPauseCommand}"/>
                         <Button Grid.Column="3" Content="►" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
                         <Button Grid.Column="4" Content="►►" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
                     </Grid>
@@ -87,20 +89,20 @@
                             <!-- Hot Cues -->
                             <TextBlock Grid.Row="0" Text="HOT CUES" FontSize="10" Foreground="#666" FontWeight="Bold"/>
                             <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*" Height="40">
-                                <Button Grid.Column="0" Content="1" Background="#ff0044" Foreground="#fff" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0"/>
-                                <Button Grid.Column="1" Content="2" Background="#ff8800" Foreground="#fff" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0"/>
-                                <Button Grid.Column="2" Content="3" Background="#00ff88" Foreground="#000" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0"/>
-                                <Button Grid.Column="3" Content="4" Background="#0088ff" Foreground="#fff" FontWeight="Bold" CornerRadius="4"/>
+                                <Button Grid.Column="0" Content="1" Background="#ff0044" Foreground="#fff" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0" Command="{Binding Deck1.SetCueCommand}"/>
+                                <Button Grid.Column="1" Content="2" Background="#ff8800" Foreground="#fff" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0" Command="{Binding Deck1.SetCueCommand}"/>
+                                <Button Grid.Column="2" Content="3" Background="#00ff88" Foreground="#000" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0" Command="{Binding Deck1.SetCueCommand}"/>
+                                <Button Grid.Column="3" Content="4" Background="#0088ff" Foreground="#fff" FontWeight="Bold" CornerRadius="4" Command="{Binding Deck1.SetCueCommand}"/>
                             </Grid>
                             
                             <!-- Loop Controls -->
                             <TextBlock Grid.Row="4" Text="LOOP" FontSize="10" Foreground="#666" FontWeight="Bold" Margin="0,10,0,5"/>
                             <Grid Grid.Row="4" ColumnDefinitions="*,*,*,*,*" Height="40" Margin="0,25,0,0">
-                                <Button Grid.Column="0" Content="1" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
-                                <Button Grid.Column="1" Content="2" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
-                                <Button Grid.Column="2" Content="4" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
-                                <Button Grid.Column="3" Content="8" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
-                                <Button Grid.Column="4" Content="EXIT" Background="#ff0044" Foreground="#fff" FontSize="9" CornerRadius="4"/>
+                                <Button Grid.Column="0" Content="1" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0" Command="{Binding Deck1.AutoLoopCommand}" CommandParameter="1"/>
+                                <Button Grid.Column="1" Content="2" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0" Command="{Binding Deck1.AutoLoopCommand}" CommandParameter="2"/>
+                                <Button Grid.Column="2" Content="4" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0" Command="{Binding Deck1.AutoLoopCommand}" CommandParameter="4"/>
+                                <Button Grid.Column="3" Content="8" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0" Command="{Binding Deck1.AutoLoopCommand}" CommandParameter="8"/>
+                                <Button Grid.Column="4" Content="EXIT" Background="#ff0044" Foreground="#fff" FontSize="9" CornerRadius="4" Command="{Binding Deck1.ExitLoopCommand}"/>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -109,13 +111,13 @@
                     <Grid Grid.Row="4" Background="#1a1a1a" ColumnDefinitions="*,*,*">
                         <StackPanel Grid.Column="0" Margin="15,10">
                             <TextBlock Text="TEMPO" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
-                            <TextBlock Text="+0.0%" FontSize="16" Foreground="#00ff88" HorizontalAlignment="Center" FontWeight="Bold"/>
-                            <Slider Minimum="-8" Maximum="8" Value="0" Margin="0,5,0,0"/>
+                            <TextBlock Text="{Binding Deck1.TempoDisplay}" FontSize="16" Foreground="#00ff88" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <Slider Minimum="-8" Maximum="8" Value="{Binding Deck1.Tempo}" Margin="0,5,0,0"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Margin="15,10">
                             <TextBlock Text="KEY" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
-                            <TextBlock Text="--" FontSize="16" Foreground="#fff" HorizontalAlignment="Center" FontWeight="Bold"/>
-                            <Button Content="SYNC" Background="#00ff88" Foreground="#000" Height="30" Margin="0,5,0,0" FontWeight="Bold" CornerRadius="3"/>
+                            <TextBlock Text="{Binding Deck1.Key}" FontSize="16" Foreground="#fff" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <Button Content="SYNC" Background="#00ff88" Foreground="#000" Height="30" Margin="0,5,0,0" FontWeight="Bold" CornerRadius="3" Command="{Binding Deck1.SyncCommand}"/>
                         </StackPanel>
                         <StackPanel Grid.Column="2" Margin="15,10">
                             <TextBlock Text="KEYLOCK" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
@@ -231,11 +233,10 @@
                         <Grid ColumnDefinitions="*,Auto">
                             <StackPanel Grid.Column="0">
                                 <TextBlock Text="DECK B" FontSize="10" Foreground="#0088ff" FontWeight="Bold"/>
-                                <TextBlock Text="No Track Loaded" FontSize="14" Foreground="#fff" Margin="0,2,0,0"/>
+                                <TextBlock Text="{Binding Deck2.TrackName}" FontSize="14" Foreground="#fff" Margin="0,2,0,0"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="5">
-                                <TextBlock Text="120.0" FontSize="24" FontWeight="Bold" Foreground="#0088ff"/>
-                                <TextBlock Text="BPM" FontSize="10" Foreground="#666" VerticalAlignment="Bottom" Margin="0,0,0,5"/>
+                                <TextBlock Text="{Binding Deck2.Bpm}" FontSize="24" FontWeight="Bold" Foreground="#0088ff"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -243,7 +244,10 @@
                     <!-- Waveform Display -->
                     <Border Grid.Row="1" Background="#000" Margin="10" CornerRadius="4" BorderBrush="#0088ff" BorderThickness="1">
                         <Grid>
-                            <controls:WaveformControl Height="200"/>
+                            <controls:WaveformControl Height="200"
+                                                     WaveformData="{Binding Deck2.WaveformData}"
+                                                     Position="{Binding Deck2.Position}"
+                                                     IsPlaying="{Binding Deck2.IsPlaying}"/>
                             <TextBlock Text="LOAD TRACK" FontSize="16" Foreground="#333" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Grid>
                     </Border>
@@ -252,7 +256,7 @@
                     <Grid Grid.Row="2" Margin="15,0" ColumnDefinitions="*,*,*,*,*">
                         <Button Grid.Column="0" Content="◄◄" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
                         <Button Grid.Column="1" Content="◄" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
-                        <Button Grid.Column="2" Content="▶" FontSize="24" Height="50" Background="#0088ff" Foreground="#fff" CornerRadius="4" FontWeight="Bold"/>
+                        <Button Grid.Column="2" Content="▶" FontSize="24" Height="50" Background="#0088ff" Foreground="#fff" CornerRadius="4" FontWeight="Bold" Command="{Binding Deck2.PlayPauseCommand}"/>
                         <Button Grid.Column="3" Content="►" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
                         <Button Grid.Column="4" Content="►►" FontSize="20" Height="50" Background="#1a1a1a" Foreground="#fff" CornerRadius="4"/>
                     </Grid>
@@ -263,20 +267,20 @@
                             <!-- Hot Cues -->
                             <TextBlock Grid.Row="0" Text="HOT CUES" FontSize="10" Foreground="#666" FontWeight="Bold"/>
                             <Grid Grid.Row="2" ColumnDefinitions="*,*,*,*" Height="40">
-                                <Button Grid.Column="0" Content="1" Background="#ff0044" Foreground="#fff" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0"/>
-                                <Button Grid.Column="1" Content="2" Background="#ff8800" Foreground="#fff" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0"/>
-                                <Button Grid.Column="2" Content="3" Background="#00ff88" Foreground="#000" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0"/>
-                                <Button Grid.Column="3" Content="4" Background="#0088ff" Foreground="#fff" FontWeight="Bold" CornerRadius="4"/>
+                                <Button Grid.Column="0" Content="1" Background="#ff0044" Foreground="#fff" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0" Command="{Binding Deck2.SetCueCommand}"/>
+                                <Button Grid.Column="1" Content="2" Background="#ff8800" Foreground="#fff" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0" Command="{Binding Deck2.SetCueCommand}"/>
+                                <Button Grid.Column="2" Content="3" Background="#00ff88" Foreground="#000" FontWeight="Bold" CornerRadius="4" Margin="0,0,5,0" Command="{Binding Deck2.SetCueCommand}"/>
+                                <Button Grid.Column="3" Content="4" Background="#0088ff" Foreground="#fff" FontWeight="Bold" CornerRadius="4" Command="{Binding Deck2.SetCueCommand}"/>
                             </Grid>
                             
                             <!-- Loop Controls -->
                             <TextBlock Grid.Row="4" Text="LOOP" FontSize="10" Foreground="#666" FontWeight="Bold" Margin="0,10,0,5"/>
                             <Grid Grid.Row="4" ColumnDefinitions="*,*,*,*,*" Height="40" Margin="0,25,0,0">
-                                <Button Grid.Column="0" Content="1" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
-                                <Button Grid.Column="1" Content="2" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
-                                <Button Grid.Column="2" Content="4" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
-                                <Button Grid.Column="3" Content="8" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0"/>
-                                <Button Grid.Column="4" Content="EXIT" Background="#ff0044" Foreground="#fff" FontSize="9" CornerRadius="4"/>
+                                <Button Grid.Column="0" Content="1" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0" Command="{Binding Deck2.AutoLoopCommand}" CommandParameter="1"/>
+                                <Button Grid.Column="1" Content="2" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0" Command="{Binding Deck2.AutoLoopCommand}" CommandParameter="2"/>
+                                <Button Grid.Column="2" Content="4" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0" Command="{Binding Deck2.AutoLoopCommand}" CommandParameter="4"/>
+                                <Button Grid.Column="3" Content="8" Background="#1a1a1a" Foreground="#fff" CornerRadius="4" Margin="0,0,3,0" Command="{Binding Deck2.AutoLoopCommand}" CommandParameter="8"/>
+                                <Button Grid.Column="4" Content="EXIT" Background="#ff0044" Foreground="#fff" FontSize="9" CornerRadius="4" Command="{Binding Deck2.ExitLoopCommand}"/>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -285,13 +289,13 @@
                     <Grid Grid.Row="4" Background="#1a1a1a" ColumnDefinitions="*,*,*">
                         <StackPanel Grid.Column="0" Margin="15,10">
                             <TextBlock Text="TEMPO" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
-                            <TextBlock Text="+0.0%" FontSize="16" Foreground="#0088ff" HorizontalAlignment="Center" FontWeight="Bold"/>
-                            <Slider Minimum="-8" Maximum="8" Value="0" Margin="0,5,0,0"/>
+                            <TextBlock Text="{Binding Deck2.TempoDisplay}" FontSize="16" Foreground="#0088ff" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <Slider Minimum="-8" Maximum="8" Value="{Binding Deck2.Tempo}" Margin="0,5,0,0"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Margin="15,10">
                             <TextBlock Text="KEY" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
-                            <TextBlock Text="--" FontSize="16" Foreground="#fff" HorizontalAlignment="Center" FontWeight="Bold"/>
-                            <Button Content="SYNC" Background="#0088ff" Foreground="#fff" Height="30" Margin="0,5,0,0" FontWeight="Bold" CornerRadius="3"/>
+                            <TextBlock Text="{Binding Deck2.Key}" FontSize="16" Foreground="#fff" HorizontalAlignment="Center" FontWeight="Bold"/>
+                            <Button Content="SYNC" Background="#0088ff" Foreground="#fff" Height="30" Margin="0,5,0,0" FontWeight="Bold" CornerRadius="3" Command="{Binding Deck2.SyncCommand}"/>
                         </StackPanel>
                         <StackPanel Grid.Column="2" Margin="15,10">
                             <TextBlock Text="KEYLOCK" FontSize="9" Foreground="#666" HorizontalAlignment="Center"/>
