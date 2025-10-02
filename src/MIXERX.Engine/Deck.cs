@@ -19,6 +19,7 @@ public class Deck : IAudioNode
     private bool _isPlaying;
     private float _tempo = 1.0f;
     private float _volume = 1.0f;
+    private float _gain = 1.0f;
     private int _position;
     private readonly float[] _readBuffer = new float[8192];
     
@@ -160,6 +161,11 @@ public class Deck : IAudioNode
         _volume = Math.Clamp(volume, 0.0f, 1.0f);
     }
 
+    public void SetGain(float gain)
+    {
+        _gain = Math.Clamp(gain, 0.0f, 2.0f);
+    }
+
     public void SetPosition(TimeSpan position)
     {
         var newSamplePosition = (long)(position.TotalSeconds * (_decoder?.SampleRate ?? 48000));
@@ -222,10 +228,12 @@ public class Deck : IAudioNode
         // Apply effects
         _effectChain.Process(_readBuffer.AsSpan(0, samplesRead));
 
-        // Apply volume and copy to output
+        // Apply gain with soft clipping and volume
         for (int i = 0; i < Math.Min(samplesRead, output.Length); i++)
         {
-            output[i] = _readBuffer[i] * _volume;
+            var sample = _readBuffer[i] * _gain;
+            sample = MathF.Tanh(sample); // Soft clipping
+            output[i] = sample * _volume;
         }
 
         // Update position and analyze
@@ -339,6 +347,9 @@ public class Deck : IAudioNode
             case "volume":
                 SetVolume(value);
                 break;
+            case "gain":
+                SetGain(value);
+                break;
             default:
                 // Try to route to effects
                 _effectChain.SetParameter(name, value);
@@ -350,6 +361,8 @@ public class Deck : IAudioNode
     {
         _isPlaying = false;
         _tempo = 1.0f;
+        _volume = 1.0f;
+        _gain = 1.0f;
         _volume = 1.0f;
         _effectChain.Reset();
         _bpmAnalyzer.Reset();
