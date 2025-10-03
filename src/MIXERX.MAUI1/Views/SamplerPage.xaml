@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MIXERX.MAUI.ViewModels"
+             x:Class="MIXERX.MAUI.Views.SamplerPage"
+             x:DataType="vm:SamplerViewModel"
+             Title="Sampler"
+             BackgroundColor="{StaticResource BackgroundDark}">
+
+    <Grid RowDefinitions="Auto,*">
+        
+        <!-- Bank Selection -->
+        <Frame Grid.Row="0" BackgroundColor="{StaticResource BackgroundLight}" Padding="15" Margin="10">
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
+                <Button Grid.Column="0" Text="BANK 1" Command="{Binding SelectBankCommand}" CommandParameter="0" Style="{StaticResource PrimaryButton}"/>
+                <Button Grid.Column="1" Text="BANK 2" Command="{Binding SelectBankCommand}" CommandParameter="1" Style="{StaticResource DeckButton}"/>
+                <Button Grid.Column="2" Text="BANK 3" Command="{Binding SelectBankCommand}" CommandParameter="2" Style="{StaticResource DeckButton}"/>
+                <Button Grid.Column="3" Text="BANK 4" Command="{Binding SelectBankCommand}" CommandParameter="3" Style="{StaticResource DeckButton}"/>
+            </Grid>
+        </Frame>
+
+        <!-- Sample Pads -->
+        <Grid Grid.Row="1" Padding="10" RowDefinitions="*,*" ColumnDefinitions="*,*,*,*" RowSpacing="10" ColumnSpacing="10">
+            
+            <!-- Row 1 -->
+            <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="{StaticResource BackgroundLight}" Padding="0">
+                <Grid RowDefinitions="*,Auto">
+                    <Button Grid.Row="0" Text="1" FontSize="32" FontAttributes="Bold" Command="{Binding TriggerSampleCommand}" CommandParameter="0"/>
+                    <Label Grid.Row="1" Text="Empty" FontSize="10" HorizontalOptions="Center" Margin="5"/>
+                </Grid>
+            </Frame>
+            
+            <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="{StaticResource BackgroundLight}" Padding="0">
+                <Grid RowDefinitions="*,Auto">
+                    <Button Grid.Row="0" Text="2" FontSize="32" FontAttributes="Bold" Command="{Binding TriggerSampleCommand}" CommandParameter="1"/>
+                    <Label Grid.Row="1" Text="Empty" FontSize="10" HorizontalOptions="Center" Margin="5"/>
+                </Grid>
+            </Frame>
+            
+            <Frame Grid.Row="0" Grid.Column="2" BackgroundColor="{StaticResource BackgroundLight}" Padding="0">
+                <Grid RowDefinitions="*,Auto">
+                    <Button Grid.Row="0" Text="3" FontSize="32" FontAttributes="Bold" Command="{Binding TriggerSampleCommand}" CommandParameter="2"/>
+                    <Label Grid.Row="1" Text="Empty" FontSize="10" HorizontalOptions="Center" Margin="5"/>
+                </Grid>
+            </Frame>
+            
+            <Frame Grid.Row="0" Grid.Column="3" BackgroundColor="{StaticResource BackgroundLight}" Padding="0">
+                <Grid RowDefinitions="*,Auto">
+                    <Button Grid.Row="0" Text="4" FontSize="32" FontAttributes="Bold" Command="{Binding TriggerSampleCommand}" CommandParameter="3"/>
+                    <Label Grid.Row="1" Text="Empty" FontSize="10" HorizontalOptions="Center" Margin="5"/>
+                </Grid>
+            </Frame>
+            
+            <!-- Row 2 -->
+            <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="{StaticResource BackgroundLight}" Padding="0">
+                <Grid RowDefinitions="*,Auto">
+                    <Button Grid.Row="0" Text="5" FontSize="32" FontAttributes="Bold" Command="{Binding TriggerSampleCommand}" CommandParameter="4"/>
+                    <Label Grid.Row="1" Text="Empty" FontSize="10" HorizontalOptions="Center" Margin="5"/>
+                </Grid>
+            </Frame>
+            
+            <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="{StaticResource BackgroundLight}" Padding="0">
+                <Grid RowDefinitions="*,Auto">
+                    <Button Grid.Row="0" Text="6" FontSize="32" FontAttributes="Bold" Command="{Binding TriggerSampleCommand}" CommandParameter="5"/>
+                    <Label Grid.Row="1" Text="Empty" FontSize="10" HorizontalOptions="Center" Margin="5"/>
+                </Grid>
+            </Frame>
+            
+            <Frame Grid.Row="1" Grid.Column="2" BackgroundColor="{StaticResource BackgroundLight}" Padding="0">
+                <Grid RowDefinitions="*,Auto">
+                    <Button Grid.Row="0" Text="7" FontSize="32" FontAttributes="Bold" Command="{Binding TriggerSampleCommand}" CommandParameter="6"/>
+                    <Label Grid.Row="1" Text="Empty" FontSize="10" HorizontalOptions="Center" Margin="5"/>
+                </Grid>
+            </Frame>
+            
+            <Frame Grid.Row="1" Grid.Column="3" BackgroundColor="{StaticResource BackgroundLight}" Padding="0">
+                <Grid RowDefinitions="*,Auto">
+                    <Button Grid.Row="0" Text="8" FontSize="32" FontAttributes="Bold" Command="{Binding TriggerSampleCommand}" CommandParameter="7"/>
+                    <Label Grid.Row="1" Text="Empty" FontSize="10" HorizontalOptions="Center" Margin="5"/>
+                </Grid>
+            </Frame>
+            
+        </Grid>
+        
+    </Grid>
+
+</ContentPage>

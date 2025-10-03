@@ -1,6 +1,7 @@
 using Xunit;
 using MIXERX.Engine;
 using MIXERX.Core;
+using MIXERX.Core.Interfaces;
 
 namespace MIXERX.Engine.Tests;
 

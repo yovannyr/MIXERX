@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MIXERX.MAUI.ViewModels"
+             x:Class="MIXERX.MAUI.Views.SmartCratePage"
+             x:DataType="vm:SmartCrateViewModel"
+             Title="Smart Crates"
+             BackgroundColor="{StaticResource BackgroundDark}">
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        
+        <Frame Grid.Row="0" BackgroundColor="{StaticResource BackgroundLight}" Padding="15" Margin="10">
+            <Grid ColumnDefinitions="*,Auto,Auto">
+                <Entry Grid.Column="0" Placeholder="Crate Name" Text="{Binding CrateName}"/>
+                <Picker Grid.Column="1" SelectedItem="{Binding Logic}" Margin="10,0">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>And</x:String>
+                            <x:String>Or</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+                <Button Grid.Column="2" Text="+ Rule" Command="{Binding AddRuleCommand}"/>
+            </Grid>
+        </Frame>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Rules}" Margin="10,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BackgroundColor="{StaticResource BackgroundLight}" Padding="10" Margin="0,5">
+                        <Grid ColumnDefinitions="*,*,*,Auto">
+                            <Entry Grid.Column="0" Text="{Binding Field}" Placeholder="Field"/>
+                            <Picker Grid.Column="1" SelectedItem="{Binding Operator}"/>
+                            <Entry Grid.Column="2" Text="{Binding Value}" Placeholder="Value"/>
+                            <Button Grid.Column="3" Text="✕" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SmartCrateViewModel}}, Path=RemoveRuleCommand}" CommandParameter="{Binding .}"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <CollectionView Grid.Row="2" ItemsSource="{Binding MatchingTracks}" Margin="10"/>
+        
+    </Grid>
+
+</ContentPage>

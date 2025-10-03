@@ -1,4 +1,5 @@
 using MIXERX.Core;
+using MIXERX.Core.Interfaces;
 using MIXERX.Engine;
 
 Console.WriteLine("MIXERX Audio Engine Starting...");

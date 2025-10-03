@@ -3,6 +3,7 @@ using MIXERX.Engine.Audio;
 using MIXERX.Engine.Sync;
 using MIXERX.Engine.Mixer;
 using System.Collections.Concurrent;
+using MIXERX.Core.Interfaces;
 
 namespace MIXERX.Engine;
 

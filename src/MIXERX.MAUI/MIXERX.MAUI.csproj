@@ -3,6 +3,16 @@
 	<PropertyGroup>
 		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net9.0-windows10.0.19041.0</TargetFrameworks>
+		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
+		<!-- <TargetFrameworks>$(TargetFrameworks);net9.0-tizen</TargetFrameworks> -->
+
+		<!-- Note for MacCatalyst:
+		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
+		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
+		The Mac App Store will NOT accept apps with ONLY maccatalyst-arm64 indicated;
+		either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
+		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
+
 		<OutputType>Exe</OutputType>
 		<RootNamespace>MIXERX.MAUI</RootNamespace>
 		<UseMaui>true</UseMaui>
@@ -11,66 +21,147 @@
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>MIXERX PRO</ApplicationTitle>
+		<ApplicationTitle>MIXERX.MAUI</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.mixerx.pro</ApplicationId>
+		<ApplicationId>com.companyname.mixerx.maui</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
+
+		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
+		<WindowsPackageType>None</WindowsPackageType>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#00FF88" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#0A0A0A" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-
+		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+		
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
+	
+	<ItemGroup>
+		<None Include="..\..\THIRD-PARTY-NOTICES.txt" Link="Resources\Raw\THIRD-PARTY-NOTICES.txt" Pack="true" CopyToOutputDirectory="PreserveNewest" />
+		<None Include="..\..\LICENSE" Link="Resources\Raw\LICENSE" Pack="true" CopyToOutputDirectory="PreserveNewest" />
+		<None Include="..\..\NOTICE" Link="Resources\Raw\NOTICE" Pack="true" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
 
 	<ItemGroup>
 		<!-- Core MAUI -->
-		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.0" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.110" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="9.0.110" />
 		
 		<!-- Syncfusion MAUI Toolkit -->
-		<PackageReference Include="Syncfusion.Maui.Toolkit" Version="27.1.48" />
-		<PackageReference Include="Syncfusion.Maui.Charts" Version="27.1.48" />
-		<PackageReference Include="Syncfusion.Maui.DataGrid" Version="27.1.48" />
-		<PackageReference Include="Syncfusion.Maui.Sliders" Version="27.1.48" />
-		<PackageReference Include="Syncfusion.Maui.TabView" Version="27.1.48" />
+		<!--<PackageReference Include="Syncfusion.Maui.Toolkit" Version="27.1.48" />-->
+		<PackageReference Include="Syncfusion.Maui.Charts" Version="31.1.22" />
+		<PackageReference Include="Syncfusion.Maui.DataGrid" Version="31.1.22" />
+		<PackageReference Include="Syncfusion.Maui.Sliders" Version="31.1.22" />
+		<PackageReference Include="Syncfusion.Maui.TabView" Version="31.1.22" />
 		
 		<!-- Community Toolkit -->
-		<PackageReference Include="CommunityToolkit.Maui" Version="9.1.0" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="12.2.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 		
 		<!-- SkiaSharp for custom graphics -->
-		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="2.88.8" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.1" />
 		
 		<!-- Microsoft Extensions -->
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.9" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="Concentus" Version="2.2.2" />
+		<PackageReference Include="HidSharp" Version="2.6.3" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.9" />
+		<PackageReference Include="NWaves" Version="0.9.6" />
+		<PackageReference Include="RtMidi.Core" Version="1.0.53" />
+		<PackageReference Include="SkiaSharp" Version="3.119.1" />
+		<PackageReference Include="SkiaSharp.Views.Maui.Controls" Version="3.119.1" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)' == 'net9.0-windows10.0.19041.0'">
+		<PackageReference Include="NAudio" Version="2.x" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<!-- Reference to existing projects -->
-		<ProjectReference Include="..\MIXERX.Core\MIXERX.Core.csproj" />
-		<ProjectReference Include="..\MIXERX.Engine\MIXERX.Engine.csproj" />
+	  <ProjectReference Include="..\MIXERX.Application\MIXERX.Application.csproj" />
+	  <ProjectReference Include="..\MIXERX.Core\MIXERX.Core.csproj" />
+	  <ProjectReference Include="..\MIXERX.Infrastructure\MIXERX.Infrastructure.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Pages\DVSPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\LibraryPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\MainPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\MainPage2.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\MobileMainPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\SamplerPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\SettingsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\SmartCratePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\StreamingPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Resources\Styles\AppStyles.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="App.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </None>
+	  <None Update="AppShell.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </None>
+	  <None Update="MainPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </None>
+	  <None Update="Platforms\Windows\App.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </None>
+	  <None Update="Resources\Styles\Colors.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </None>
+	  <None Update="Resources\Styles\Styles.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </None>
 	</ItemGroup>
 
 </Project>

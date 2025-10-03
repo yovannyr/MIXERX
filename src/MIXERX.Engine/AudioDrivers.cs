@@ -1,4 +1,5 @@
 using MIXERX.Core;
+using MIXERX.Core.Interfaces;
 using NAudio.Wave;
 using NAudio.CoreAudioApi;
 

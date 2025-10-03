@@ -1,0 +1,41 @@
+Third-Party Licenses
+
+This application uses third-party libraries:
+
+- miniaudio (MIT)
+  Copyright (c) 2017-2025 David Reid
+  https://github.com/mackron/miniaudio
+  License: MIT
+
+- miniaudio-cs (MIT)
+  Copyright (c) 2020-2025 Authors
+  https://github.com/GRVYDEV/miniaudio-cs
+  License: MIT
+
+- NWaves (MIT)
+  Copyright (c) 2016-2025 Andrey Smirnov
+  https://github.com/ar1st0crat/NWaves
+  License: MIT
+
+- RtMidi.Core (MIT)
+  Copyright (c) 2017-2025 Atsushi Eno et al.
+  https://github.com/atsushieno/rtmidi.net
+  License: MIT
+
+- HidSharp (MIT)
+  Copyright (c) 2011-2025 Matthew Allum / contributors
+  https://github.com/amelentini/HidSharp
+  License: MIT
+
+- dr_mp3 / dr_flac / dr_wav (Public Domain / Unlicense)
+  https://github.com/mackron/dr_libs
+  License: Public Domain / Unlicense
+
+- stb_vorbis (Public Domain)
+  https://github.com/nothings/stb
+  License: Public Domain
+
+- Concentus (BSD-3-Clause) [falls benutzt]
+  Copyright (c) 2016-2025 Mark Heath / contributors
+  https://github.com/lostromb/concentus
+  License: BSD-3-Clause
